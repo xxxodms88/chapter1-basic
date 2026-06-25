@@ -1,0 +1,11 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+#Dependency directories
+node_modules/
+
+#gitnore파일에 추가해서, 프로젝트를 진행하면서 깃으로 관리할 필요가 없는 파일이 생기때마다 해당 .gitnore파일에 추가한다
+
+#Runtime data

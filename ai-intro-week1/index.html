@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>인공지능입문 1주차 스터디</title>
+<title>인공지능입문 스터디</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
@@ -161,6 +161,54 @@ tr.exam td{background:var(--amber-soft)}
 .result .score{font-size:48px;font-weight:700;font-family:var(--mono);font-variant-numeric:tabular-nums}
 .review{display:grid;gap:8px;text-align:left;width:100%}
 .review .card{font-size:14px}
+/* 장 전환 */
+.chapters{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;background:var(--surface-2);border-radius:10px;justify-self:start}
+.chapters button{font:inherit;font-size:14px;font-weight:500;border:0;background:none;color:var(--muted);padding:6px 14px;border-radius:7px;cursor:pointer}
+.chapters button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+pre.code{margin:0;font-family:var(--mono);font-size:13px;line-height:1.6;background:var(--surface-2);border-radius:10px;padding:14px 16px;overflow-x:auto}
+.formula{font-family:var(--mono);font-size:15px;background:var(--accent-soft);border-radius:10px;padding:12px 16px;overflow-x:auto;white-space:nowrap}
+.peas{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.peas .card{gap:4px}
+.peas .letter{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--accent);line-height:1}
+.pick{display:flex;flex-wrap:wrap;gap:6px}
+.pick button{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer}
+.pick button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.envtable td,.envtable th{text-align:center}
+.envtable td:first-child,.envtable th:first-child{text-align:left}
+.checks td{text-align:center}
+.checks td:first-child,.checks th:first-child{text-align:left}
+.checks tbody tr{cursor:pointer}
+.checks tbody tr:hover td{background:var(--surface-2)}
+.checks tbody tr[aria-selected="true"] td{background:var(--accent-soft)}
+.yes{color:var(--good);font-weight:700}.opt-mark{color:var(--amber);font-weight:600}.no-mark{color:var(--line)}
+details.ans{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+details.ans summary{cursor:pointer;font-weight:600}
+details.ans[open] summary{margin-bottom:8px}
+details.ans p{color:var(--muted);font-size:14.5px}
+.calc{display:grid;gap:14px}
+.calc label{display:grid;grid-template-columns:120px 1fr 56px;gap:12px;align-items:center;font-size:14px}
+.calc input[type=range]{width:100%;accent-color:var(--accent)}
+.calc output{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:480px){.calc label{grid-template-columns:92px 1fr 48px}}
+.ev-bars{display:grid;gap:8px}
+.ev-bars .bar{grid-template-columns:70px 1fr 64px}
+.ev-bars .fill.win{background:var(--good)}
+.verdict{font-weight:600}
+.sim{display:grid;gap:14px}
+.agentrow{display:grid;gap:8px}
+.agentrow .hd{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}
+.rooms{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.room{border:2px solid var(--line);border-radius:10px;padding:10px;min-height:74px;display:grid;gap:4px;align-content:start;background:var(--surface)}
+.room.dirty{background:var(--amber-soft);border-color:var(--amber)}
+.room .nm{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.room .st{font-size:13.5px;font-weight:600}
+.room .bot{font-size:13px;color:var(--accent);font-weight:600}
+.mem{font-size:12.5px;color:var(--muted)}
+.log{font-family:var(--mono);font-size:12.5px}
+.log td,.log th{padding:5px 8px;text-align:center}
+.log table{min-width:0}
+.big{font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);color:var(--ink);resize:vertical}
 footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -169,27 +217,36 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
 
 <div class="wrap">
   <header class="top">
-    <span class="eyebrow">인공지능입문 · Week 01 · AIMA 1장</span>
-    <h1>오리엔테이션: 인공지능이란 무엇인가</h1>
-    <p class="meta">강의자료(숭실대 AI소프트학부) 내용을 요약 노트, 개념도, 타임라인, 플래시카드, 퀴즈로 정리했습니다.</p>
+    <div class="chapters" role="group" aria-label="장 선택">
+      <button data-ch="1" aria-pressed="true">1장 · 인공지능 소개</button>
+      <button data-ch="2" aria-pressed="false">2장 · 지능형 에이전트</button>
+    </div>
+    <span class="eyebrow" id="chEyebrow">인공지능입문 · Week 01 · AIMA 1장</span>
+    <h1 id="chTitle">오리엔테이션: 인공지능이란 무엇인가</h1>
+    <p class="meta" id="chMeta">강의자료(숭실대 AI소프트학부) 내용을 요약 노트, 개념도, 타임라인, 플래시카드, 퀴즈로 정리했습니다.</p>
     <div class="progress" id="progress"></div>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="학습 메뉴">
-    <button role="tab" data-tab="summary" aria-selected="true">요약 노트</button>
-    <button role="tab" data-tab="approaches" aria-selected="false">4가지 접근</button>
-    <button role="tab" data-tab="history" aria-selected="false">AI의 역사</button>
-    <button role="tab" data-tab="cards" aria-selected="false">플래시카드</button>
-    <button role="tab" data-tab="quiz" aria-selected="false">퀴즈</button>
-    <button role="tab" data-tab="course" aria-selected="false">강의 안내</button>
+    <button role="tab" data-ch="1" data-tab="summary" aria-selected="true">요약 노트</button>
+    <button role="tab" data-ch="1" data-tab="approaches" aria-selected="false">4가지 접근</button>
+    <button role="tab" data-ch="1" data-tab="history" aria-selected="false">AI의 역사</button>
+    <button role="tab" data-ch="2" data-tab="c2-summary" aria-selected="false">요약 노트</button>
+    <button role="tab" data-ch="2" data-tab="c2-env" aria-selected="false">PEAS · 환경</button>
+    <button role="tab" data-ch="2" data-tab="c2-agents" aria-selected="false">에이전트 구조</button>
+    <button role="tab" data-ch="2" data-tab="c2-practice" aria-selected="false">실습</button>
+    <button role="tab" data-ch="all" data-tab="cards" aria-selected="false">플래시카드</button>
+    <button role="tab" data-ch="all" data-tab="quiz" aria-selected="false">퀴즈</button>
+    <button role="tab" data-ch="1" data-tab="course" aria-selected="false">강의 안내</button>
   </nav>
+
+  <div class="toolbar" id="blankBar" style="margin-bottom:26px">
+    <label class="switch" for="blankToggle"><input type="checkbox" id="blankToggle"> 빈칸 모드 (핵심어 가리기)</label>
+    <span class="muted" style="font-size:13.5px">빈칸 모드에서 가려진 칸을 누르면 정답이 보입니다.</span>
+  </div>
 
   <!-- 요약 노트 -->
   <section class="panel" id="summary" role="tabpanel">
-    <div class="toolbar">
-      <label class="switch" for="blankToggle"><input type="checkbox" id="blankToggle"> 빈칸 모드 (핵심어 가리기)</label>
-      <span class="muted" style="font-size:13.5px">빈칸 모드에서 가려진 칸을 누르면 정답이 보입니다.</span>
-    </div>
 
     <div class="block">
       <span class="eyebrow">1장 강의 목표</span>
@@ -386,6 +443,352 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
     </div>
   </section>
 
+  <!-- ===== 2장: 요약 노트 ===== -->
+  <section class="panel" id="c2-summary" role="tabpanel" hidden>
+    <div class="block">
+      <span class="eyebrow">2장 학습 목표</span>
+      <h2>이번 장에서 할 수 있어야 하는 것</h2>
+      <div class="grid2">
+        <div class="card"><span class="num">1</span><p>에이전트를 정의하고, 네 가지 구조의 행동 선택 과정을 비교한다.</p></div>
+        <div class="card"><span class="num">2</span><p>성과 측도와 주어진 정보를 바탕으로 행동의 합리성을 판단한다.</p></div>
+        <div class="card"><span class="num">3</span><p>다양한 과제에서 PEAS(성과 측도, 환경, 작동기, 감지기)를 서술한다.</p></div>
+        <div class="card"><span class="num">4</span><p>과제 환경의 성질을 분류하고, 그에 맞는 에이전트 구조를 고른다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">정의</span>
+      <h2>에이전트(Agent)란</h2>
+      <p><span class="k">감지기(sensor)</span>로 환경을 지각하고, <span class="k">작동기(actuator)</span>로 환경에 동작을 수행하는 모든 것.</p>
+      <div class="grid3">
+        <div class="card"><h3>지각 (percept)</h3><p class="muted">특정 순간에 감지기가 받아들이는 입력</p></div>
+        <div class="card"><h3>지각열 (percept sequence)</h3><p class="muted">에이전트가 <span class="k">지금까지 지각한 모든 것</span>의 전체 이력</p></div>
+        <div class="card"><h3>동작 (action)</h3><p class="muted">작동기를 통해 환경에 가하는 변화</p></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>예</th><th>감지기 / 지각</th><th>작동기 / 동작</th></tr></thead>
+          <tbody>
+            <tr><td>인간</td><td>눈, 귀, 피부</td><td>손, 다리, 성대</td></tr>
+            <tr><td>로봇</td><td>카메라, 적외선</td><td>모터</td></tr>
+            <tr><td>소프트봇 (Softbot)</td><td>파일 내용, 네트워크 패킷</td><td>화면 출력, 파일 쓰기, 패킷 전송</td></tr>
+            <tr><td>제어기 (Controller)</td><td>센서 측정값 (설정값과의 차이 이용)</td><td>제어 입력. 예) 온도조절기</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">함수 vs 프로그램</span>
+      <h2>에이전트 함수와 에이전트 프로그램</h2>
+      <div class="grid2">
+        <div class="card"><h3>에이전트 함수 (무엇을 하는가)</h3><p class="formula" style="justify-self:start">f : P* → A</p><p class="muted">가능한 모든 지각열의 집합 P*에서 동작 집합 A로의 사상. 추상적·수학적 서술이고, 원리상 표로 나타낼 수 있다.</p></div>
+        <div class="card"><h3>에이전트 프로그램 (어떻게 구현하는가)</h3><p class="muted">아키텍처 위에서 에이전트 함수를 구현하는 코드. 매번 <b>현재 지각</b>을 입력받고, 필요한 과거 정보는 내부 상태에 저장한다.</p><p><b><span class="k">에이전트 = 아키텍처 + 프로그램</span></b></p></div>
+      </div>
+      <div class="card">
+        <h3>표 기반 에이전트(table-driven agent)의 문제</h3>
+        <p class="muted">지각이 m종류이고 길이가 t인 지각열은 mᵗ개. 길이 1~T를 모두 저장하면 Σₜ₌₁ᵀ mᵗ개 항목이 필요하다. 지각 4종류, 길이 10만 해도 4¹⁰ = <span class="k">1,048,576</span>개. 규칙성을 이용하면 훨씬 작은 프로그램으로 같은 행동을 구현할 수 있다.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">예제</span>
+      <h2>진공청소기 세계</h2>
+      <p>방 A, B 두 칸과 먼지. 지각은 <code>[위치, 상태]</code>, 동작은 <code>Left, Right, Suck, NoOp</code>.</p>
+      <div class="grid2">
+        <div class="table-wrap">
+          <table style="min-width:0">
+            <thead><tr><th>지각열</th><th>동작</th></tr></thead>
+            <tbody>
+              <tr><td>[A, Clean]</td><td>Right</td></tr>
+              <tr><td>[A, Dirty]</td><td>Suck</td></tr>
+              <tr><td>[B, Clean]</td><td>Left</td></tr>
+              <tr><td>[B, Dirty]</td><td>Suck</td></tr>
+              <tr><td>[A, Clean], [A, Clean]</td><td>Right</td></tr>
+              <tr><td>[A, Clean], [A, Dirty]</td><td>Suck</td></tr>
+              <tr><td>…</td><td>… (표가 무한히 커진다)</td></tr>
+            </tbody>
+          </table>
+        </div>
+<pre class="code">function REFLEX-VACUUM-AGENT([location, status])
+  returns an action
+  if status = Dirty then return Suck
+  else if location = A then return Right
+  else if location = B then return Left</pre>
+      </div>
+      <p class="muted">표의 규칙성을 찾으면 몇 줄로 같은 함수를 구현할 수 있습니다. 이 프로그램은 현재 지각만 보고 과거를 기억하지 않습니다. 이것이 좋은 에이전트인지 판단하려면 먼저 <b>합리성</b>의 기준이 필요합니다.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">합리성</span>
+      <h2>무엇이 옳은 행동인가</h2>
+      <p>임의의 시점에서 무엇이 합리적인지는 네 가지에 달려 있습니다.</p>
+      <div class="grid2">
+        <div class="card"><span class="num">1</span><h3>성과 측도</h3><p class="muted">성공의 기준. 에이전트가 아니라 <span class="k">설계자</span>가 정하고, 환경 상태의 열(sequence)을 평가한다.</p></div>
+        <div class="card"><span class="num">2</span><h3>사전 지식</h3><p class="muted">환경에 대한 사전 지식. 방 구조를 아는가? 먼지가 다시 생기는가?</p></div>
+        <div class="card"><span class="num">3</span><h3>가능한 동작</h3><p class="muted">할 수 없는 일을 하지 않았다고 비합리적인 것은 아니다.</p></div>
+        <div class="card"><span class="num">4</span><h3>지각열</h3><p class="muted">현재까지의 지각열. 지금까지 본 것에 근거해서만 판단할 수 있다.</p></div>
+      </div>
+      <div class="card">
+        <h3>합리적 에이전트의 정의</h3>
+        <p>가능한 모든 지각열에 대해, 합리적 에이전트는 그 지각열과 내장된 지식이 제공하는 증거를 바탕으로 <span class="k">성과 측도의 기대치를 최대화</span>할 것으로 예상되는 행동을 선택한다.</p>
+        <div class="formula">a* = argmax<sub>a∈A</sub> E[ M | h, K, a ]</div>
+        <p class="muted" style="font-size:13.5px">h: 지각열 · K: 사전 지식 · M: 성과. 기대치 예) 성공 80%에 10점, 실패 20%에 0점이면 기대 성과는 8점.</p>
+      </div>
+      <p class="muted">왜 "기대치"인가: 환경이 불확실하면 같은 행동도 결과가 달라집니다. 합리성은 실제 결과가 아니라 행동 시점에 알 수 있었던 정보로 계산한 기대 성과로 판단합니다. 결과가 나빴다고 선택이 비합리적이었던 것은 아닙니다.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">오해와 요구</span>
+      <h2>합리성은 무엇이 아닌가</h2>
+      <div class="grid2">
+        <div class="card"><h3>합리성 ≠ 전지성 (omniscience)</h3><p class="muted">전지한 에이전트는 실제 결과를 미리 안다. 합리적 에이전트는 알 수 있는 정보 안에서 최선을 다할 뿐. 예) 길을 건너다 추락하는 비행기 문에 맞았다면 비합리적인 게 아니라 운이 없었던 것.</p></div>
+        <div class="card"><h3>합리성 ≠ 완벽함 (perfection)</h3><p class="muted">합리성은 <span class="k">기대 성과</span>를, 완벽함은 <span class="k">실제 성과</span>를 최대화한다. 예) 승률 70%가 최고의 수였다면 져도 합리적 선택.</p></div>
+      </div>
+      <h3>합리적 에이전트가 해야 하는 일</h3>
+      <div class="grid2">
+        <div class="card"><h3>정보 수집</h3><p class="muted">지각을 바꾸기 위한 행동도 합리적일 수 있다. 예) 길을 건너기 전 좌우 살피기</p></div>
+        <div class="card"><h3>학습</h3><p class="muted">경험으로 지식과 행동을 개선. 무엇을 배울지는 비용과 기대 이득을 고려</p></div>
+        <div class="card"><h3>탐험</h3><p class="muted">정보의 장기적 이득이 비용보다 크면 당장 보상이 낮은 행동도 합리적</p></div>
+        <div class="card"><h3>자율성</h3><p class="muted">설계자의 사전 지식에만 의존하지 않고 자신의 경험으로 보완. 사전 지식은 출발점, 경험이 그것을 넘어선다</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">예제</span>
+      <h2>진공청소기 에이전트는 합리적인가?</h2>
+      <p>"합리적인가"는 성과 측도와 환경 가정을 정해야만 답할 수 있습니다.</p>
+      <div class="card">
+        <h3>가정</h3>
+        <ul class="clean">
+          <li>성과 측도: 1,000 단계 동안 매 단계 깨끗한 칸당 1점</li>
+          <li>방 구조와 시작 위치는 알고, 초기 먼지 분포는 모른다</li>
+          <li>깨끗한 칸은 계속 깨끗하고, Suck은 현재 칸을 깨끗하게 만든다</li>
+          <li>Left/Right는 벽에 막히지 않는 한 항상 성공한다</li>
+          <li>지각은 현재 위치와 그 칸의 상태만 알려 준다</li>
+        </ul>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>이 가정 아래에서는 합리적</h3><p class="muted">더러우면 빨아들이고 아니면 옆 칸으로 가는 단순 규칙이 기대치를 최대화한다. 어떤 에이전트도 이보다 잘할 수 없다.</p></div>
+        <div class="card"><h3>가정이 바뀌면 비합리적</h3><p class="muted">이동에 벌점이 있으면 두 칸이 깨끗해진 뒤의 왕복은 손해. 두 칸이 깨끗함을 기억해 NoOp을 고를 수 있다. 먼지가 다시 생기면 점검 주기는 발생률·이동 비용·남은 시간에 달려 있다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">성과 측도 설계</span>
+      <h2>행동이 아니라 결과를 잰다</h2>
+      <p>일반 원칙: 에이전트가 어떻게 행동해야 한다고 생각하는지가 아니라, <span class="k">환경에서 실제로 무엇이 달성되기를 바라는지</span>를 기준으로 정합니다.</p>
+      <div class="grid2">
+        <div class="card" style="border-color:var(--bad)"><h3>나쁜 측도: 행동을 잰다</h3><p class="muted">"8시간 동안 빨아들인 먼지의 양" → 먼지를 다시 쏟을 수 있다면 같은 먼지를 반복 흡입해 점수를 올릴 수 있다.</p></div>
+        <div class="card" style="border-color:var(--good)"><h3>좋은 측도: 결과를 잰다</h3><p class="muted">"매 시간 단계마다 깨끗한 칸의 수" → 원하는 환경 상태를 직접 표현. 전력 소모나 소음 벌점을 더할 수도 있다.</p></div>
+      </div>
+      <ul class="clean muted">
+        <li>"평균적으로 깨끗한 바닥"과 "가끔 매우 깨끗하지만 자주 지저분한 바닥" 중 무엇이 나은가? 측도는 가치 판단을 담는다.</li>
+        <li>측도를 잘못 지정하면 유능한 에이전트일수록 더 크게 어긋난다 (1장의 표준 모형 문제, 강화학습의 <b>보상 해킹</b>).</li>
+        <li>그래서 4판은 진짜 목적을 확실히 모르는 전제 아래 행동하는 <b>이로운 기계</b>를 제안했다.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">한 장 요약</span>
+      <h2>2장 요약</h2>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><td><b>에이전트</b></td><td>환경을 지각하고 행동하는 모든 것. 에이전트 함수 f: P* → A는 행동을 서술하고, 에이전트 프로그램은 이를 구현한다.</td></tr>
+            <tr><td><b>합리성</b></td><td>지각열과 사전 지식에 근거해 기대 성과를 최대화하는 행동. 전지성·완벽함과 다르며, 정보 수집도 비용과 이득으로 판단한다.</td></tr>
+            <tr><td><b>PEAS</b></td><td>성과 측도·환경·작동기·감지기로 과제 환경을 명세한다. 성과 측도는 행동이 아니라 결과를 잰다.</td></tr>
+            <tr><td><b>환경 종류</b></td><td>관측 가능성, 에이전트 수, 결정론, 일화/순차, 정적/동적, 이산/연속, 기지/미지. 환경의 성질이 에이전트 설계를 결정한다.</td></tr>
+            <tr><td><b>에이전트 종류</b></td><td>단순 반사 → 모형 기반 반사 → 목표 기반 → 효용 기반. 모두 학습으로 확장 가능. 상태는 원자적·분해된·구조적으로 표현한다.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 2장: PEAS · 환경 ===== -->
+  <section class="panel" id="c2-env" role="tabpanel" hidden>
+    <div class="block">
+      <span class="eyebrow">과제 환경의 명세</span>
+      <h2>PEAS</h2>
+      <p>에이전트 설계의 첫 단계는 과제 환경(task environment)을 최대한 완전하게 서술하는 것입니다. 과제 환경은 합리적 에이전트가 풀어야 할 "문제", 합리적 에이전트는 그 "해답"입니다.</p>
+      <div class="peas">
+        <div class="card"><span class="letter">P</span><h3>Performance measure · 성과 측도</h3><p class="muted">결과를 평가하는 기준. 예) 게임 승리, 주행 안전성, 도착 시간</p></div>
+        <div class="card"><span class="letter">E</span><h3>Environment · 환경</h3><p class="muted">상호작용하는 외부의 모든 것. 예) 체스판, 도로, 다른 차량</p></div>
+        <div class="card"><span class="letter">A</span><h3>Actuators · 작동기</h3><p class="muted">환경에 영향을 주는 수단. 예) 로봇 팔, 바퀴, 화면 출력</p></div>
+        <div class="card"><span class="letter">S</span><h3>Sensors · 감지기</h3><p class="muted">환경을 관찰하는 수단. 예) 카메라, 라이다, 마이크, 키보드</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">예제 모음</span>
+      <h2>PEAS 예제</h2>
+      <p class="muted">에이전트를 골라 보세요. 빈칸 모드를 켜면 PEAS 칸을 가리고 맞혀 볼 수 있습니다.</p>
+      <div class="pick" id="peasPick"></div>
+      <div class="peas" id="peasOut"></div>
+      <p class="muted" id="peasNote" style="font-size:14px"></p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">경계</span>
+      <h2>환경의 범위</h2>
+      <ul class="clean">
+        <li>분석 경계를 어디에 두느냐에 따라 환경의 범위가 달라진다. 에이전트 함수의 입출력 경계로 보면 감지기·작동기의 물리적 과정도 환경에 포함할 수 있다.</li>
+        <li>로봇 전체가 에이전트라면 감지기·작동기는 구성 요소다. 어느 경계든 센서 노이즈와 동작 오차를 반영한다.</li>
+        <li>같은 프로그램도 환경이 달라지면 합리성 여부가 달라진다. 체스판은 완전히 보이고 규칙이 확정적이지만, 도로는 일부만 보이고 예측 불가능하며 계속 변한다.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">환경 종류</span>
+      <h2>과제 환경의 7가지 성질</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>성질</th><th>쉬운 쪽</th><th>어려운 쪽</th><th>핵심</th></tr></thead>
+          <tbody>
+            <tr><td><b>관측 가능성</b></td><td>완전 관측 가능 (체스)</td><td>부분 관측 / 관측 불가 (택시)</td><td>행동 선택에 필요한 상태가 매 시점 보이는가. 안 보이면 과거 지각으로 상태를 추정</td></tr>
+            <tr><td><b>에이전트 수</b></td><td>단일 (십자말풀이)</td><td>다중 (체스: 경쟁, 공동 운반 로봇: 협력)</td><td>다른 의사결정자의 행동이 내 성과에 영향을 주는가. 사람이 존재한다는 이유만으로 다중이 되지는 않는다</td></tr>
+            <tr><td><b>결정론</b></td><td>결정론적</td><td>비결정론적 / 확률적</td><td>상태와 행동이 다음 상태를 하나로 정하는가. 관측의 불완전성과 전이의 확률성은 별개</td></tr>
+            <tr><td><b>시간 구조</b></td><td>일화적 (결함 부품 검출)</td><td>순차적 (체스, 택시)</td><td>현재 행동이 이후에 영향을 주는가</td></tr>
+            <tr><td><b>변화</b></td><td>정적 (십자말풀이)</td><td>동적 (택시) · 준동적 (시계 쓰는 체스)</td><td>숙고하는 동안 환경이 변하는가. 환경은 그대로인데 시간에 따라 점수가 변하면 준동적</td></tr>
+            <tr><td><b>연속성</b></td><td>이산적 (체스 말 위치)</td><td>연속적 (속도, 위치)</td><td>상태·시간·행동을 각각 구분. 디지털 영상의 픽셀 값 자체는 이산적</td></tr>
+            <tr><td><b>지식</b></td><td>기지 (known)</td><td>미지 (unknown)</td><td>환경의 "물리 법칙"을 에이전트가 아는가. 관측 가능성과 별개: 카드 게임은 기지지만 부분 관측, 새 게임은 다 보이지만 미지</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="card" style="background:var(--amber-soft);border-color:transparent">가장 어려운 경우: <b>부분 관측 · 다중 · 확률적 · 순차적 · 동적 · 연속적 · 미지</b>. 택시 주행이 거의 그렇습니다.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">AIMA Figure 2.6</span>
+      <h2>과제 환경 분류 표</h2>
+      <p class="muted">빈칸 모드를 켜면 칸이 가려집니다. 직접 분류해 본 뒤 눌러서 확인하세요. 분류는 절대적이지 않고 가정에 따라 달라질 수 있습니다.</p>
+      <div class="table-wrap">
+        <table class="envtable">
+          <thead><tr><th>과제 환경</th><th>관측</th><th>에이전트</th><th>결정론</th><th>일화</th><th>정적</th><th>이산</th></tr></thead>
+          <tbody id="envBody"></tbody>
+        </table>
+      </div>
+      <p class="muted" style="font-size:13.5px">정제소(refinery): 원유를 정제하는 공장. 정제소 제어기는 온도·압력·유량을 조절하는 에이전트입니다.</p>
+      <h3>토론 질문</h3>
+      <details class="ans"><summary>백개먼은 주사위를 쓰는데 왜 "완전 관측 가능"인가? 포커는 왜 아닌가?</summary><p>예시 답안: 관측 가능성은 현재 상태가 보이는지의 문제이고, 주사위는 전이의 확률성(확률적) 문제입니다. 백개먼은 판 위의 모든 말이 보이므로 완전 관측이지만, 포커는 상대 패가 숨겨져 있어 부분 관측입니다.</p></details>
+      <details class="ans"><summary>시계를 쓰는 체스가 "준동적"인 이유는?</summary><p>예시 답안: 숙고하는 동안 판(환경)은 변하지 않지만, 시간이 흐르면서 남은 시간과 성과가 달라지기 때문입니다.</p></details>
+      <details class="ans"><summary>영상 분석이 "일화적"이라면, 의료 진단은 왜 "순차적"인가?</summary><p>예시 답안: 영상 한 장의 분류는 다음 영상 분류에 영향을 주지 않지만, 의료 진단에서는 어떤 검사·처치를 하느냐가 이후 환자 상태와 다음 선택에 영향을 줍니다.</p></details>
+      <details class="ans"><summary>택시 주행에서 감지기를 추가하면 어느 열이 바뀔 수 있는가?</summary><p>예시 답안: 관측 가능성 열입니다. 감지기가 늘면 보이는 상태가 늘어 부분 관측에서 완전 관측 쪽으로 가까워질 수 있습니다. 다른 차량의 의도 같은 숨은 상태가 남으므로 완전 관측이 되기는 어렵습니다.</p></details>
+    </div>
+  </section>
+
+  <!-- ===== 2장: 에이전트 구조 ===== -->
+  <section class="panel" id="c2-agents" role="tabpanel" hidden>
+    <div class="block">
+      <span class="eyebrow">에이전트 프로그램의 종류</span>
+      <h2>네 가지 기본 구조 + 학습</h2>
+      <p>공통 골격은 모두 <b>지각 → (내부 처리) → 행동</b>. 아래로 갈수록 더 많은 정보를 쓰고 더 유연하게 행동하지만, <b>성능 순위는 아닙니다</b>. 행을 눌러 자세히 보세요.</p>
+      <div class="table-wrap">
+        <table class="checks">
+          <thead><tr><th>구조</th><th>현재 지각</th><th>내부 상태</th><th>전이·감지기 모형</th><th>목표</th><th>효용 함수</th><th>학습 요소</th></tr></thead>
+          <tbody id="agentRows"></tbody>
+        </table>
+      </div>
+      <p class="muted" style="font-size:13.5px"><span class="yes">●</span> 사용 &nbsp; <span class="opt-mark">◐</span> 어느 구조에든 붙일 수 있음</p>
+      <div class="detail" id="agentDetail" aria-live="polite"></div>
+      <p class="muted">연결되는 주제: 탐색·계획 → 목표 달성, 논리·상태 추정 → 세계 표현, 의사결정 → 선호와 불확실성, 학습 → 구성 요소 개선.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">상태 표현</span>
+      <h2>무엇을 어떻게 적을 것인가</h2>
+      <div class="grid3">
+        <div class="card"><span class="tag">원자적 atomic</span><p>상태는 내부 구조가 없는 하나의 이름표. 예) 도시 이름 A, B. 같거나 다를 뿐.</p><p class="muted">→ 탐색·게임</p></div>
+        <div class="card"><span class="tag">분해된 factored</span><p>변수(속성)와 값의 집합. 예) [location=A, status=Clean, temp=75°F]. 상태 변수를 <span class="k">플루언트(fluent)</span>라 한다.</p><p class="muted">→ CSP · 명제 논리 · 계획</p></div>
+        <div class="card"><span class="tag">구조적 structured</span><p>객체들과 그 관계로 된 그래프. 예) "트럭이 소를 향해 후진한다". 표현력이 가장 크다.</p><p class="muted">→ 1차 논리, 지식 표현 (8~10장)</p></div>
+      </div>
+      <p class="muted">표현력 vs 추론의 어려움: 풍부한 표현은 객체·속성·관계를 간결하게 나타냅니다. 추론 난도는 표현뿐 아니라 문제와 알고리즘에도 달려 있습니다.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">전이 모형</span>
+      <h2>상태 → 행동 → 다음 상태</h2>
+      <p>진공청소기 세계의 상태 공간: 위치 2 × 먼지 분포 4 = <span class="k">8개</span> 상태.</p>
+      <div class="grid2">
+        <div class="card"><h3>결정론적</h3><div class="formula">T : S × A → S,&nbsp; s' = T(s, a)</div><p class="muted">현재 상태 s에서 행동 a를 하면 다음 상태는 s' 하나.</p></div>
+        <div class="card"><h3>확률적</h3><div class="formula">P(s' | s, a)</div><p class="muted">다음 상태를 확률 분포로. 행동 실패나 무작위 먼지 발생을 표현. 현재 상태에 미래 예측에 필요한 정보가 담겼다고 가정.</p></div>
+      </div>
+      <p class="muted">상태가 변하는 원인: 에이전트의 행동(Suck, Left, Right)과 외부 변화.</p>
+    </div>
+  </section>
+
+  <!-- ===== 2장: 실습 ===== -->
+  <section class="panel" id="c2-practice" role="tabpanel" hidden>
+    <div class="block">
+      <span class="eyebrow">연습 · 슬라이드 26</span>
+      <h2>기대 성과로 행동 고르기</h2>
+      <p class="muted">성공하면 10점, 실패하면 0점. 슬라이더로 조건을 바꿔 보세요.</p>
+      <div class="card calc">
+        <label for="pA">행동 A 성공률 <input type="range" id="pA" min="0" max="100" step="5" value="70"><output id="pAo"></output></label>
+        <label for="pB">행동 B 성공률 <input type="range" id="pB" min="0" max="100" step="5" value="90"><output id="pBo"></output></label>
+        <label for="cB">행동 B 비용 <input type="range" id="cB" min="0" max="10" step="1" value="0"><output id="cBo"></output></label>
+        <div class="ev-bars" id="evBars"></div>
+        <p class="verdict" id="evVerdict"></p>
+        <div class="row" style="justify-content:flex-start"><button class="btn" id="evReset">기본 문제 (70% / 90%)</button><button class="btn" id="evCost">B에만 비용 3점</button></div>
+      </div>
+      <details class="ans"><summary>행동 B가 실패했다. 그 선택은 비합리적이었을까?</summary><p>아닙니다. 선택 시점의 정보로 B의 기대 성과(9점)가 A(7점)보다 컸으므로 합리적인 선택이었습니다. 합리성은 실제 결과가 아니라 선택 시점의 정보와 평가 기준으로 판단합니다.</p></details>
+      <details class="ans"><summary>B에만 비용 3점이 붙으면?</summary><p>B의 순 기대 성과는 9 − 3 = 6점으로 A의 7점보다 작아서 A를 선택합니다.</p></details>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">실습 · 슬라이드 27</span>
+      <h2>기억이 행동을 바꾸는 순간</h2>
+      <p class="muted">A에서 시작, 두 칸 모두 Dirty. 6단계 동안 행동 직후 깨끗한 칸마다 +1점, 이동마다 −1점. 청소와 NoOp은 비용 없음.</p>
+      <div class="card sim">
+        <div class="row" style="justify-content:flex-start">
+          <button class="btn primary" id="simStep">한 단계 진행</button>
+          <button class="btn" id="simAll">끝까지 실행</button>
+          <button class="btn" id="simReset">초기화</button>
+          <label class="switch" for="simRedirt" style="font-size:14px"><input type="checkbox" id="simRedirt"> 4단계 뒤 A칸 재오염</label>
+        </div>
+        <div class="grid2" id="simAgents"></div>
+        <div class="table-wrap log"><table><thead><tr><th>단계</th><th>단순 반사</th><th>점수</th><th>기억 사용</th><th>점수</th></tr></thead><tbody id="simLog"></tbody></table></div>
+      </div>
+      <details class="ans"><summary>기억 사용 에이전트는 어떤 정보를 기억해야 할까?</summary><p>각 칸을 마지막으로 확인했을 때 깨끗했는지. 두 칸이 모두 깨끗하다는 사실을 알면 이동하지 않고 NoOp을 선택해 이동 벌점을 피합니다.</p></details>
+      <details class="ans"><summary>먼지가 다시 생긴다면 계속 NoOp 해도 될까?</summary><p>안 됩니다. "4단계 뒤 A칸 재오염"을 켜고 실행해 보세요. 기억 에이전트는 A가 깨끗하다고 믿고 있어서 다시 치우지 않습니다. 점검 간격을 정하려면 먼지 발생률, 이동 비용, 남은 시간, 마지막으로 확인한 시점 같은 정보가 필요합니다.</p></details>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">적용 · 슬라이드 28</span>
+      <h2>교내 배달 로봇의 PEAS</h2>
+      <div class="peas">
+        <div class="card"><span class="letter">P</span><p class="muted">안전한 배송 완료율, 배송 시간, 에너지 사용량. 안전 조건은 별도 제약으로 둘 수 있다.</p></div>
+        <div class="card"><span class="letter">E</span><p class="muted">교내 보행로, 건물 출입구, 보행자, 수령인, 날씨 (실외 배송 가정)</p></div>
+        <div class="card"><span class="letter">A</span><p class="muted">바퀴 구동 모터, 조향 장치, 물품함 잠금장치, 화면·스피커</p></div>
+        <div class="card"><span class="letter">S</span><p class="muted">카메라, 라이다, 위치 센서, 바퀴 회전 센서, 주문 및 수령 확인 입력</p></div>
+      </div>
+      <p><b>환경 분류:</b> 부분 관측 · 다중 · 순차 · 동적. 위치는 연속, 주문 상태는 이산.</p>
+      <p class="muted">분류할 때 먼저 경계와 가정을 적고, 그 근거를 감지기·행동·성과와 연결하세요.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">직접 써 보기</span>
+      <h2>PEAS 연습</h2>
+      <p class="muted">대상을 고르고 PEAS를 써 본 뒤 예시 답안과 비교하세요. 입력한 내용은 이 브라우저에만 저장됩니다.</p>
+      <div class="pick" id="drillPick"></div>
+      <div class="grid2" id="drillBox"></div>
+      <details class="ans" id="drillAns"><summary>예시 답안 보기</summary><div id="drillAnsBody"></div></details>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">개념 점검 · 슬라이드 29</span>
+      <h2>이유까지 설명하기</h2>
+      <p class="muted">먼저 스스로 답과 근거(가정 또는 반례 한 문장)를 말해 본 뒤 여세요.</p>
+      <details class="ans"><summary>1. 일부 상태가 보이지 않으면 합리적 에이전트가 될 수 없는가?</summary><p>아닙니다. 합리성은 지각열과 사전 지식으로 알 수 있는 범위에서 기대 성과를 최대화하는 것입니다. 부분 관측 환경에서도 과거 지각으로 상태를 추정하며 합리적으로 행동할 수 있습니다 (합리성 ≠ 전지성).</p></details>
+      <details class="ans"><summary>2. 같은 지각에 항상 같은 행동을 하는 에이전트는 학습할 수 없는가?</summary><p>아닙니다. 에이전트 함수는 현재 지각이 아니라 지각열 전체를 입력으로 받습니다. 학습 요소가 경험으로 규칙을 고치면, 같은 지각이라도 그 이전 이력에 따라 다른 행동이 나올 수 있습니다.</p></details>
+      <details class="ans"><summary>3. 게임 규칙은 알지만 상대 패는 모른다. 기지/미지와 관측 가능성을 구분하자.</summary><p>규칙(행동의 결과)을 알므로 <b>기지</b>, 상대 패라는 상태 일부가 보이지 않으므로 <b>부분 관측</b>입니다. 두 구분은 서로 독립입니다.</p></details>
+      <details class="ans"><summary>4. 과거 상태를 기억하는 로봇은 반드시 목표 기반 에이전트인가?</summary><p>아닙니다. 모형 기반 반사 에이전트도 내부 상태로 과거를 기억하지만, 목표 없이 조건-행동 규칙으로 행동을 고릅니다.</p></details>
+      <details class="ans"><summary>5. 성과 측도, 효용, 보상은 누가 무엇을 평가하기 위해 쓰는가?</summary><p><b>성과 측도</b>: 설계자가 외부에서 환경 상태의 열(결과)을 평가. <b>효용</b>: 에이전트가 내부에서 상태의 바람직함을 평가 (성과 측도의 내재화). <b>보상</b>: 학습 설정에서 단계마다 주어지는 피드백 신호 (MDP·강화학습).</p></details>
+      <details class="ans"><summary>생각해 볼 문제: 스마트폰 음성 비서는 어떤 에이전트인가? PEAS로 서술해 보자.</summary><p>예시 답안: P 요청 처리 정확도, 응답 속도, 사용자 만족 · E 사용자, 앱과 서비스, 인터넷, 주변 소음 · A 음성 출력, 화면 표시, 앱 실행·알람 설정 · S 마이크, 터치 입력, 위치, 캘린더 등 앱 데이터. 대화 맥락을 기억하고(모형 기반) 요청을 목표로 삼아 행동하므로 목표 기반에 가깝고, 사용 기록으로 개선된다면 학습 에이전트로 볼 수 있습니다.</p></details>
+    </div>
+  </section>
+
   <!-- 플래시카드 -->
   <section class="panel" id="cards" role="tabpanel" hidden>
     <div class="block">
@@ -468,7 +871,7 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
     </div>
   </section>
 
-  <footer>다음 주: 지능형 에이전트 (에이전트와 환경, PEAS 모델, 합리성 · 교재 2장)</footer>
+  <footer id="chFooter"></footer>
 </div>
 
 <script>
@@ -479,18 +882,6 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
   };
   const $=s=>document.querySelector(s);
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-
-  /* ---------- 탭 ---------- */
-  const tabs=[...document.querySelectorAll('nav.tabs button')];
-  function showTab(id){
-    if(!document.getElementById(id)) id='summary';
-    tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===id?'true':'false'));
-    document.querySelectorAll('section.panel').forEach(p=>p.hidden=p.id!==id);
-    store.set('ai1.tab',id);
-  }
-  tabs.forEach(b=>b.addEventListener('click',()=>{showTab(b.dataset.tab);window.scrollTo({top:0})}));
-  const initial=(location.hash||'').slice(1)||store.get('ai1.tab','summary');
-  showTab(initial);
 
   /* ---------- 빈칸 모드 ---------- */
   const blank=$('#blankToggle');
@@ -569,8 +960,7 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
   const syl=[['01','교과목 소개 및 인공지능 소개','AI 정의와 역사 · 약한 AI vs 강한 AI · 주요 응용 분야','1장'],['02','지능형 에이전트','에이전트와 환경 · PEAS 모델 · 합리성과 목표 기반 행위','2장'],['03','탐색 문제 해결 I','상태 공간 문제 · 무정보 탐색(BFS, DFS) · 경로 비용과 탐색 트리','3장'],['04','탐색 문제 해결 II','휴리스틱 탐색(A*) · 평가 함수 · 탐색 알고리즘 비교','3장'],['05','복잡한 환경에서의 탐색','실세계 문제 탐색 · 반복 심화 탐색 · 성능 평가','4장'],['06','제약 만족 문제(CSP)','변수, 도메인, 제약 · 백트래킹, 제약 전파 · 퍼즐 예제','5장'],['07','적대적 탐색과 게임','미니맥스 · 알파-베타 가지치기 · 틱택토','6장'],['08','중간고사','이론 시험 (2개 분반 동시)','시험'],['09','논리적 추론 기초 1','지식 기반 에이전트 · 웜퍼스 세계 · 논리','7장'],['10','논리적 추론 기초 2','명제 논리 · 명제 정리 증명 · 명제 논리 기반 에이전트','7장'],['11','1차 논리','표현의 재고찰 · 구문과 의미론 · 활용 · 지식 공학','8장'],['12','1차 논리의 추론','명제 추론 대 1차 추론 · 단일화 · 순방향/역방향 연쇄 · 분해','9장'],['13','지식 표현','온톨로지 공학 · 범주와 객체 · 정신적 객체와 양상 논리','10장'],['14','자동 계획 수립','고전적 계획 수립 · 계획 수립 휴리스틱 · 위계적 계획','11장'],['15','기말고사','이론 기말고사 · 팀 프로젝트 발표','시험']];
   $('#syllabus').innerHTML=syl.map(r=>`<tr class="${r[3]==='시험'?'exam':''}"><td class="wk">${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
 
-  /* ---------- 플래시카드 ---------- */
-  const deck=[
+  const deck1=[
     ['정의','인공지능 (AI)','컴퓨터를 사용하여 인간의 지능을 모델링하는 기술. 인간의 지능적 활동을 컴퓨터로 구현'],
     ['정의','기계 지능','컴퓨터를 통해 구현한 지능 (Machine Intelligence)'],
     ['패러다임','지식기반 방식','전문가가 규칙과 지식을 직접 기술하는 AI 방식'],
@@ -606,45 +996,8 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
     ['역사','알파고','2016년 이세돌 9단에게 승리. 신경망 + 탐색(MCTS)'],
     ['역사','대부흥의 3요소','알고리즘 × 연산(GPU) × 데이터(빅데이터)'],
     ['인물','제프리 힌튼','딥러닝의 대부. 볼츠만 머신, 역전파 논문 공동 저자']
-  ].map((c,i)=>({id:i,cat:c[0],term:c[1],def:c[2]}));
-  let known=new Set(store.get('ai1.known',[]));
-  let order=deck.map(c=>c.id), pos=0;
-  const flash=$('#flash'), hideKnown=$('#hideKnown');
-  const visible=()=>order.filter(id=>!(hideKnown.checked&&known.has(id)));
-  function renderCard(){
-    const v=visible();
-    flash.classList.remove('flipped');
-    if(!v.length){$('#fcCat').textContent='';$('#fcTerm').textContent='모든 카드를 외웠어요!';$('#fcDef').textContent='"외움 표시 초기화"로 다시 시작할 수 있어요.';$('#fcCount').textContent='0 / 0';$('#knownBtn').disabled=true;renderProgress();return}
-    if(pos>=v.length)pos=v.length-1; if(pos<0)pos=0;
-    const c=deck[v[pos]];
-    $('#fcCat').textContent=c.cat+(known.has(c.id)?' · 외움':'');
-    $('#fcTerm').textContent=c.term;
-    setTimeout(()=>{$('#fcDef').textContent=c.def},flash.classList.contains('flipped')?0:0);
-    $('#fcCount').textContent=`${pos+1} / ${v.length}`;
-    const kb=$('#knownBtn');kb.disabled=false;kb.textContent=known.has(c.id)?'외움 취소':'외웠어요';
-    renderProgress();
-  }
-  flash.addEventListener('click',()=>flash.classList.toggle('flipped'));
-  $('#prevBtn').addEventListener('click',()=>{pos--;if(pos<0)pos=Math.max(visible().length-1,0);renderCard()});
-  $('#nextBtn').addEventListener('click',()=>{pos++;if(pos>=visible().length)pos=0;renderCard()});
-  $('#shuffleBtn').addEventListener('click',()=>{order=shuffle(order);pos=0;renderCard()});
-  $('#resetKnown').addEventListener('click',()=>{known.clear();store.set('ai1.known',[]);renderCard()});
-  hideKnown.addEventListener('change',()=>{pos=0;renderCard()});
-  $('#knownBtn').addEventListener('click',()=>{
-    const v=visible();const id=v[pos];if(id==null)return;
-    known.has(id)?known.delete(id):known.add(id);
-    store.set('ai1.known',[...known]);
-    if(hideKnown.checked&&known.has(id)){renderCard()}else{pos++;if(pos>=visible().length)pos=0;renderCard()}
-  });
-  document.addEventListener('keydown',e=>{
-    if($('#cards').hidden||e.target.matches('input,textarea'))return;
-    if(e.key==='ArrowRight'){$('#nextBtn').click()}
-    else if(e.key==='ArrowLeft'){$('#prevBtn').click()}
-    else if(e.key===' '&&e.target!==flash){e.preventDefault();flash.classList.toggle('flipped')}
-  });
-
-  /* ---------- 퀴즈 ---------- */
-  const Q=[
+  ];
+  const Q1=[
     ['1956년 다트머스 워크숍에서 "Artificial Intelligence"라는 이름을 제안한 사람은?',['마빈 민스키','존 매카시','앨런 튜링','허버트 사이먼'],1,'존 매카시가 제안했고 이후 용어로 정착했습니다.'],
     ['튜링 검사는 AI 정의의 4가지 접근 중 어디에 해당하나?',['인간적 사고','합리적 사고','인간적 행동','합리적 행동'],2,'내부 메커니즘은 묻지 않고, 사람과 구별할 수 없게 "행동"하는지를 "인간" 기준으로 봅니다.'],
     ['GPS(General Problem Solver)가 가장 관심을 둔 것은?',['문제를 가장 빠르게 푸는 것','추론 단계의 순서가 인간 피험자와 일치하는지','항상 논리적으로 옳은 결론을 내는 것','기대 효용을 최대화하는 것'],1,'Newell & Simon의 GPS는 인지 모형화 접근으로, 인간의 오류·우회까지 재현하는 것이 목표였습니다.'],
@@ -672,24 +1025,323 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
     ['이 과목의 성적 반영 비율로 옳은 것은?',['중간 40 · 기말 40 · 출석 20','중간 30 · 기말 30 · 보고서/팀프로젝트 30 · 출석 10','중간 25 · 기말 25 · 과제 50','기말 50 · 팀프로젝트 50'],1,'중간 30%, 기말 30%, 보고서 및 팀 프로젝트 30%, 출석 10%.'],
     ['고전적 AI를 배워야 하는 이유의 예로 든 "알파고"의 결합 방식은?',['LLM + 도구 호출','신경망 + 탐색(MCTS)','전문가 시스템 + 규칙','퍼셉트론 + Lisp'],1,'딥러닝 + 고전적 추론의 결합 예시입니다.']
   ];
-  let qs,qi,score,wrong,answered;
+  const deck2=[
+    ['에이전트','에이전트 (agent)','감지기로 환경을 지각하고 작동기로 환경에 동작을 수행하는 모든 것'],
+    ['에이전트','지각 (percept)','특정 순간에 감지기가 받아들이는 입력'],
+    ['에이전트','지각열 (percept sequence)','에이전트가 지금까지 지각한 모든 것의 전체 이력'],
+    ['에이전트','에이전트 함수','가능한 모든 지각열에서 동작으로의 사상 f : P* → A. 행동의 추상적·수학적 서술'],
+    ['에이전트','에이전트 프로그램','아키텍처 위에서 에이전트 함수를 구현하는 코드. 현재 지각을 입력받고 필요한 과거는 내부 상태에 저장'],
+    ['에이전트','에이전트 = ?','아키텍처(감지기·작동기를 갖춘 계산 장치) + 프로그램'],
+    ['에이전트','표 기반 에이전트의 문제','지각 m종류, 길이 t인 지각열은 mᵗ개. 4종류·길이 10이면 1,048,576개로 표가 폭발한다'],
+    ['에이전트','소프트봇 (Softbot)','호스트 장치에서 실행되는 소프트웨어 에이전트. 파일·패킷을 지각하고 화면 출력·파일 쓰기로 행동'],
+    ['합리성','합리성을 정하는 4요소','성과 측도, 사전 지식, 가능한 동작, 현재까지의 지각열'],
+    ['합리성','합리적 에이전트','지각열과 내장 지식을 근거로 성과 측도의 기대치를 최대화할 것으로 예상되는 행동을 고르는 에이전트'],
+    ['합리성','성과 측도 (performance measure)','설계자가 정한, 환경 상태의 열(결과)을 외부에서 평가하는 기준'],
+    ['합리성','합리성 ≠ 전지성','전지한 에이전트는 실제 결과를 미리 안다. 합리적 에이전트는 알 수 있는 정보 안에서 최선을 다한다'],
+    ['합리성','합리성 ≠ 완벽함','합리성은 기대 성과, 완벽함은 실제 성과를 최대화한다'],
+    ['합리성','정보 수집','지각을 바꾸기 위한 행동. 예) 길을 건너기 전 좌우 살피기'],
+    ['합리성','탐험 (exploration)','정보의 장기적 이득이 비용보다 크면 당장 보상이 낮은 행동도 합리적'],
+    ['합리성','자율성 (autonomy)','설계자의 사전 지식에만 의존하지 않고 자신의 경험으로 보완하는 성질'],
+    ['합리성','좋은 성과 측도의 원칙','에이전트의 행동이 아니라 환경에서 실제로 달성되기를 바라는 결과를 잰다'],
+    ['PEAS','PEAS','Performance measure(성과 측도), Environment(환경), Actuators(작동기), Sensors(감지기)'],
+    ['PEAS','작동기 (actuator)','환경에 영향을 주는 수단. 예) 핸들, 브레이크, 로봇 팔, 화면 출력'],
+    ['PEAS','감지기 (sensor)','환경을 관찰하는 수단. 예) 카메라, 라이다, GPS, 키보드 입력'],
+    ['환경','완전 관측 가능','행동 선택에 필요한 상태 정보가 매 시점 관측된다. 예) 체스'],
+    ['환경','결정론적 vs 확률적','상태와 행동이 다음 상태를 하나로 정하면 결정론적, 여러 결과가 확률로 가능하면 확률적'],
+    ['환경','일화적 vs 순차적','행동이 다음 에피소드에 영향을 주지 않으면 일화적(결함 검출), 이후에 영향을 주면 순차적(체스, 택시)'],
+    ['환경','준동적 (semidynamic)','환경은 그대로지만 시간에 따라 점수가 변함. 예) 시계를 쓰는 체스'],
+    ['환경','기지 vs 미지','환경의 법칙(행동 결과)을 에이전트가 아는가. 관측 가능성과는 별개'],
+    ['구조','단순 반사 에이전트','현재 지각만 보고 조건-행동 규칙으로 행동. aₜ = g(pₜ)'],
+    ['구조','모형 기반 반사 에이전트','내부 상태로 보이지 않는 세계를 추적. 전이 모형과 감지기 모형이 필요'],
+    ['구조','전이 모형 (transition model)','세계가 어떻게 변하는가: 내 행동의 영향 + 나와 무관한 변화'],
+    ['구조','감지기 모형 (sensor model)','세계의 상태가 지각에 어떻게 반영되는가. 예) 앞차 브레이크등 → 카메라에 붉은빛'],
+    ['구조','목표 기반 에이전트','목표를 알고, 전이 모형으로 행동 결과를 예측해 목표에 이르는 행동을 고름. 탐색·계획 사용'],
+    ['구조','효용 기반 에이전트','효용 함수 U(s)로 상태의 바람직함을 수치화. 목표 충돌이나 불확실성을 저울질'],
+    ['구조','효용 함수 U(s)','각 상태의 바람직함을 실수로 나타낸 것. 성과 측도의 내재화'],
+    ['구조','학습 에이전트의 4요소','성능 요소, 비평자(critic), 학습 요소, 문제 생성기'],
+    ['구조','비평자 (critic)','고정된 외부 성과 기준으로 에이전트가 얼마나 잘하는지 학습 요소에 피드백'],
+    ['구조','문제 생성기','새롭고 유익한 경험을 얻기 위한 탐험적 행동을 제안'],
+    ['상태','원자적 표현','내부 구조가 없는 이름표 상태. 탐색·게임에서 사용'],
+    ['상태','분해된 표현','변수와 값의 집합으로 된 상태. 변수는 플루언트(fluent). CSP·명제 논리·계획'],
+    ['상태','구조적 표현','객체와 관계의 그래프. 가장 표현력이 크다. 1차 논리·지식 표현']
+  ];
+  const Q2=[
+    ['에이전트의 정의로 가장 알맞은 것은?',['사람처럼 생각하는 프로그램','감지기로 환경을 지각하고 작동기로 동작을 수행하는 모든 것','학습 능력이 있는 로봇','목표를 가진 소프트웨어'],1,'인간, 로봇, 소프트봇, 온도조절기 같은 제어기까지 모두 에이전트입니다.'],
+    ['"지각열(percept sequence)"이란?',['지금 이 순간의 입력','에이전트가 지금까지 지각한 모든 것의 이력','에이전트가 수행한 동작의 목록','센서의 종류'],1,'특정 순간의 입력은 지각(percept)입니다.'],
+    ['에이전트 함수를 바르게 표기한 것은?',['f : A → P*','f : P* → A','f : S × A → S','f : S → ℝ'],1,'가능한 모든 지각열의 집합 P*에서 동작 집합 A로의 사상입니다. S × A → S는 결정론적 전이 함수입니다.'],
+    ['"에이전트 = ? + 프로그램"에서 빈칸은?',['환경','아키텍처','성과 측도','지각열'],1,'아키텍처는 물리적 감지기와 작동기를 갖춘 계산 장치입니다.'],
+    ['지각이 4종류이고 길이가 10인 지각열의 개수는?',['40','10⁴ = 10,000','4¹⁰ = 1,048,576','4 × 10!'],2,'길이 t인 지각열은 mᵗ개. 그래서 표 기반 에이전트는 비현실적입니다.'],
+    ['REFLEX-VACUUM-AGENT가 지각 [B, Clean]에서 고르는 동작은?',['Suck','Right','Left','NoOp'],2,'더럽지 않고 위치가 B이므로 Left.'],
+    ['합리성을 결정하는 네 가지 요소가 아닌 것은?',['성과 측도','사전 지식','가능한 동작','행동의 실제 결과'],3,'네 요소는 성과 측도, 사전 지식, 가능한 동작, 현재까지의 지각열입니다. 실제 결과는 행동 시점에 알 수 없습니다.'],
+    ['성과 측도는 누가 정하는가?',['에이전트 자신','설계자','환경','사용자 무작위'],1,'에이전트가 아니라 설계자가 정하며, 환경 상태의 열을 평가합니다.'],
+    ['성공 80%에 10점, 실패 20%에 0점인 행동의 기대 성과는?',['2점','8점','10점','0.8점'],1,'0.8 × 10 + 0.2 × 0 = 8점.'],
+    ['길을 건너다 추락하는 비행기 문에 맞았다. 이 예가 보여 주는 것은?',['합리성 ≠ 전지성','합리성 ≠ 자율성','합리성 = 완벽함','정보 수집의 필요성'],0,'비합리적이었던 게 아니라 운이 없었던 것. 합리적 에이전트는 미래를 미리 알지 못합니다.'],
+    ['합리성과 완벽함의 차이로 옳은 것은?',['합리성은 실제 성과, 완벽함은 기대 성과를 최대화','합리성은 기대 성과, 완벽함은 실제 성과를 최대화','둘은 같다','완벽함은 사전 지식을 쓰지 않는다'],1,'완벽함은 미래를 알아야 하므로 현실에서 요구할 수 없습니다.'],
+    ['도로를 건너기 전에 좌우를 살피는 행동은 합리적 에이전트의 어떤 요구에 해당하나?',['자율성','정보 수집','탐험','학습'],1,'지각을 바꾸기 위한 행동도 합리적일 수 있습니다.'],
+    ['진공청소기의 성과 측도로 더 좋은 것은?',['8시간 동안 빨아들인 먼지의 양','매 시간 단계마다 깨끗한 칸의 수','Suck 동작 횟수','이동 거리'],1,'행동이 아니라 결과를 재야 합니다. 먼지 양을 재면 먼지를 쏟고 다시 빨아들여 점수를 올릴 수 있습니다.'],
+    ['PEAS의 A는?',['Agent','Action','Actuators','Architecture'],2,'Performance measure, Environment, Actuators(작동기), Sensors(감지기).'],
+    ['자율 택시의 감지기(Sensors)가 아닌 것은?',['카메라','라이다','브레이크','GPS'],2,'브레이크는 작동기(Actuators)입니다.'],
+    ['시계를 쓰는 체스는 어떤 환경인가?',['정적','준동적','동적','일화적'],1,'판은 그대로지만 시간이 흐르며 점수(남은 시간)가 변하므로 준동적입니다.'],
+    ['포커가 백개먼과 달리 "부분 관측"인 이유는?',['주사위를 쓰기 때문','상대 패가 보이지 않기 때문','여러 명이 하기 때문','순차적이기 때문'],1,'백개먼도 주사위(확률적)를 쓰지만 판이 다 보여 완전 관측입니다.'],
+    ['AIMA Figure 2.6에서 "일화적(episodic)"으로 분류된 과제는?',['택시 주행','의료 진단','영상 분석','체스'],2,'영상 분석과 부품 집기 로봇이 일화적입니다.'],
+    ['게임 규칙은 알지만 상대 패는 모르는 상황의 분류는?',['미지 · 완전 관측','기지 · 부분 관측','미지 · 부분 관측','기지 · 완전 관측'],1,'기지/미지(규칙 지식)와 관측 가능성은 서로 별개입니다.'],
+    ['십자말풀이는 AIMA 분류에서 어떤 환경인가?',['부분 관측, 다중','완전 관측, 단일, 결정론적, 순차적, 정적, 이산','완전 관측, 다중, 확률적','부분 관측, 단일, 동적'],1,'Figure 2.6 첫 행입니다.'],
+    ['가장 어려운 환경 조합에 가까운 과제로 강의가 든 예는?',['십자말풀이','영상 분석','택시 주행','백개먼'],2,'부분 관측 · 다중 · 확률적 · 순차적 · 동적 · 연속적 · 미지.'],
+    ['단순 반사 에이전트의 행동 선택을 바르게 나타낸 것은?',['aₜ = g(pₜ)','aₜ = g(p₀,…,pₜ)','a* = argmax U(s)','s\' = T(s, a)'],0,'현재 지각만 보고 조건-행동 규칙으로 고릅니다.'],
+    ['모형 기반 반사 에이전트가 내부 상태를 갱신하는 데 필요한 두 가지 지식은?',['목표와 효용','전이 모형과 감지기 모형','비평자와 학습 요소','성과 측도와 보상'],1,'세계가 어떻게 변하는지(전이)와, 세계 상태가 지각에 어떻게 반영되는지(감지기).'],
+    ['목표 기반 에이전트에서 효용 기반 에이전트로 넘어가는 이유가 아닌 것은?',['"빠르게"와 "안전하게"처럼 목표가 충돌할 때','목표 달성이 불확실할 때','여러 경로 중 더 좋은 것을 고르고 싶을 때','현재 지각만으로 충분할 때'],3,'목표는 달성/미달성 이분법이라 절충과 확률 저울질을 못 합니다.'],
+    ['효용 함수 U(s)에 대한 설명으로 옳은 것은?',['단계별 피드백 신호','각 상태의 바람직함을 실수로 나타낸 것, 성과 측도의 내재화','환경의 물리 법칙','지각열의 저장소'],1,'단계별 피드백은 보상(reward)입니다.'],
+    ['학습 에이전트에서 비평자(critic)의 역할은?',['행동을 선택한다','고정된 외부 성과 기준으로 얼마나 잘하는지 피드백한다','탐험적 행동을 제안한다','성능 요소를 직접 실행한다'],1,'지각 자체는 성공 여부를 알려 주지 않으므로 비평자가 필요합니다. 탐험 제안은 문제 생성기입니다.'],
+    ['[location=A, status=Clean, temp=75°F] 같은 상태 표현은?',['원자적','분해된','구조적','확률적'],1,'변수와 값의 집합입니다. 상태 변수를 플루언트(fluent)라 합니다.'],
+    ['진공청소기 세계(2칸)의 상태 수는?',['2','4','8','16'],2,'위치 2 × 먼지 분포 4 = 8.'],
+    ['행동 A(성공 70%)와 B(성공 90%, 비용 3점) 중 순 기대 성과가 큰 것은? (성공 10점)',['A (7점)','B (6점)','같다','알 수 없다'],0,'A = 7, B = 9 − 3 = 6.'],
+    ['학습 에이전트 아이디어를 처음 제안한 사람은?',['매카시','튜링 (1950)','민스키','힌튼'],1,'튜링은 지능적 기계를 손으로 짜는 대신 학습하는 기계를 만들어 가르치자고 제안했습니다.']
+  ];
+
+  /* ---------- 2장: PEAS 예제 ---------- */
+  const peasEx=[
+    {n:'자율 택시',P:'안전, 빠름, 법규 준수, 편안한 승차감, 수익 극대화, 승객 만족도',E:'도로, 다른 차량, 보행자, 승객, 날씨, 신호등, 경찰',A:'핸들, 가속 페달, 브레이크, 방향 지시등, 경적, 화면·음성',S:'카메라, 라이다·소나, 속도계, GPS, 주행거리계, 엔진 센서, 키보드·터치스크린',note:'열린 과제라 목록이 계속 늘어날 수 있습니다. 성과 측도는 충돌할 수 있어(도착 시간 vs 승차감) 효용으로 비교하거나, 안전·법규를 반드시 지킬 제약으로 둡니다.'},
+    {n:'의료 진단 시스템',P:'환자 건강, 비용 절감',E:'환자, 병원, 직원',A:'질문·검사·진단·치료 표시',S:'증상과 소견의 터치스크린·음성 입력',note:'출력은 질문, 검사, 진단 화면입니다.'},
+    {n:'위성 영상 분석',P:'물체·지형의 정확한 분류',E:'궤도 위성, 다운링크, 날씨',A:'장면 분류 결과 표시',S:'고해상도 디지털 카메라',note:'이 표의 경계는 위성·전송 경로·날씨까지 포함합니다. 저장된 영상만 분석한다면 입력은 영상 파일입니다.'},
+    {n:'부품 집기 로봇',P:'올바른 통에 넣은 부품 비율',E:'부품이 놓인 컨베이어 벨트, 통',A:'관절 팔과 손',S:'카메라, 촉각 센서, 관절 각도 센서',note:'성과 측도가 명확한 예입니다.'},
+    {n:'정제소 제어기',P:'순도, 수율, 안전',E:'정제소, 원료, 작업자',A:'밸브, 펌프, 히터, 교반기, 디스플레이',S:'온도, 압력, 유량, 화학 센서',note:'제어 이론의 제어기가 에이전트인 예입니다.'},
+    {n:'영어 교습 프로그램',P:'학생의 시험 점수',E:'학생들, 시험 기관',A:'연습 문제·피드백·음성 표시',S:'키보드 입력, 음성',note:'환경이 학생인 소프트웨어 에이전트(소프트봇)의 예입니다.'}
+  ];
+  const peasPick=$('#peasPick');
+  peasPick.innerHTML=peasEx.map((e,i)=>`<button data-i="${i}">${e.n}</button>`).join('');
+  function showPeas(i){
+    const e=peasEx[i];
+    peasPick.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===i?'true':'false'));
+    const L={P:'성과 측도',E:'환경',A:'작동기',S:'감지기'};
+    $('#peasOut').innerHTML=['P','E','A','S'].map(k=>`<div class="card"><span class="letter">${k}</span><h3>${L[k]}</h3><p><span class="k">${e[k]}</span></p></div>`).join('');
+    $('#peasNote').textContent=e.note;
+  }
+  peasPick.addEventListener('click',ev=>{const b=ev.target.closest('button');if(b)showPeas(+b.dataset.i)});
+  showPeas(0);
+
+  /* ---------- 2장: Figure 2.6 ---------- */
+  const envRows=[['십자말풀이','완전','단일','결정론적','순차적','정적','이산'],['시계 쓰는 체스','완전','다중','결정론적','순차적','준동적','이산'],['포커','부분','다중','확률적','순차적','정적','이산'],['백개먼','완전','다중','확률적','순차적','정적','이산'],['택시 주행','부분','다중','확률적','순차적','동적','연속'],['의료 진단','부분','단일','확률적','순차적','동적','연속'],['영상 분석','완전','단일','결정론적','일화적','준동적','연속'],['부품 집기 로봇','부분','단일','확률적','일화적','동적','연속'],['정제소 제어기','부분','단일','확률적','순차적','동적','연속'],['영어 교습','부분','다중','확률적','순차적','동적','이산']];
+  $('#envBody').innerHTML=envRows.map(r=>`<tr><td><b>${r[0]}</b></td>${r.slice(1).map(c=>`<td><span class="k">${c}</span></td>`).join('')}</tr>`).join('');
+
+  /* ---------- 2장: 에이전트 구조 ---------- */
+  const agents=[
+    {n:'단순 반사',en:'Simple reflex agent',m:[1,0,0,0,0,2],
+      body:`<p>현재 지각에만 근거해 행동을 고르고 지각 이력은 무시합니다. <b>조건-행동 규칙</b>: if 조건 then 행동. 예) 앞차가 브레이크를 밟으면 나도 브레이크를 밟는다.</p>
+      <div class="formula">상호작용: p₀, a₀, p₁, a₁, … &nbsp;·&nbsp; 단순 반사: aₜ = g(pₜ)</div>
+      <div class="grid2"><div class="card"><h3>장점</h3><p class="muted">빠르고 단순하며 지각 이력을 저장하지 않는다. 규칙과 실행 코드를 위한 메모리는 필요하다.</p></div>
+      <div class="card"><h3>조건</h3><p class="muted">현재 지각만으로 적절한 행동을 고를 수 있어야 한다. 구별해야 할 상황이 같은 지각으로 보이면 기억 등이 필요하다.</p></div></div>`},
+    {n:'모형 기반 반사',en:'Model-based reflex agent',m:[1,1,1,0,0,2],
+      body:`<p>지금 보이지 않는 세계의 측면을 추적하기 위해 <b>내부 상태</b>(기억)를 유지합니다. 예) 이미 청소한 위치를 기억하는 청소기, 사각지대에 들어간 옆 차를 기억하는 택시.</p>
+      <div class="grid2"><div class="card"><h3>전이 모형</h3><p class="muted">세계가 어떻게 변하는가. ① 내 행동의 영향 (핸들을 돌리면 차가 회전) ② 나와 무관한 변화 (비가 오면 도로가 미끄러움)</p></div>
+      <div class="card"><h3>감지기 모형</h3><p class="muted">세계의 상태가 지각에 어떻게 반영되는가. 앞차 브레이크등이 켜지면 카메라에 붉은빛이 보인다.</p></div></div>
+<pre class="code">state  ← UPDATE-STATE(state, most_recent_action, percept,
+                      transition_model, sensor_model)
+rule   ← RULE-MATCH(state, rules)
+action ← rule.ACTION</pre>
+      <p class="muted">내부 상태는 가능한 상태들의 집합이나 확률 분포일 수도 있습니다.</p>`},
+    {n:'목표 기반',en:'Goal-based agent',m:[1,1,1,1,0,2],
+      body:`<p>현재 상태를 아는 것만으로는 부족하고 <b>무엇을 원하는지(목표)</b>도 알아야 합니다. 예) 갈림길에서 택시는 승객의 목적지를 알아야 방향을 정한다.</p>
+      <ul class="clean"><li>전이 모형으로 "행동 A를 하면 어떻게 될까"를 예측하고 목표에 도달하는 행동을 고른다.</li><li>여러 단계가 필요하면 <b>탐색과 계획</b>을 쓴다. 잠시 목표에서 멀어지는 행동이 필요할 수도 있다.</li></ul>
+      <div class="grid2"><div class="card"><h3>장점</h3><ul class="clean muted"><li>유연하다: 목적지가 바뀌면 목표만 바꾸면 된다</li><li>지식이 명시적: 제동 거리 모형 하나를 고치면 모든 결정에 반영</li><li>규칙에 없는 새 상황에 대응</li></ul></div>
+      <div class="card"><h3>한계</h3><ul class="clean muted"><li>느리다: 행동마다 결과를 예측·비교</li><li>목표는 달성/미달성 이분법: 어느 경로가 더 좋은지 말할 수 없다</li><li>목표 충돌·불확실성을 저울질 못 한다 → 효용 기반</li></ul></div></div>`},
+    {n:'효용 기반',en:'Utility-based agent',m:[1,1,1,1,1,2],
+      body:`<p>여러 경로 중 어느 것이 "더 좋은가"를 판단합니다. 예) 화성 로버는 배터리가 위험할 정도로 낮지 않은 상태를 선호하고, 택시는 빠르지만 위험한 길과 느리지만 안전한 길을 저울질한다.</p>
+      <p><b>효용 함수 U(s)</b>: 각 상태의 바람직함을 실수로 나타낸 것. 성과 측도를 에이전트 내부로 옮겨 놓은 것(internalization)이며, 외부 성과 측도와 일치할수록 좋다.</p>
+      <div class="formula">a* = argmax<sub>a</sub> Σ<sub>s'</sub> P(s' | s, a) · U(s')</div>
+      <div class="grid2"><div class="card"><h3>효용이 목표보다 나은 두 상황</h3><p class="muted">① 목표가 상충할 때 (속도 vs 안전을 하나의 수치로 비교) ② 목표 달성이 불확실할 때 (성공 확률과 중요도를 함께 저울질)</p></div>
+      <div class="card"><h3>효용 vs 보상</h3><p class="muted">효용 U는 결과에 대한 선호의 수치화, 보상 r은 단계별 피드백. 기대 누적 할인 보상은 MDP·강화학습의 가치의 한 형태일 뿐 효용의 일반 정의는 아니다.</p></div></div>`},
+    {n:'학습',en:'Learning agent',m:[1,2,2,2,2,1],
+      body:`<p>튜링(1950)의 제안: 지능적 기계를 손으로 짜는 대신 학습하는 기계를 만들고 가르치자. 학습 요소는 성능 요소의 어느 부분(모형, 규칙, 효용 함수)이든 바꿀 수 있어서 반사·목표·효용 기반 어느 구조에도 적용됩니다.</p>
+      <div class="grid2"><div class="card"><h3>성능 요소</h3><p class="muted">지각을 받아 행동을 선택. 지금까지 다룬 에이전트 프로그램 전체</p></div>
+      <div class="card"><h3>비평자 (critic)</h3><p class="muted">고정된 외부 성과 기준으로 얼마나 잘하는지 피드백. 지각 자체는 성공 여부를 말해 주지 않으므로 필요</p></div>
+      <div class="card"><h3>학습 요소</h3><p class="muted">비평자의 피드백으로 성능 요소의 행동 선택 방식을 개선</p></div>
+      <div class="card"><h3>문제 생성기</h3><p class="muted">새롭고 유익한 경험을 위한 탐험적 행동 제안. 당장 최적이 아니어도 장기적으로 더 나은 행동 발견</p></div></div>
+      <p class="muted">외부 성과 기준은 임의로 바꾸지 않습니다. 보상 해킹은 별도 문제입니다.</p>`}
+  ];
+  const mark=v=>v===1?'<span class="yes">●</span>':v===2?'<span class="opt-mark">◐</span>':'<span class="no-mark">–</span>';
+  const agentRows=$('#agentRows');
+  agentRows.innerHTML=agents.map((a,i)=>`<tr data-i="${i}" tabindex="0"><td><b>${a.n}</b></td>${a.m.map(v=>`<td>${mark(v)}</td>`).join('')}</tr>`).join('');
+  function showAgent(i){
+    const a=agents[i];
+    agentRows.querySelectorAll('tr').forEach(r=>r.setAttribute('aria-selected',+r.dataset.i===i?'true':'false'));
+    $('#agentDetail').innerHTML=`<h3>${a.n} 에이전트 <span class="muted" style="font-weight:400">${a.en}</span></h3>${a.body}`;
+  }
+  agentRows.addEventListener('click',ev=>{const r=ev.target.closest('tr');if(r)showAgent(+r.dataset.i)});
+  agentRows.addEventListener('keydown',ev=>{const r=ev.target.closest('tr');if(r&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();showAgent(+r.dataset.i)}});
+  showAgent(0);
+
+  /* ---------- 2장: 기대 성과 계산기 ---------- */
+  const pA=$('#pA'),pB=$('#pB'),cB=$('#cB');
+  function calcEV(){
+    const a=pA.value/100*10, b=pB.value/100*10-cB.value;
+    $('#pAo').textContent=pA.value+'%';$('#pBo').textContent=pB.value+'%';$('#cBo').textContent=cB.value+'점';
+    const w=v=>Math.max(0,v)/10*100;
+    const fmt=v=>(Math.round(v*10)/10).toString();
+    $('#evBars').innerHTML=`<div class="bar"><span>행동 A</span><div class="track"><div class="fill ${a>b?'win':''}" style="width:${w(a)}%"></div></div><span class="v">${fmt(a)}점</span></div>
+      <div class="bar"><span>행동 B</span><div class="track"><div class="fill ${b>a?'win':''}" style="width:${w(b)}%"></div></div><span class="v">${fmt(b)}점</span></div>`;
+    $('#evVerdict').textContent=a===b?'두 행동의 기대 성과가 같습니다.':`합리적 선택: 행동 ${a>b?'A':'B'} (A = ${pA.value/100} × 10 = ${fmt(a)}점, B = ${pB.value/100} × 10${+cB.value?` − ${cB.value}`:''} = ${fmt(b)}점)`;
+  }
+  [pA,pB,cB].forEach(el=>el.addEventListener('input',calcEV));
+  $('#evReset').addEventListener('click',()=>{pA.value=70;pB.value=90;cB.value=0;calcEV()});
+  $('#evCost').addEventListener('click',()=>{pA.value=70;pB.value=90;cB.value=3;calcEV()});
+  calcEV();
+
+  /* ---------- 2장: 진공청소기 시뮬레이터 ---------- */
+  const STEPS=6;
+  let sim;
+  function newAgent(kind){return {kind,loc:'A',dirt:{A:true,B:true},known:{A:null,B:null},score:0,last:null}}
+  function simReset(){sim={t:0,agents:[newAgent('reflex'),newAgent('memory')],log:[]};renderSim()}
+  function decide(g){
+    const here=g.dirt[g.loc];
+    g.known[g.loc]=!here;
+    if(here)return 'Suck';
+    if(g.kind==='memory'&&g.known.A===true&&g.known.B===true)return 'NoOp';
+    return g.loc==='A'?'Right':'Left';
+  }
+  function act(g,a){
+    let pts=0;
+    if(a==='Suck'){g.dirt[g.loc]=false;g.known[g.loc]=true}
+    if(a==='Right'){g.loc='B';pts-=1}
+    if(a==='Left'){g.loc='A';pts-=1}
+    pts+=(!g.dirt.A)+(!g.dirt.B);
+    g.score+=pts;g.last=a;return pts;
+  }
+  function simStep(){
+    if(sim.t>=STEPS)return;
+    const row=sim.agents.map(g=>{const a=decide(g);return [a,act(g,a)]});
+    sim.t++;
+    if(sim.t===4&&$('#simRedirt').checked)sim.agents.forEach(g=>g.dirt.A=true);
+    sim.log.push(row);renderSim();
+  }
+  function renderSim(){
+    const names={reflex:'단순 반사',memory:'기억 사용'};
+    const kn=v=>v===null?'?':v?'깨끗':'더러움';
+    $('#simAgents').innerHTML=sim.agents.map(g=>`<div class="agentrow"><div class="hd"><h3>${names[g.kind]}</h3><span class="big">${g.score}점</span></div>
+      <div class="rooms">${['A','B'].map(r=>`<div class="room ${g.dirt[r]?'dirty':''}"><span class="nm">방 ${r}</span><span class="st">${g.dirt[r]?'Dirty':'Clean'}</span>${g.loc===r?`<span class="bot">● 청소기${g.last?` · ${g.last}`:''}</span>`:''}</div>`).join('')}</div>
+      ${g.kind==='memory'?`<span class="mem">기억: A ${kn(g.known.A)}, B ${kn(g.known.B)}</span>`:'<span class="mem">기억 없음 (현재 지각만 사용)</span>'}</div>`).join('');
+    $('#simLog').innerHTML=sim.log.length?sim.log.map((r,i)=>`<tr><td>${i+1}</td><td>${r[0][0]}</td><td>${r[0][1]>0?'+':''}${r[0][1]}</td><td>${r[1][0]}</td><td>${r[1][1]>0?'+':''}${r[1][1]}</td></tr>`).join('')+(sim.t>=STEPS?`<tr><td><b>합계</b></td><td></td><td><b>${sim.agents[0].score}</b></td><td></td><td><b>${sim.agents[1].score}</b></td></tr>`:''):`<tr><td colspan="5" class="muted">"한 단계 진행"을 눌러 시작하세요.</td></tr>`;
+    $('#simStep').disabled=sim.t>=STEPS;$('#simAll').disabled=sim.t>=STEPS;
+  }
+  $('#simStep').addEventListener('click',simStep);
+  $('#simAll').addEventListener('click',()=>{while(sim.t<STEPS)simStep()});
+  $('#simReset').addEventListener('click',simReset);
+  $('#simRedirt').addEventListener('change',simReset);
+  simReset();
+
+  /* ---------- 2장: PEAS 직접 써 보기 ---------- */
+  const drills=[
+    {n:'스팸 필터',ans:{P:'스팸 차단률, 정상 메일 오차단(오탐)의 최소화',E:'사용자 메일함, 메일 서버, 보내는 사람(스패머 포함)',A:'메일을 스팸함으로 이동, 표시(라벨), 경고 알림',S:'들어오는 메일의 헤더·본문·첨부, 사용자의 "스팸 아님" 신고'}},
+    {n:'챗봇',ans:{P:'답변의 정확성·유용성, 응답 속도, 사용자 만족, 안전성',E:'사용자, 대화 기록, 연결된 문서·도구',A:'텍스트(또는 음성) 응답 출력, 도구 호출',S:'사용자 입력 텍스트, 이전 대화 맥락, 도구 결과'}},
+    {n:'배달 로봇 (실내)',ans:{P:'배송 완료율, 배송 시간, 충돌 없음, 배터리 사용',E:'건물 복도, 엘리베이터, 문, 사람들, 수령인',A:'바퀴 모터, 조향, 물품함 잠금, 엘리베이터 호출 신호, 스피커',S:'카메라, 라이다, 초음파 센서, 휠 인코더, 주문 정보 입력'}}
+  ];
+  let drillI=0;
+  const drillPick=$('#drillPick');
+  drillPick.innerHTML=drills.map((d,i)=>`<button data-i="${i}">${d.n}</button>`).join('');
+  function showDrill(i){
+    drillI=i;
+    drillPick.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===i?'true':'false'));
+    const L={P:'P · 성과 측도',E:'E · 환경',A:'A · 작동기',S:'S · 감지기'};
+    const saved=store.get('ai2.drill.'+i,{});
+    $('#drillBox').innerHTML=['P','E','A','S'].map(k=>`<label class="card" for="drill-${k}"><b>${L[k]}</b><textarea id="drill-${k}" data-k="${k}" placeholder="직접 써 보세요">${esc(saved[k]||'')}</textarea></label>`).join('');
+    $('#drillAns').open=false;
+    $('#drillAnsBody').innerHTML=`<div class="peas">${['P','E','A','S'].map(k=>`<div class="card"><span class="letter">${k}</span><p class="muted">${drills[i].ans[k]}</p></div>`).join('')}</div>`;
+  }
+  drillPick.addEventListener('click',ev=>{const b=ev.target.closest('button');if(b)showDrill(+b.dataset.i)});
+  $('#drillBox').addEventListener('input',ev=>{
+    const t=ev.target;if(!t.dataset.k)return;
+    const s=store.get('ai2.drill.'+drillI,{});s[t.dataset.k]=t.value;store.set('ai2.drill.'+drillI,s);
+  });
+  showDrill(0);
+  /* ---------- 장 · 탭 ---------- */
+  const CH={
+    1:{eyebrow:'인공지능입문 · Week 01 · AIMA 1장',title:'오리엔테이션: 인공지능이란 무엇인가',meta:'1장 강의자료 내용을 요약 노트, 개념도, 타임라인, 플래시카드, 퀴즈로 정리했습니다.',footer:'다음: 2장 지능형 에이전트 (에이전트와 환경, PEAS 모델, 합리성). 위의 "2장" 버튼을 누르세요.',home:'summary',
+      deck:deck1.map((c,i)=>({id:'1-'+i,cat:c[0],term:c[1],def:c[2]})),quiz:Q1},
+    2:{eyebrow:'인공지능입문 · Week 02 · AIMA 2장',title:'지능형 에이전트 (Intelligent Agents)',meta:'2장 강의자료 내용을 요약 노트, PEAS·환경 분류, 에이전트 구조, 실습, 플래시카드, 퀴즈로 정리했습니다.',footer:'다음 주: 탐색을 통한 문제 해결 (3장). 목표 기반 에이전트가 계획을 어떻게 찾는가. 연습문제: aimacode.github.io/aima-exercises (Chapter 2)',home:'c2-summary',
+      deck:deck2.map((c,i)=>({id:'2-'+i,cat:c[0],term:c[1],def:c[2]})),quiz:Q2}
+  };
+  const tabs=[...document.querySelectorAll('nav.tabs button')];
+  const chBtns=[...document.querySelectorAll('.chapters button')];
+  let ch=1;
+  function showTab(id){
+    const btn=tabs.find(b=>b.dataset.tab===id&&(b.dataset.ch==='all'||+b.dataset.ch===ch));
+    if(!btn)id=CH[ch].home;
+    tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===id?'true':'false'));
+    document.querySelectorAll('section.panel').forEach(p=>p.hidden=p.id!==id);
+    $('#blankBar').hidden=id==='cards'||id==='quiz';
+    const sel=tabs.find(b=>b.dataset.tab===id&&!b.hidden),nav=sel&&sel.parentElement;
+    if(nav)nav.scrollLeft=Math.max(0,sel.offsetLeft-nav.offsetLeft-16);
+    store.set('ai.tab.'+ch,id);
+  }
+  function setChapter(n,tab){
+    ch=CH[n]?n:1;const c=CH[ch];
+    chBtns.forEach(b=>b.setAttribute('aria-pressed',+b.dataset.ch===ch?'true':'false'));
+    tabs.forEach(b=>b.hidden=!(b.dataset.ch==='all'||+b.dataset.ch===ch));
+    $('#chEyebrow').textContent=c.eyebrow;$('#chTitle').textContent=c.title;$('#chMeta').textContent=c.meta;$('#chFooter').textContent=c.footer;
+    store.set('ai.ch',ch);
+    order=c.deck.map(d=>d.id);pos=0;renderCard();
+    startQuiz(c.quiz);
+    showTab(tab||store.get('ai.tab.'+ch,c.home));
+  }
+  tabs.forEach(b=>b.addEventListener('click',()=>{showTab(b.dataset.tab);window.scrollTo({top:0})}));
+  chBtns.forEach(b=>b.addEventListener('click',()=>{setChapter(+b.dataset.ch);window.scrollTo({top:0})}));
+
+  /* ---------- 플래시카드 ---------- */
+  const allCards={};Object.values(CH).forEach(c=>c.deck.forEach(d=>allCards[d.id]=d));
+  let known=new Set(store.get('ai.known',[]));
+  let order=[], pos=0;
+  const flash=$('#flash'), hideKnown=$('#hideKnown');
+  const visible=()=>order.filter(id=>!(hideKnown.checked&&known.has(id)));
+  function renderCard(){
+    const v=visible();
+    flash.classList.remove('flipped');
+    if(!v.length){$('#fcCat').textContent='';$('#fcTerm').textContent='모든 카드를 외웠어요!';$('#fcDef').textContent='"외움 표시 초기화"로 다시 시작할 수 있어요.';$('#fcCount').textContent='0 / 0';$('#knownBtn').disabled=true;renderProgress();return}
+    if(pos>=v.length)pos=v.length-1; if(pos<0)pos=0;
+    const c=allCards[v[pos]];
+    $('#fcCat').textContent=c.cat+(known.has(c.id)?' · 외움':'');
+    $('#fcTerm').textContent=c.term;
+    $('#fcDef').textContent=c.def;
+    $('#fcCount').textContent=`${pos+1} / ${v.length}`;
+    const kb=$('#knownBtn');kb.disabled=false;kb.textContent=known.has(c.id)?'외움 취소':'외웠어요';
+    renderProgress();
+  }
+  flash.addEventListener('click',()=>flash.classList.toggle('flipped'));
+  $('#prevBtn').addEventListener('click',()=>{pos--;if(pos<0)pos=Math.max(visible().length-1,0);renderCard()});
+  $('#nextBtn').addEventListener('click',()=>{pos++;if(pos>=visible().length)pos=0;renderCard()});
+  $('#shuffleBtn').addEventListener('click',()=>{order=shuffle(order);pos=0;renderCard()});
+  $('#resetKnown').addEventListener('click',()=>{CH[ch].deck.forEach(d=>known.delete(d.id));store.set('ai.known',[...known]);renderCard()});
+  hideKnown.addEventListener('change',()=>{pos=0;renderCard()});
+  $('#knownBtn').addEventListener('click',()=>{
+    const v=visible();const id=v[pos];if(id==null)return;
+    known.has(id)?known.delete(id):known.add(id);
+    store.set('ai.known',[...known]);
+    if(hideKnown.checked&&known.has(id)){renderCard()}else{pos++;if(pos>=visible().length)pos=0;renderCard()}
+  });
+  document.addEventListener('keydown',e=>{
+    if($('#cards').hidden||e.target.matches('input,textarea'))return;
+    if(e.key==='ArrowRight'){$('#nextBtn').click()}
+    else if(e.key==='ArrowLeft'){$('#prevBtn').click()}
+    else if(e.key===' '&&e.target!==flash){e.preventDefault();flash.classList.toggle('flipped')}
+  });
+
+  /* ---------- 퀴즈 ---------- */
+  let qs,qi,score,wrong,answered,full;
   function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-  function startQuiz(list){qs=shuffle(list);qi=0;score=0;wrong=[];renderQ()}
+  function startQuiz(list){full=list===CH[ch].quiz;qs=shuffle(list);qi=0;score=0;wrong=[];renderQ()}
   function renderQ(){
     const box=$('#quizBox');
     if(qi>=qs.length){
       const pct=Math.round(score/qs.length*100);
-      const best=store.get('ai1.best',null);
-      if(qs.length===Q.length&&(best==null||pct>best))store.set('ai1.best',pct);
-      box.innerHTML=`<div class="qcard result"><span class="eyebrow">결과</span><div class="score">${score} / ${qs.length}</div><p class="muted">${pct>=90?'완벽에 가까워요. 다음 주 2장으로 넘어가도 좋습니다.':pct>=70?'잘했어요. 틀린 문제만 다시 풀어 보세요.':'요약 노트와 플래시카드로 한 번 더 복습해 보세요.'}</p>
+      const best=store.get('ai.best.'+ch,null);
+      if(full&&(best==null||pct>best))store.set('ai.best.'+ch,pct);
+      box.innerHTML=`<div class="qcard result"><span class="eyebrow">${ch}장 결과</span><div class="score">${score} / ${qs.length}</div><p class="muted">${pct>=90?'완벽에 가까워요. 다음 장으로 넘어가도 좋습니다.':pct>=70?'잘했어요. 틀린 문제만 다시 풀어 보세요.':'요약 노트와 플래시카드로 한 번 더 복습해 보세요.'}</p>
         <div class="row">${wrong.length?'<button class="btn primary" id="retryWrong">틀린 문제만 다시</button>':''}<button class="btn" id="retryAll">전체 다시 풀기</button></div>
         ${wrong.length?`<div class="review"><h3>틀린 문제</h3>${wrong.map(q=>`<div class="card"><b>${esc(q[0])}</b><span>정답: ${esc(q[1][q[2]])}</span><span class="muted">${esc(q[3])}</span></div>`).join('')}</div>`:''}</div>`;
-      const rw=$('#retryWrong');if(rw)rw.onclick=()=>startQuiz(wrong);
-      $('#retryAll').onclick=()=>startQuiz(Q);
+      const rw=$('#retryWrong');if(rw){const w=wrong;rw.onclick=()=>startQuiz(w)}
+      $('#retryAll').onclick=()=>startQuiz(CH[ch].quiz);
       renderProgress();return;
     }
     const q=qs[qi];answered=false;
-    box.innerHTML=`<div class="qcard"><div class="qhead"><span class="counter">문제 ${qi+1} / ${qs.length}</span><span class="counter">점수 ${score}</span></div>
+    box.innerHTML=`<div class="qcard"><div class="qhead"><span class="counter">${ch}장 · 문제 ${qi+1} / ${qs.length}</span><span class="counter">점수 ${score}</span></div>
       <div class="qbar"><i style="width:${qi/qs.length*100}%"></i></div>
       <div class="qtext">${esc(q[0])}</div>
       <div class="opts">${q[1].map((o,i)=>`<button class="opt" data-i="${i}"><span class="l">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
@@ -706,11 +1358,17 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
   }
 
   function renderProgress(){
-    const best=store.get('ai1.best',null);
-    $('#progress').innerHTML=`<span class="chip">외운 카드 <b>${known.size}</b> / ${deck.length}</span><span class="chip">퀴즈 최고 점수 <b>${best==null?'—':best+'%'}</b></span><span class="chip">퀴즈 <b>${Q.length}</b>문항</span>`;
+    const c=CH[ch];
+    const best=store.get('ai.best.'+ch,null);
+    const k=c.deck.filter(d=>known.has(d.id)).length;
+    $('#progress').innerHTML=`<span class="chip">${ch}장 외운 카드 <b>${k}</b> / ${c.deck.length}</span><span class="chip">퀴즈 최고 점수 <b>${best==null?'—':best+'%'}</b></span><span class="chip">퀴즈 <b>${c.quiz.length}</b>문항</span>`;
   }
-  renderCard();
-  startQuiz(Q);
+
+  const h=(location.hash||'').slice(1);
+  if(h==='ch2'||h.startsWith('c2-'))setChapter(2,h.startsWith('c2-')?h:null);
+  else if(h==='ch1')setChapter(1);
+  else if(document.getElementById(h)&&h!=='cards'&&h!=='quiz')setChapter(1,h);
+  else setChapter(store.get('ai.ch',1));
 })();
 </script>
 </body>

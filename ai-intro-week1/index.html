@@ -289,7 +289,29 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
         <div class="card"><span class="num">이유 1</span><h3>AI의 기초 사고방식 훈련</h3><p class="muted">탐색·추론·제약 문제는 "문제를 공식화하고 해결하는 방법"의 기본 틀. 딥러닝도 결국 <span class="k">탐색 공간을 효율적으로 탐색하는 학습 방법</span>으로 볼 수 있다.</p></div>
         <div class="card"><span class="num">이유 2</span><h3>"블랙박스" 딥러닝 보완</h3><p class="muted">고전적 AI는 <span class="k">설명 가능성</span>, 명확한 규칙, 증명 가능성을 제공. 예) LLM + 도구 호출/계획 수립, 신경망 + 탐색(알파고의 <span class="k">MCTS</span>).</p></div>
         <div class="card"><span class="num">이유 3</span><h3>학부생의 인지 발달에 적합</h3><p class="muted">퍼즐, 게임, Wumpus World 같은 작은 문제로 AI 사고방식을 직관적으로 익힌다. 바로 딥러닝을 배우면 "코드 따라 치기"로 끝날 위험.</p></div>
-        <div class="card"><span class="num">이유 4</span><h3>최신 AI를 이해하는 공통 기초</h3><p class="muted"><b>Agentic AI</b>: 목표 → 계획 → 도구 사용 → 피드백<br><b>Physical AI</b>: 인식 → 판단 → 계획 → 실제 행동</p></div>
+        <div class="card"><span class="num">이유 4</span><h3>최신 AI를 이해하는 공통 기초</h3><p class="muted"><b>Agentic AI</b>: 목표 → 계획 → 도구 사용 → 피드백<br><b>Physical AI</b>: 인식 → 판단 → 계획 → 실제 행동</p><p class="muted" style="font-size:13.5px">두 흐름이 왜 다른지는 아래 비교 표를 보세요.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">보충 설명</span>
+      <h2>Agentic AI vs Physical AI: 왜 시작 단계가 다를까</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Agentic AI</th><th>Physical AI</th></tr></thead>
+          <tbody>
+            <tr><td><b>슬라이드의 흐름</b></td><td><span class="k">목표</span> → 계획 → 도구 사용 → 피드백</td><td><span class="k">인식</span> → 판단 → 계획 → 실제 행동</td></tr>
+            <tr><td><b>받는 입력</b></td><td>텍스트, 파일, API 결과처럼 <span class="k">이미 정리된 데이터</span></td><td>카메라 픽셀, 센서 신호 같은 <span class="k">날것의 데이터</span></td></tr>
+            <tr><td><b>인식의 난이도</b></td><td>거의 공짜. "이게 뭔지"가 이미 적혀 있다</td><td>그 자체가 큰 연구 분야. 픽셀 덩어리에서 "저건 보행자다"를 알아내야 한다 (<span class="k">컴퓨터 비전</span>)</td></tr>
+            <tr><td><b>출발점</b></td><td>사용자가 주는 명확한 목표. 예) "메일 보내 줘"</td><td>주변 상황 파악. 명시적 지시 없이도 상황을 알아야 뭘 할지 정할 수 있다</td></tr>
+            <tr><td><b>행동</b></td><td>도구 호출, 메시지 전송 같은 소프트웨어 동작</td><td>바퀴, 로봇 팔 같은 실제 물리 동작</td></tr>
+            <tr><td><b>병목 단계</b></td><td>목표 해석과 계획</td><td>인식</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card" style="background:var(--accent-soft);border-color:transparent">
+        <h3>결론</h3>
+        <p>둘 다 2장의 에이전트 구조 <b>지각 → 판단 → 행동</b>을 똑같이 따릅니다. 슬라이드는 각자 <span class="k">병목이 되는 단계</span>를 맨 앞에 내세운 것일 뿐입니다.</p>
       </div>
     </div>
 

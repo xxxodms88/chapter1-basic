@@ -971,6 +971,61 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
       <div class="formula">a*<sub>0:T</sub> = argmin Σ<sub>t=0</sub><sup>T−1</sup> c(s<sub>t</sub>, a<sub>t</sub>) &nbsp; s.t. s<sub>T</sub> ∈ S<sub>goal</sub></div>
       <p class="muted">목표 상태에 도달하는 동작열 중 비용 합이 가장 작은 것이 <b>최적해</b>. 2장의 목표 기반 에이전트는 "목표 달성 여부"만 봤다면, 3장은 "가장 싸게 달성하기"를 묻습니다. 비용이 모두 같으면 "가장 적은 단계로"와 같습니다.</p>
       <p class="muted"><b>왜 목표가 먼저인가:</b> Arad에서 할 수 있는 일(관광, 언어 공부, 야경)은 무수히 많습니다. "내일 Bucharest 공항에서 비행기를 타야 한다"는 목표가 생기면 Bucharest에 이르지 못하는 동작은 후보에서 빠집니다. 목표는 고려할 동작의 범위를 좁혀 의사결정을 조직화하는 장치입니다.</p>
+      <p class="note-link">✎ 내 질문 노트: 이 부분을 풀어서 아래에 정리</p>
+    </div>
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>"목표 기반 에이전트의 특수한 경우"를 풀어 보면</h2>
+      <p class="muted" style="font-size:14px">위 슬라이드 내용을 쉽게 풀어 쓴 메모예요. 강의안 내용과 구분해서 보세요.</p>
+
+      <h3>1. 무엇이 "특수"한가: 2장 목표 기반 에이전트와 비교</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>목표 기반 에이전트 (2장)</th><th>문제 해결 에이전트 (3장)</th></tr></thead>
+          <tbody>
+            <tr><td><b>언제 결정하나</b></td><td>매 순간 지각을 보고 그때그때 다음 행동을 고른다</td><td>움직이기 전에 <span class="k">동작열 전체를 한 번에</span> 계산한다</td></tr>
+            <tr><td><b>실행 중 지각</b></td><td>계속 본다 (폐루프)</td><td>안 봐도 된다 (<span class="k">개루프</span>)</td></tr>
+            <tr><td><b>상태 표현</b></td><td>제한 없음</td><td><span class="k">원자적</span>: In(Arad) 같은 이름표</td></tr>
+            <tr><td><b>필요한 환경</b></td><td>어떤 환경이든</td><td>기지 · 완전 관측 · 결정론적 (결과가 계획대로 나와야 하므로)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">즉 "목표를 갖고 행동한다"는 점은 같고, <b>계획을 미리 다 세운 뒤 그대로 실행한다</b>는 점이 특수합니다. 환경이 예측대로 움직여야만 이 방식이 통하고, 그렇지 않은 경우는 4장에서 다뤄요.</p>
+
+      <h3>2. "원자적 상태"란</h3>
+      <div class="card">
+        <p>상태를 <b>안을 들여다보지 않는 이름표</b>로만 다룬다는 뜻이에요. 검색 알고리즘은 "In(Arad)"가 도시라는 것도, 좌표가 어디인지도 모르고, 오직 "이 상태에서 이 동작을 하면 저 상태가 된다"만 압니다.</p>
+        <p class="muted">그래서 같은 알고리즘을 미로·지도·퍼즐에 그대로 쓸 수 있어요. 반대로 상태 안의 변수를 들여다보는 방식(분해된 표현)은 5장 CSP, 7장 논리에서 나와요.</p>
+      </div>
+
+      <h3>3. 네 단계를 여행 계획으로</h3>
+      <div class="grid2">
+        <div class="card"><span class="num">1 · 목표 형식화</span><p>"내일 Bucharest 공항에 가야 해" → 가야 할 곳을 정한다</p></div>
+        <div class="card"><span class="num">2 · 문제 형식화</span><p>지도에서 도시와 도로, 거리만 남기고 나머지(날씨, 라디오)는 지운다</p></div>
+        <div class="card"><span class="num">3 · 검색</span><p>지도를 보며 머릿속으로 경로를 찾는다. 아직 출발 안 함</p></div>
+        <div class="card"><span class="num">4 · 실행</span><p>찾은 경로대로 운전한다. 도로가 지도와 같으니 중간에 다시 계산할 필요가 없다</p></div>
+      </div>
+
+      <h3>4. 수식 한 조각씩 읽기</h3>
+      <div class="formula">a*<sub>0:T</sub> = argmin Σ<sub>t=0</sub><sup>T−1</sup> c(s<sub>t</sub>, a<sub>t</sub>) &nbsp; s.t. s<sub>T</sub> ∈ S<sub>goal</sub></div>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr><td><b>a*<sub>0:T</sub></b></td><td>우리가 찾는 답: 0번째부터 마지막까지의 <b>최적 동작열</b></td></tr>
+            <tr><td><b>c(s<sub>t</sub>, a<sub>t</sub>)</b></td><td>t번째 단계에서 상태 s<sub>t</sub>에서 동작 a<sub>t</sub>를 할 때 드는 비용 (예: 도로 거리)</td></tr>
+            <tr><td><b>Σ …</b></td><td>모든 단계 비용을 더한 것 = <span class="k">경로 비용</span></td></tr>
+            <tr><td><b>argmin</b></td><td>그 합을 <b>가장 작게 만드는</b> 동작열을 고른다</td></tr>
+            <tr><td><b>s.t. s<sub>T</sub> ∈ S<sub>goal</sub></b></td><td>조건: 마지막 상태가 목표 상태여야 한다 (목표에 도착하지 않는 동작열은 후보가 아님)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">예) Arad → Bucharest 후보 중 Sibiu–Fagaras 경로는 140 + 99 + 211 = 450, Sibiu–Rimnicu Vilcea–Pitesti 경로는 140 + 80 + 97 + 101 = 418. 둘 다 목표에 도착하지만 합이 더 작은 <b>418 경로가 a*</b>입니다.</p>
+
+      <div class="card">
+        <h3>한 줄 정리</h3>
+        <p>문제 해결 에이전트 = 목표 기반 에이전트 중에서, <b>세상을 이름표(원자적 상태)로 보고, 목표까지 가장 싼 동작열을 미리 검색으로 찾은 뒤, 눈 감고 그대로 실행하는</b> 에이전트.</p>
+      </div>
     </div>
 
     <div class="block">

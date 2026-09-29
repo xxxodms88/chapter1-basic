@@ -392,9 +392,45 @@ footer{margin-top:48px;font-size:13px;color:var(--muted);border-top:1px solid va
       <div class="grid3">
         <div class="card"><span class="num">뉴런</span><h3><span class="k">약 1,000억 개</span></h3><p class="muted">시냅스는 약 <span class="k">100조 개</span></p></div>
         <div class="card"><span class="num">신생아 뇌</span><h3><span class="k">약 400g</span></h3><p class="muted">성인의 약 30%지만 뉴런 개수는 성인과 같다</p></div>
-        <div class="card"><span class="num">학습</span><h3>연결이 바뀐다</h3><p class="muted">뉴런은 늘지 않고 재생도 안 되지만 <span class="k">시냅스(연결)</span>가 바뀌어 학습이 가능</p></div>
+        <div class="card"><span class="num">학습</span><h3>연결이 바뀐다</h3><p class="muted">뉴런은 늘지 않고 재생도 안 되지만 <span class="k">시냅스(연결)</span>가 바뀌어 학습이 가능</p><p class="note-link">✎ 내 질문 노트: 아래에 자세히 정리</p></div>
       </div>
       <p class="muted">ANN(Artificial Neural Network)은 뉴런의 구조를 흉내 내고 "기능"을 부여한 것입니다. 뉴런의 작동 원리는 아직 자세히 알기 어렵고, 규명된 것은 주로 구조입니다.</p>
+    </div>
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>뉴런은 안 늘어나는데 어떻게 학습할까</h2>
+      <p class="muted" style="font-size:14px">"연결이 바뀐다" 카드를 보고 따로 궁금해서 정리한 내용이에요. 강의안 내용과 구분해서 보세요.</p>
+      <div class="grid2">
+        <div class="card"><h3>뉴런 = 처리 단위</h3><p class="muted">신호를 받아서 일정 수준을 넘으면 다음으로 전달하는 세포. 개수는 거의 고정이다.</p></div>
+        <div class="card"><h3>시냅스 = 뉴런 사이의 연결 지점</h3><p class="muted">한 뉴런이 다른 뉴런에 신호를 넘기는 곳. 연결마다 <span class="k">강도</span>가 다르고, 이 강도는 바뀔 수 있다.</p></div>
+      </div>
+      <div class="card">
+        <h3>학습 = 시냅스가 바뀌는 것 (시냅스 가소성)</h3>
+        <ul class="clean">
+          <li><b>강도가 바뀐다</b>: 자주 함께 쓰이는 연결은 강해지고, 안 쓰는 연결은 약해진다. "함께 발화하는 뉴런은 함께 연결된다"는 <span class="k">헵의 규칙(Hebb's rule)</span>으로 요약된다.</li>
+          <li><b>연결이 생기고 없어진다</b>: 새 시냅스가 만들어지기도 하고, 필요 없는 연결은 정리(가지치기)된다.</li>
+        </ul>
+        <p class="muted">비유: 도시(뉴런)의 수는 그대로인데, 자주 다니는 길(시냅스)은 넓어지고 안 다니는 길은 사라지는 것. 그래서 뉴런이 늘지 않아도 배울 수 있다.</p>
+      </div>
+      <h3>인공신경망(ANN)도 같은 원리</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>인간의 뇌</th><th>인공신경망 (ANN)</th></tr></thead>
+          <tbody>
+            <tr><td><b>처리 단위</b></td><td>뉴런</td><td>노드 (인공 뉴런)</td></tr>
+            <tr><td><b>연결</b></td><td>시냅스</td><td>연결선</td></tr>
+            <tr><td><b>연결의 세기</b></td><td>시냅스 강도</td><td><span class="k">가중치 (weight)</span></td></tr>
+            <tr><td><b>학습할 때 바뀌는 것</b></td><td>시냅스 강도와 연결 자체</td><td>가중치 값 (노드 수는 그대로)</td></tr>
+            <tr><td><b>바꾸는 방법</b></td><td>헵의 규칙 등 생물학적 과정</td><td>역전파 알고리즘 (1장 역사의 1차 부활기)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>결론</h3>
+        <p>뇌와 인공신경망 모두 <b>처리 단위의 수가 아니라 <span class="k">연결의 세기</span>를 바꿔서 배운다</b>. 그래서 딥러닝에서 "모델을 학습시킨다"는 말은 곧 "가중치를 조정한다"는 뜻이다.</p>
+        <p class="muted" style="font-size:13.5px">참고: 강의자료의 "뉴런은 늘지 않는다"는 전통적인 설명이에요. 최근에는 해마 같은 일부 영역에서 성인도 새 뉴런이 생긴다는 연구가 있지만, 학습의 주된 방식이 시냅스 변화라는 점은 같아요.</p>
+      </div>
     </div>
 
     <div class="block">

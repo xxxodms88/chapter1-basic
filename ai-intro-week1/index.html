@@ -2233,9 +2233,36 @@ function MEMORY-VACUUM([loc, status]):
       <div class="grid2"><div class="card"><h3>에이전트에게 기대되는 것</h3><ul class="clean"><li>자율적으로 작동</li><li>환경을 지각</li><li>오랜 시간 지속</li><li>변화에 적응</li><li>목표를 세우고 추구</li></ul></div>
       <div class="card"><h3>합리적 에이전트</h3><p class="muted">최선의 결과를 얻도록 행동하는 에이전트. 불확실성이 있으면 최선의 <b>기대(expected)</b> 결과를 얻도록 행동한다.</p></div></div>
       <p><b>왜 이 접근인가?</b></p>
-      <div class="grid2"><div class="card"><h3>사고의 법칙보다 일반적</h3><p class="muted">올바른 추론은 합리적 행동의 여러 수단 중 하나. 뜨거운 난로에서 손을 떼는 반사 행동은 숙고보다 성공적이다. 차가 달려오는데 최적 회피 경로를 끝까지 계산하는 건 합리적이지 않다 (<b>제한된 합리성</b>, bounded rationality).</p></div>
+      <div class="grid2"><div class="card"><h3>사고의 법칙보다 일반적</h3><p class="muted">올바른 추론은 합리적 행동의 여러 수단 중 하나. 뜨거운 난로에서 손을 떼는 반사 행동은 숙고보다 성공적이다. 차가 달려오는데 최적 회피 경로를 끝까지 계산하는 건 합리적이지 않다 (<b>제한된 합리성</b>, bounded rationality).</p><p class="note-link">✎ 내 질문 노트: 아래에 자세히 정리</p></div>
       <div class="card"><h3>인간 기반보다 과학적</h3><p class="muted">합리성의 기준은 수학적으로 명확하고 일반적이어서, 그 기준을 만족하는 설계를 체계적으로 도출·증명할 수 있다. 인간 행동에는 완전한 이론이 없다.</p></div></div>
-      <p class="muted">단, 완벽한 합리성은 복잡한 환경에서 계산상 불가능하므로 실제로는 제한된 합리성 아래에서 "충분히 좋은" 행동을 목표로 한다.</p>`}
+      <p class="muted">단, 완벽한 합리성은 복잡한 환경에서 계산상 불가능하므로 실제로는 제한된 합리성 아래에서 "충분히 좋은" 행동을 목표로 한다.</p>
+      <div class="note">
+        <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+        <h3 style="font-size:19px">"사고의 법칙보다 일반적"이란 무슨 뜻일까</h3>
+        <p class="muted" style="font-size:14px">위 카드 내용을 풀어 쓴 메모예요. 강의안 내용과 구분해서 보세요.</p>
+        <div class="card">
+          <h3>포함 관계로 보면</h3>
+          <p>"사고의 법칙"은 <b>올바르게 추론하기</b>를 목표로 하고, "합리적 에이전트"는 <b>최선의 결과를 내는 행동</b>을 목표로 해요. 올바른 추론은 좋은 행동을 고르는 <b>여러 방법 중 하나</b>일 뿐이라서, 합리적 행동이 더 넓은 개념이에요.</p>
+          <div class="flow"><span class="s">합리적 행동 (더 넓음)</span><span class="arr">⊃</span><span class="s">논리적 추론으로 고르기</span><span class="s">반사적으로 반응하기</span><span class="s">확률로 저울질하기</span><span class="s">경험으로 배운 습관</span></div>
+        </div>
+        <h3>올바른 추론만으로는 부족한 세 가지 경우</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>경우</th><th>예</th><th>사고의 법칙</th><th>합리적 행동</th></tr></thead>
+          <tbody>
+            <tr><td><b>추론 없이도 잘할 때</b></td><td>뜨거운 난로에 손이 닿음</td><td>"뜨겁다 → 화상 위험 → 손을 떼야 한다"를 추론한 뒤 행동</td><td>생각 없이 즉시 손을 뗌. 더 빠르고 결과도 좋다 (2장 단순 반사 에이전트와 같은 원리)</td></tr>
+            <tr><td><b>끝까지 추론하면 늦을 때</b></td><td>차가 달려옴</td><td>가능한 회피 경로를 모두 따져 최적 경로를 증명</td><td>계산하는 사이 치인다. 충분히 좋은 방향으로 바로 피하는 것이 합리적 (<span class="k">제한된 합리성</span>)</td></tr>
+            <tr><td><b>참/거짓으로 결론이 안 날 때</b></td><td>비 올 확률 70%, 우산을 챙길까</td><td>"비가 온다"가 참인지 모르니 논리만으로는 결론이 안 남</td><td>젖는 불편과 우산 드는 수고를 확률로 저울질해 기대 결과가 좋은 쪽을 고름</td></tr>
+          </tbody>
+        </table></div>
+        <div class="card">
+          <h3>제한된 합리성 (bounded rationality)</h3>
+          <p class="muted">시간·계산 능력·정보가 한정된 상황에서 <b>완벽한 최선 대신 충분히 좋은</b> 행동을 고르는 것이에요. 1장의 GPS를 함께 만든 허버트 사이먼(Newell &amp; Simon의 Simon)이 제안한 개념이고, 3장 가중치 A*에서 나온 "satisficing(만족 검색)"도 같은 생각이에요. 시간 제한이 있는 체스(2장 "준동적" 환경)에서 끝까지 수를 읽지 않고 시간 안에 괜찮은 수를 두는 것도 같은 예입니다.</p>
+        </div>
+        <div class="card">
+          <h3>한 줄 정리</h3>
+          <p>사고의 법칙은 <b>"생각이 올바른가"</b>, 합리적 에이전트는 <b>"결과가 좋은가"</b>를 묻는다. 결과가 좋으려면 올바른 추론이 도움이 되지만, 반사·시간 제약·불확실성처럼 추론만으로는 안 되거나 오히려 손해인 경우가 있어서 합리적 행동이 더 일반적인 틀이다.</p>
+        </div>
+      </div>`}
   };
   const cells=[...document.querySelectorAll('.cell')];
   function showApproach(id){

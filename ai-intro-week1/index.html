@@ -172,6 +172,14 @@ tr.exam td{background:var(--amber-soft)}
 .onotes li.c{box-shadow:inset 3px 0 0 var(--good)}
 .onotes li.p{box-shadow:inset 3px 0 0 var(--bad)}
 .onotes li b{font-weight:600}
+.qtimer{font-family:var(--mono);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent);background:var(--accent-soft);padding:2px 10px;border-radius:999px}
+.qtimer.low{color:var(--bad);background:var(--bad-soft)}
+.row.left{justify-content:flex-start}
+.tag.warn{background:var(--bad-soft);color:var(--bad)}
+.hlist{display:grid}
+.hrow{display:grid;gap:8px;padding:14px 0;border-top:1px solid var(--line)}
+.hmeta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px}
+.hscore .big{font-size:18px}
 .review .card .xwhy{font-size:13.5px;color:var(--muted);line-height:1.7}
 .result{display:grid;gap:14px;text-align:center;justify-items:center}
 .result .score{font-size:48px;font-weight:700;font-family:var(--mono);font-variant-numeric:tabular-nums}
@@ -2247,7 +2255,7 @@ function MEMORY-VACUUM([loc, status]):
     <div class="block">
       <span class="eyebrow">퀴즈</span>
       <h2>확인 문제</h2>
-      <p class="muted">객관식 문제를 무작위 순서로 풉니다. 답을 고르면 바로 해설이 나옵니다.</p>
+      <p class="muted">객관식 문제를 무작위 순서로 풉니다. 시작하면 7분 타이머가 돌아가고, 답을 고르면 바로 해설이 나옵니다. 푼 결과는 회차별로 기록되어 오답을 다시 확인하거나 다시 풀 수 있어요.</p>
     </div>
     <div id="quizBox"></div>
   </section>
@@ -3088,7 +3096,7 @@ action ← rule.ACTION</pre>
     $('#chEyebrow').textContent=c.eyebrow;$('#chTitle').textContent=c.title;$('#chMeta').textContent=c.meta;$('#chFooter').textContent=c.footer;
     store.set('ai.ch',ch);
     order=c.deck.map(d=>d.id);pos=0;renderCard();
-    startQuiz(c.quiz);
+    quizHome();
     showTab(tab||store.get('ai.tab.'+ch,c.home));
   }
   tabs.forEach(b=>b.addEventListener('click',()=>{showTab(b.dataset.tab);window.scrollTo({top:0})}));
@@ -3429,32 +3437,95 @@ action ← rule.ACTION</pre>
   [[1,Q1],[2,Q2],[3,Q3],[10,QHW]].forEach(([k,list])=>list.forEach((q,i)=>{const x=QX[k][i];if(x&&q[0].startsWith(x[0])){q[4]=x[1];q[5]=x[2]}}));
 
   /* ---------- 퀴즈 ---------- */
-  let qs,qi,score,wrong,answered,full;
+  let qs,qi,score,wrong,answered,full,kind,unans,timedOut,recorded,startedAt=0,deadline=0,timer=null;
+  const QUIZ_SEC=7*60;
   function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-  function startQuiz(list){full=list===CH[ch].quiz;qs=shuffle(list);qi=0;score=0;wrong=[];renderQ()}
+  const fmtClock=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+  const getHist=()=>store.get('ai.hist.'+ch,[]);
+  const qByIdx=ids=>ids.map(i=>CH[ch].quiz[i]).filter(Boolean);
+  function stopTimer(){if(timer){clearInterval(timer);timer=null}}
+  function tick(){
+    const left=(deadline-Date.now())/1000,el=$('#qTimer');
+    if(el){el.textContent='⏱ '+fmtClock(left);el.classList.toggle('low',left<=60)}
+    if(left<=0)timeUp();
+  }
+  function startQuiz(list,k){
+    stopTimer();full=list===CH[ch].quiz;kind=k||(full?'전체':'다시 풀기');
+    qs=shuffle(list);qi=0;score=0;wrong=[];unans=new Set();timedOut=false;recorded=false;
+    startedAt=Date.now();deadline=startedAt+QUIZ_SEC*1000;timer=setInterval(tick,250);renderQ();
+  }
+  function timeUp(){
+    stopTimer();timedOut=true;
+    qs.slice(answered?qi+1:qi).forEach(q=>{unans.add(q);wrong.push(q)});
+    qi=qs.length;renderQ();
+  }
+  function wrongCard(q,u){
+    return `<div class="card"><b>${esc(q[0])}</b>${u?'<span class="tag warn" style="justify-self:start">미응답</span>':''}<span>정답: ${esc(q[1][q[2]])}</span><span class="muted">${esc(q[3])}</span>${q[4]?`<p class="xwhy">${esc(q[4])}</p>`:''}</div>`;
+  }
+  function record(){
+    if(recorded)return;recorded=true;
+    const idx=q=>CH[ch].quiz.indexOf(q);
+    const h=getHist();
+    h.unshift({t:Date.now(),k:kind,s:score,n:qs.length,w:wrong.filter(q=>!unans.has(q)).map(idx),u:[...unans].map(idx),sec:Math.min(QUIZ_SEC,Math.round((Date.now()-startedAt)/1000)),to:timedOut});
+    store.set('ai.hist.'+ch,h.slice(0,30));
+  }
+  function quizHome(){
+    stopTimer();qs=null;
+    const box=$('#quizBox'),h=getHist(),c=CH[ch];
+    const allWrong=[...new Set(h.flatMap(r=>[...r.w,...r.u]))].sort((a,b)=>a-b);
+    const rows=h.map((r,ri)=>{
+      const ids=[...r.w,...r.u],pct=Math.round(r.s/r.n*100);
+      const d=new Date(r.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      return `<div class="hrow"><div class="hmeta"><b>${d}</b><span class="tag">${esc(r.k)}</span>${r.to?'<span class="tag warn">시간 종료</span>':''}</div>
+        <div class="hscore"><span class="big">${r.s} / ${r.n}</span> <span class="muted">${pct}% · ${fmtClock(r.sec)} 사용${r.u.length?` · 미응답 ${r.u.length}`:''}</span></div>
+        ${ids.length?`<div class="row left"><button class="btn" data-act="view" data-r="${ri}" aria-expanded="false">오답 확인 (${ids.length})</button><button class="btn primary" data-act="redo" data-r="${ri}">오답 다시 풀기</button></div><div class="review" id="hw${ri}" hidden></div>`:'<p class="muted">오답 없이 모두 맞혔어요.</p>'}</div>`;
+    }).join('');
+    box.innerHTML=`<div class="qcard"><div class="qhead"><h3>${c.short} 퀴즈</h3><span class="counter">${c.quiz.length}문항 · 제한 시간 7분</span></div>
+      <p class="muted">시작 버튼을 누르면 7분 타이머가 바로 돌아가요. 시간이 끝나면 남은 문제는 미응답(오답)으로 처리되고 결과가 저장돼요.</p>
+      <div class="row left"><button class="btn primary" id="qStart">전체 문제 시작</button>${allWrong.length?`<button class="btn" id="qAllWrong">누적 오답 ${allWrong.length}문항 다시 풀기</button>`:''}</div></div>
+      <div class="qcard"><div class="qhead"><h3>지난 기록</h3>${h.length?'<button class="btn" id="qClear">기록 지우기</button>':''}</div>
+      ${h.length?`<p class="muted" style="font-size:13.5px">최근 30회까지 이 브라우저에 저장돼요. 회차마다 오답을 확인하거나 그 오답만 다시 풀 수 있어요.</p><div class="hlist">${rows}</div>`:'<p class="muted">아직 푼 기록이 없어요.</p>'}</div>`;
+    $('#qStart').onclick=()=>startQuiz(c.quiz);
+    const aw=$('#qAllWrong');if(aw)aw.onclick=()=>startQuiz(qByIdx(allWrong),'누적 오답');
+    const cl=$('#qClear');if(cl)cl.onclick=()=>{if(confirm(c.short+' 퀴즈 기록을 모두 지울까요?')){store.set('ai.hist.'+ch,[]);quizHome()}};
+    box.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()=>{
+      const r=h[+b.dataset.r];
+      if(b.dataset.act==='redo'){startQuiz(qByIdx([...r.w,...r.u]),'오답 다시 풀기');return}
+      const el=$('#hw'+b.dataset.r),open=el.hidden;
+      if(open&&!el.innerHTML)el.innerHTML=[...r.w.map(i=>[i,0]),...r.u.map(i=>[i,1])].filter(([i])=>CH[ch].quiz[i]).map(([i,u])=>wrongCard(CH[ch].quiz[i],u)).join('');
+      el.hidden=!open;b.setAttribute('aria-expanded',open);b.textContent=(open?'오답 닫기':'오답 확인')+` (${r.w.length+r.u.length})`;
+    }));
+    renderProgress();
+  }
   function renderQ(){
     const box=$('#quizBox');
     if(qi>=qs.length){
-      const pct=Math.round(score/qs.length*100);
+      stopTimer();record();
+      const pct=Math.round(score/qs.length*100),used=Math.min(QUIZ_SEC,Math.round((Date.now()-startedAt)/1000));
       const best=store.get('ai.best.'+ch,null);
       if(full&&(best==null||pct>best))store.set('ai.best.'+ch,pct);
-      box.innerHTML=`<div class="qcard result"><span class="eyebrow">${CH[ch].short} 결과</span><div class="score">${score} / ${qs.length}</div><p class="muted">${pct>=90?'완벽에 가까워요. 다음 장으로 넘어가도 좋습니다.':pct>=70?'잘했어요. 틀린 문제만 다시 풀어 보세요.':'요약 노트와 플래시카드로 한 번 더 복습해 보세요.'}</p>
-        <div class="row">${wrong.length?'<button class="btn primary" id="retryWrong">틀린 문제만 다시</button>':''}<button class="btn" id="retryAll">전체 다시 풀기</button></div>
-        ${wrong.length?`<div class="review"><h3>틀린 문제</h3>${wrong.map(q=>`<div class="card"><b>${esc(q[0])}</b><span>정답: ${esc(q[1][q[2]])}</span><span class="muted">${esc(q[3])}</span>${q[4]?`<p class="xwhy">${esc(q[4])}</p>`:''}</div>`).join('')}</div>`:''}</div>`;
-      const rw=$('#retryWrong');if(rw){const w=wrong;rw.onclick=()=>startQuiz(w)}
+      box.innerHTML=`<div class="qcard result"><span class="eyebrow">${CH[ch].short} 결과 · ${esc(kind)}</span><div class="score">${score} / ${qs.length}</div>
+        <p class="muted">${timedOut?`⏱ 시간 종료 · 미응답 ${unans.size}문항은 오답으로 처리했어요. `:`⏱ ${fmtClock(used)} 사용. `}${pct>=90?'완벽에 가까워요. 다음 장으로 넘어가도 좋습니다.':pct>=70?'잘했어요. 틀린 문제만 다시 풀어 보세요.':'요약 노트와 플래시카드로 한 번 더 복습해 보세요.'}</p>
+        <div class="row">${wrong.length?'<button class="btn primary" id="retryWrong">틀린 문제만 다시</button>':''}<button class="btn" id="retryAll">전체 다시 풀기</button><button class="btn" id="toHome">기록 보기</button></div>
+        ${wrong.length?`<div class="review"><h3>틀린 문제</h3>${wrong.map(q=>wrongCard(q,unans.has(q))).join('')}</div>`:''}</div>`;
+      const rw=$('#retryWrong');if(rw){const w=wrong;rw.onclick=()=>startQuiz(w,'오답 다시 풀기')}
       $('#retryAll').onclick=()=>startQuiz(CH[ch].quiz);
+      $('#toHome').onclick=quizHome;
       renderProgress();return;
     }
     const q=qs[qi];answered=false;
-    box.innerHTML=`<div class="qcard"><div class="qhead"><span class="counter">${CH[ch].short} · 문제 ${qi+1} / ${qs.length}</span><span class="counter">점수 ${score}</span></div>
+    box.innerHTML=`<div class="qcard"><div class="qhead"><span class="counter">${CH[ch].short} · 문제 ${qi+1} / ${qs.length}</span><span class="qtimer" id="qTimer" role="timer">⏱ ${fmtClock((deadline-Date.now())/1000)}</span><span class="counter">점수 ${score}</span></div>
       <div class="qbar"><i style="width:${qi/qs.length*100}%"></i></div>
       <div class="qtext">${esc(q[0])}</div>
       <div class="opts">${q[1].map((o,i)=>`<button class="opt" data-i="${i}"><span class="l">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
-      <div id="qexp"></div></div>`;
+      <div id="qexp"></div>
+      <div class="row" style="justify-content:flex-start"><button class="btn" id="qQuit" style="font-size:13px;padding:5px 12px">그만두기 (기록 안 함)</button></div></div>`;
     box.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>answer(+b.dataset.i)));
+    $('#qQuit').onclick=()=>{if(confirm('지금 푸는 퀴즈를 그만둘까요? 이번 회차는 기록되지 않아요.'))quizHome()};
+    tick();
   }
   function answer(i){
-    if(answered)return;answered=true;
+    if(!qs||answered)return;answered=true;
     const q=qs[qi],ok=i===q[2];
     if(ok)score++;else wrong.push(q);
     document.querySelectorAll('.opt').forEach(b=>{const j=+b.dataset.i;b.disabled=true;if(j===q[2])b.classList.add('correct');else if(j===i)b.classList.add('wrong')});

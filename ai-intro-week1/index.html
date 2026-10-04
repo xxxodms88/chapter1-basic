@@ -221,7 +221,8 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .bubble{position:relative;border-style:solid;border-radius:22px;margin-top:-8px}
 .bubble::before{content:"";position:absolute;top:-14px;left:40px;border:14px solid transparent;border-top:0;border-bottom-color:var(--note)}
 .bubble::after{content:"";position:absolute;top:-10px;left:42px;border:12px solid transparent;border-top:0;border-bottom-color:var(--note-soft)}
-.fc-note{width:100%;max-width:560px}
+.fc-note{width:100%;max-width:560px;align-content:start;transition:opacity .25s,transform .25s}
+.fc-note.off{visibility:hidden;opacity:0;transform:translateY(8px)}
 .fc-note p{font-size:15px;line-height:1.75}
 .note-link{font-size:13.5px;color:var(--note);font-weight:600}
 /* 3장 */
@@ -2203,7 +2204,7 @@ function MEMORY-VACUUM([loc, status]):
     <div class="block">
       <span class="eyebrow">플래시카드</span>
       <h2>용어 외우기</h2>
-      <p class="muted">카드를 누르거나 스페이스바로 뒤집고, ← → 키로 넘깁니다. 뒤집으면 카드 아래에 쉽게 풀어 쓴 설명 메모가 나옵니다. "외웠어요"로 표시한 카드는 이 브라우저에 저장됩니다.</p>
+      <p class="muted">카드를 누르거나 스페이스바로 뒤집고, ← → 키로 넘깁니다. 뒤집으면 버튼 아래 고정된 자리에 쉽게 풀어 쓴 설명 메모가 나타납니다(화면은 움직이지 않아요). "외웠어요"로 표시한 카드는 이 브라우저에 저장됩니다.</p>
     </div>
     <div class="fc-area">
       <div class="row">
@@ -2217,17 +2218,17 @@ function MEMORY-VACUUM([loc, status]):
           <div class="face back"><small>뜻</small><div class="def" id="fcDef"></div></div>
         </div>
       </button>
-      <div class="note fc-note" id="fcNote" hidden>
-        <span class="badge">✎ 쉽게 풀어 보기 · 강의안에 없는 설명</span>
-        <h3 id="fcNoteTerm" style="font-size:17px"></h3>
-        <p id="fcNoteText"></p>
-      </div>
       <div class="row">
         <button class="btn" id="prevBtn">← 이전</button>
         <span class="counter" id="fcCount"></span>
         <button class="btn" id="nextBtn">다음 →</button>
       </div>
       <button class="btn good" id="knownBtn">외웠어요</button>
+      <div class="note fc-note off" id="fcNote" aria-live="polite">
+        <span class="badge">✎ 쉽게 풀어 보기 · 강의안에 없는 설명</span>
+        <h3 id="fcNoteTerm" style="font-size:17px"></h3>
+        <p id="fcNoteText"></p>
+      </div>
     </div>
   </section>
 
@@ -2447,7 +2448,6 @@ function MEMORY-VACUUM([loc, status]):
     ['완전 튜링 검사(total Turing test)에서 표준 튜링 검사에 추가되는 능력은?',['자연어 처리와 지식 표현','자동 추론과 기계 학습','컴퓨터 비전과 로봇공학','음성 인식과 번역'],2,'물체 지각(컴퓨터 비전)과 물체 조작·이동(로봇공학)이 추가됩니다.'],
     ['"비둘기 비유"가 말하려는 것은?',['AI는 자연을 최대한 정확히 흉내 내야 한다','AI의 목표는 인간 모방보다 지능의 근본 원리를 이해하는 것이다','튜링 검사는 반드시 통과해야 한다','비행기와 AI는 관련이 없다'],1,'비행기 공학의 목표가 비둘기 흉내가 아니라 항공역학 이해였던 것과 같습니다.'],
     ['"사고의 법칙" 접근의 두 가지 난점으로 옳은 것은?',['표현의 문제, 계산의 문제','데이터 부족, GPU 부족','설명 가능성 부족, 편향','윤리 문제, 일자리 문제'],0,'불확실한 지식을 형식 논리로 옮기기 어렵고(표현), 사실이 늘면 계산이 폭발합니다(계산).'],
-    ['"에이전트(agent)"의 어원은?',['그리스어 agon','라틴어 agere (행하다)','영어 agenda','라틴어 ager (들판)'],1,'스스로 행동하는 존재라는 뜻입니다.'],
     ['차가 달려오는데 최적 회피 경로를 끝까지 계산하지 않고 바로 피하는 것과 관련된 개념은?',['튜링 검사','제한된 합리성','삼단논법','인지 모형화'],1,'시간·계산 제약 아래 "충분히 좋은" 행동을 하는 것이 제한된 합리성(bounded rationality)입니다.'],
     ['합리적 에이전트 접근이 "사고의 법칙"보다 나은 이유로 옳은 것은?',['올바른 추론만이 합리적 행동을 만들기 때문','추론 없이도 합리적인 행동(예: 반사 행동)이 있어 더 일반적이기 때문','인간의 사고를 정확히 흉내 내기 때문','계산이 항상 가능하기 때문'],1,'올바른 추론은 합리적 행동의 여러 수단 중 하나일 뿐입니다.'],
     ['"이로운 기계" 틀의 핵심은?',['목적을 완벽히 아는 기계','목적에 대한 불확실성','인간보다 빠른 계산','스스로 목표를 정하는 기계'],1,'목적이 무엇인지 확실히 모르기 때문에 조심스럽게 행동하고, 허락을 구하고, 선호를 학습하고, 통제권을 넘깁니다.'],
@@ -2457,14 +2457,20 @@ function MEMORY-VACUUM([loc, status]):
     ['첫 번째 AI 겨울(1974~1980)의 주된 원인은?',['GPU 가격 상승','지나친 낙관과 기대에 대한 실망','인터넷 부재','딥러닝의 실패'],1,'"10년 안에 체스 챔피언", "8년 이내에 인간 지능" 같은 과도한 기대가 실망으로 바뀌었습니다.'],
     ['1997년 체스 세계 챔피언을 이긴 IBM 시스템은?',['왓슨','딥블루','알파고','ELIZA'],1,'왓슨은 2011년 퀴즈쇼, 알파고는 2016년 바둑입니다.'],
     ['2012년 이후 대부흥의 세 가지 조건이 아닌 것은?',['알고리즘','연산(GPU)','데이터','전문가 규칙'],3,'알고리즘 × 연산 × 데이터. 전문가 규칙은 지식기반 방식의 특징입니다.'],
-    ['2012년 구글이 앤드류 응과 함께 심층신경망으로 유튜브 영상에서 인식한 것은?',['사람 얼굴','고양이','자동차','숫자'],1,'1만6천 대 컴퓨터, 10억 개 이상의 연결로 고양이를 인식했습니다.'],
-    ['"딥러닝의 대부"로 불리며 볼츠만 머신을 제안한 사람은?',['얀 르쿤','앤드류 응','제프리 힌튼','존 매카시'],2,'1984년 볼츠만 머신 제안, 역전파 논문 공동 저자입니다.'],
     ['인간 두뇌에 대한 설명으로 옳은 것은?',['뉴런은 태어난 뒤 계속 늘어난다','신생아의 뉴런 개수는 성인과 같다','뉴런은 약 100조 개다','학습은 뉴런 수가 늘어서 일어난다'],1,'신생아 뇌는 약 400g(성인의 30%)이지만 뉴런 수는 같고, 학습은 시냅스 연결이 바뀌어 일어납니다. 뉴런 약 1,000억, 시냅스 약 100조.'],
     ['강의자료에서 AI의 창의성이 제한되는 영역으로 꼽지 않은 것은?',['상상력','직관력','빠르고 정확한 계산','연상 능력'],2,'빠르고 정확한 계산은 컴퓨터가 이미 인간을 앞선 영역입니다.'],
     ['온도조절기에 대한 강의의 토론 포인트로 알맞은 것은?',['감지 O, 판단은 단순 규칙, 목표는 고정','스스로 목표를 세운다','판단이 전혀 없다','식재료를 인식한다'],0,'환경 인식–판단–목표 지향 행동 기준으로 보면 감지는 하지만 판단은 단순 규칙입니다.'],
-    ['이 과목의 팀 프로젝트 주제는?',['틱택토','Wumpus World 에이전트','자율주행 시뮬레이터','챗봇'],1,'9주차에 다루는 웜퍼스 세계가 팀 프로젝트의 무대이고, 15주차에 발표합니다.'],
-    ['이 과목의 성적 반영 비율로 옳은 것은?',['중간 40 · 기말 40 · 출석 20','중간 30 · 기말 30 · 보고서/팀프로젝트 30 · 출석 10','중간 25 · 기말 25 · 과제 50','기말 50 · 팀프로젝트 50'],1,'중간 30%, 기말 30%, 보고서 및 팀 프로젝트 30%, 출석 10%.'],
-    ['고전적 AI를 배워야 하는 이유의 예로 든 "알파고"의 결합 방식은?',['LLM + 도구 호출','신경망 + 탐색(MCTS)','전문가 시스템 + 규칙','퍼셉트론 + Lisp'],1,'딥러닝 + 고전적 추론의 결합 예시입니다.']
+    ['고전적 AI를 배워야 하는 이유의 예로 든 "알파고"의 결합 방식은?',['LLM + 도구 호출','신경망 + 탐색(MCTS)','전문가 시스템 + 규칙','퍼셉트론 + Lisp'],1,'딥러닝 + 고전적 추론의 결합 예시입니다.'],
+    ['"합리적 에이전트" 접근에서 말하는 합리성의 기준으로 옳은 것은?',['인간과 같은 방식으로 생각하는가','주어진 정보 아래 성과 측도의 기대값이 최대가 되도록 행동하는가','항상 실제로 가장 좋은 결과를 내는가','논리적으로 타당한 추론만 하는가'],1,'합리성은 "기대" 성과가 기준입니다. 결과를 미리 아는 것(전지)이나 늘 최고 결과를 내는 것(완벽)은 요구하지 않습니다.'],
+    ['AI 정의의 4가지 접근 중 "사고(Thought)" 축에 속하는 것끼리 묶은 것은?',['튜링 검사, 합리적 에이전트','인지 모형화, 사고의 법칙','튜링 검사, 인지 모형화','사고의 법칙, 합리적 에이전트'],1,'사고 축은 내부 추론 과정을 봅니다: 인간적 사고(인지 모형화)와 합리적 사고(사고의 법칙). 튜링 검사와 합리적 에이전트는 행동 축입니다.'],
+    ['"인간적" 기준을 쓰는 접근(튜링 검사, 인지 모형화)의 학문적 성격으로 알맞은 것은?',['수학·공학적 성격','심리학·인지과학 같은 경험과학의 성격','형식 논리학의 성격','통계적 결정이론의 성격'],1,'사람을 관찰하고 비교해야 하므로 경험과학이고, 합리적 기준 쪽은 기준을 정의해 계산하므로 수학·공학 성격입니다.'],
+    ['지식기반(규칙) 방식과 비교한 기계학습 방식의 특징으로 옳은 것은?',['전문가가 규칙과 지식을 직접 기술한다','데이터 사례에서 패턴을 학습한다','항상 설명 가능성이 더 높다','데이터 없이도 성능이 오른다'],1,'지식기반은 사람이 규칙을 적고, 기계학습은 데이터에서 규칙(패턴)을 스스로 찾습니다. 설명 가능성은 오히려 지식기반 쪽의 장점입니다.'],
+    ['강의에서 고전적 AI가 "블랙박스" 딥러닝을 보완한다고 한 근거로 옳은 것은?',['더 많은 학습 데이터를 쓴다','설명 가능성, 명확한 규칙, 증명 가능성을 제공한다','GPU 연산을 줄여 준다','이미지 인식 정확도가 더 높다'],1,'예) LLM + 도구 호출·계획 수립, 신경망 + 탐색(알파고의 MCTS).'],
+    ['단층 퍼셉트론이 XOR 문제를 풀 수 없는 근본 이유는?',['학습률이 너무 작아서','하나의 직선(선형 결정 경계)으로는 XOR의 두 부류를 나눌 수 없어서','학습 데이터가 부족해서','출력이 0과 1 두 가지뿐이라서'],1,'XOR은 선형 분리 불가능 문제입니다. 은닉층을 둔 다층 퍼셉트론과 역전파로 해결되어 1차 부활기가 열렸습니다.'],
+    ['인공신경망에서 "모델을 학습시킨다"는 것이 실제로 바꾸는 것은?',['노드(인공 뉴런)의 개수','연결 가중치(weight)','입력 데이터','출력층의 크기'],1,'뇌에서 뉴런 수가 아니라 시냅스 강도가 바뀌는 것처럼, 신경망도 가중치를 조정해 배웁니다.'],
+    ['다음 중 "제한된 합리성(bounded rationality)"의 예로 가장 알맞은 것은?',['체스 엔진이 시간 제한 안에서 충분히 좋은 수를 둔다','계산기가 항상 정확한 답을 낸다','챗봇이 사람인 척 대화한다','삼단논법으로 타당한 결론을 낸다'],0,'시간·계산 자원이 한정될 때 완벽한 최적 대신 "충분히 좋은" 행동을 고르는 것입니다.'],
+    ['AI의 "표준 모형(standard model)"이 가진 근본 문제로 옳은 것은?',['계산 속도가 느리다','사람이 원하는 목적을 기계에게 완벽히 명시하기 어렵다','기계가 학습을 할 수 없다','행동 대신 사고만 한다'],1,'고정된 목표를 글자 그대로 최대화하면 목표의 빈틈에서 의도치 않은 행동이 생깁니다(미다스 왕 문제, 보상 해킹).'],
+    ['"이로운 기계"가 사람이 자신을 끄려 할 때 이를 허용하는 이유로 옳은 것은?',['에너지를 아끼기 위해','자신이 사람의 목적을 잘못 알고 있을 수 있다는 신호로 받아들이기 때문','어떤 명령이든 무조건 따르도록 만들어졌기 때문','다른 기계가 일을 대신하기 때문'],1,'목적에 대한 불확실성이 있으므로, 끄려는 행동을 "지금 하는 일이 해롭다"는 정보로 보고 통제권을 넘깁니다.']
   ];
   const deck2=[
     ['에이전트','에이전트 (agent)','감지기로 환경을 지각하고 작동기로 환경에 동작을 수행하는 모든 것'],
@@ -3261,15 +3267,28 @@ action ← rule.ACTION</pre>
     '참/거짓 문제는 ① 참인지 거짓인지 먼저 밝히고 ② 강의 개념으로 이유를 2~3문장 쓰고 ③ 예외(반례)나 가정을 한 문장 덧붙이는 순서로 써요. 과제 안내문 기준으로 이유 없이 답만 쓰면 30%만 인정돼요.'
   ]};
   const fcNote=$('#fcNote');
+  const expl=c=>{const [chk,idx]=c.id.split('-');return (EXPL[chk]||[])[+idx]};
+  /* 메모 자리를 지금 덱에서 가장 긴 설명 높이로 고정해, 메모가 나타나고 사라져도 화면이 움직이지 않게 한다 */
+  let noteKey='';
+  function sizeNote(){
+    const w=fcNote.clientWidth;if(!w)return;
+    const v=visible();const key=v.join()+'|'+w;if(key===noteKey)return;noteKey=key;
+    const term=$('#fcNoteTerm'),text=$('#fcNoteText'),t0=term.textContent,x0=text.textContent;
+    fcNote.style.minHeight='';let max=0;
+    v.forEach(id=>{const c=allCards[id],t=c&&expl(c);if(!t)return;term.textContent=c.term;text.textContent=t;max=Math.max(max,fcNote.offsetHeight)});
+    term.textContent=t0;text.textContent=x0;if(max)fcNote.style.minHeight=max+'px';
+  }
   function syncNote(){
+    sizeNote();
     const v=visible();const c=allCards[v[pos]];
-    const flipped=flash.classList.contains('flipped');
-    if(!c||!flipped){fcNote.hidden=true;return}
-    const [chk,idx]=c.id.split('-');const t=(EXPL[chk]||[])[+idx];
-    if(!t){fcNote.hidden=true;return}
-    $('#fcNoteTerm').textContent=c.term;$('#fcNoteText').textContent=t;fcNote.hidden=false;
+    const t=c&&flash.classList.contains('flipped')&&expl(c);
+    if(!t){fcNote.classList.add('off');return}
+    $('#fcNoteTerm').textContent=c.term;$('#fcNoteText').textContent=t;fcNote.classList.remove('off');
   }
   new MutationObserver(syncNote).observe(flash,{attributes:true,attributeFilter:['class']});
+  new MutationObserver(syncNote).observe($('#fcCount'),{childList:true,characterData:true,subtree:true});
+  new MutationObserver(syncNote).observe($('#cards'),{attributes:true,attributeFilter:['hidden']});
+  addEventListener('resize',syncNote);
 
   /* ---------- 퀴즈 ---------- */
   let qs,qi,score,wrong,answered,full;

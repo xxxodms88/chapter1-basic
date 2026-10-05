@@ -767,12 +767,82 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       <span class="eyebrow">함수 vs 프로그램</span>
       <h2>에이전트 함수와 에이전트 프로그램</h2>
       <div class="grid2">
-        <div class="card"><h3>에이전트 함수 (무엇을 하는가)</h3><p class="formula" style="justify-self:start">f : P* → A</p><p class="muted">가능한 모든 지각열의 집합 P*에서 동작 집합 A로의 사상. 추상적·수학적 서술이고, 원리상 표로 나타낼 수 있다.</p></div>
+        <div class="card"><h3>에이전트 함수 (무엇을 하는가)</h3><p class="formula" style="justify-self:start">f : P* → A</p><p class="muted">가능한 모든 지각열의 집합 P*에서 동작 집합 A로의 사상. 추상적·수학적 서술이고, 원리상 표로 나타낼 수 있다.</p><p class="note-link">✎ 내 질문 노트: P*가 무엇이고 표로 어떻게 나타내는지 아래에 정리</p></div>
         <div class="card"><h3>에이전트 프로그램 (어떻게 구현하는가)</h3><p class="muted">아키텍처 위에서 에이전트 함수를 구현하는 코드. 매번 <b>현재 지각</b>을 입력받고, 필요한 과거 정보는 내부 상태에 저장한다.</p><p><b><span class="k">에이전트 = 아키텍처 + 프로그램</span></b></p></div>
       </div>
       <div class="card">
         <h3>표 기반 에이전트(table-driven agent)의 문제</h3>
         <p class="muted">지각이 m종류이고 길이가 t인 지각열은 mᵗ개. 길이 1~T를 모두 저장하면 Σₜ₌₁ᵀ mᵗ개 항목이 필요하다. 지각 4종류, 길이 10만 해도 4¹⁰ = <span class="k">1,048,576</span>개. 규칙성을 이용하면 훨씬 작은 프로그램으로 같은 행동을 구현할 수 있다.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>지각열의 집합 P*, 표로 보면</h2>
+      <p class="muted" style="font-size:14px">"에이전트 함수 f : P* → A"를 보고 따로 물어본 내용이에요. 강의안 내용과 구분해서 보세요.</p>
+
+      <h3>1. 기호 읽기</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>기호</th><th>뜻</th><th>진공청소기 세계에서</th></tr></thead>
+          <tbody>
+            <tr><td><b>P</b></td><td>지각 하나가 가질 수 있는 값의 집합</td><td>{[A,Clean], [A,Dirty], [B,Clean], [B,Dirty]} → <b>4개</b></td></tr>
+            <tr><td><b>*</b> (별표)</td><td>"P의 원소를 순서대로 몇 개든 이어 붙인 것 전부"라는 뜻. 문자 집합에서 모든 문자열을 만드는 것과 같은 표기</td><td>[A,Dirty] 하나짜리, [A,Dirty]→[A,Clean] 두 개짜리, … 길이 제한 없음</td></tr>
+            <tr><td><b>P*</b></td><td>가능한 <span class="k">모든 지각열</span>의 집합. 길이 1, 2, 3, …인 열을 전부 모은 것이라 <b>무한집합</b></td><td>길이 1: 4개, 길이 2: 16개, 길이 3: 64개, …</td></tr>
+            <tr><td><b>A</b></td><td>동작의 집합</td><td>{Left, Right, Suck, NoOp}</td></tr>
+            <tr><td><b>f : P* → A</b></td><td>P*의 원소(지각열) 하나마다 A의 원소(동작) 하나를 짝지어 주는 함수</td><td>"지금까지 이렇게 봤으면 → 이걸 해라"</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>2. P*의 크기: 길이별로 세 보기</h3>
+      <p>지각 종류가 m개면 길이 t인 지각열은 자리마다 m가지를 고르니 <span class="k">mᵗ개</span>예요. 진공청소기(m = 4)로 세면:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>길이 t</th><th>지각열의 예</th><th class="num-r">이 길이의 개수 4ᵗ</th><th class="num-r">길이 1~t 누적</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>[A,Dirty]</td><td class="num-r">4</td><td class="num-r">4</td></tr>
+            <tr><td>2</td><td>[A,Dirty] → [A,Clean]</td><td class="num-r">16</td><td class="num-r">20</td></tr>
+            <tr><td>3</td><td>[A,Dirty] → [A,Clean] → [B,Dirty]</td><td class="num-r">64</td><td class="num-r">84</td></tr>
+            <tr><td>10</td><td>열 개를 이어 붙인 것</td><td class="num-r">1,048,576</td><td class="num-r">1,398,100</td></tr>
+            <tr><td>∞</td><td>길이 제한이 없으므로</td><td class="num-r">—</td><td class="num-r">무한</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>3. 에이전트 함수를 표로 쓰면</h3>
+      <p>표의 <b>왼쪽 열(행의 이름)</b>은 P*의 원소, 즉 <b>지각열 전체</b>이고, <b>오른쪽 열</b>은 그때 할 동작이에요. 표의 한 줄 = 함수의 입력 하나와 출력 하나의 짝입니다. 행은 보통 길이 순으로 나열해요.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>행</th><th>입력: 지각열 (P*의 원소)</th><th>출력: 동작 (A의 원소)</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td>[A,Clean]</td><td>Right</td></tr>
+            <tr><td class="num">2</td><td>[A,Dirty]</td><td>Suck</td></tr>
+            <tr><td class="num">3</td><td>[B,Clean]</td><td>Left</td></tr>
+            <tr><td class="num">4</td><td>[B,Dirty]</td><td>Suck</td></tr>
+            <tr><td class="num">5</td><td>[A,Clean] → [B,Clean]</td><td><b>NoOp</b> ← 두 칸 다 깨끗한 걸 봤으니 멈춤</td></tr>
+            <tr><td class="num">6</td><td>[A,Dirty] → [A,Clean]</td><td>Right</td></tr>
+            <tr><td class="num">7</td><td>[B,Clean] → [A,Clean]</td><td><b>NoOp</b></td></tr>
+            <tr><td class="num">…</td><td>길이 2짜리 16줄, 길이 3짜리 64줄, …</td><td>…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>왜 P가 아니라 P*인가</h3><p class="muted">3행과 5행은 <b>마지막 지각이 똑같이 [B,Clean]</b>인데 동작이 달라요(Left vs NoOp). 앞에서 A도 깨끗했다는 <b>과거</b>를 알기 때문이죠. 입력이 지각열 전체라서 에이전트 함수는 과거에 따라 다르게 행동할 수 있어요.</p></div>
+        <div class="card"><h3>단순 반사 에이전트는 특수한 경우</h3><p class="muted">REFLEX-VACUUM-AGENT는 마지막 지각만 봐요. 표로 보면 "마지막 칸이 같은 행은 동작도 같은" 표예요. 그래서 5행처럼 멈출 수 없고 A와 B를 계속 오가요. 기억(내부 상태)을 쓰는 모형 기반 에이전트가 5행 같은 표를 구현해요.</p></div>
+      </div>
+
+      <h3>4. 그래서 표로는 만들 수 없다</h3>
+      <div class="card">
+        <ul class="clean">
+          <li>P*가 무한이라 표도 원칙적으로 끝이 없어요. 수명을 T 단계로 잘라도 행이 m¹ + m² + … + mᵀ개라서 금방 폭발해요.</li>
+          <li>그래서 에이전트 함수는 "이론상 이런 표"라는 <b>추상적 명세</b>로만 쓰고, 실제로는 규칙성을 찾아 <b>짧은 에이전트 프로그램</b>으로 같은 행동을 만들어요. 프로그램은 지각열 전체 대신 <b>현재 지각 하나</b>를 받고, 필요한 과거만 내부 상태에 요약해 둬요.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>한 줄 정리</h3>
+        <p>P*는 "지금까지 볼 수 있었던 모든 경우의 이력"을 모은 무한집합이고, 에이전트 함수는 그 이력 하나하나에 동작을 적은 <b>끝없는 표</b>예요. 시험에서는 <span class="k">f : P* → A</span>의 방향(지각열 → 동작)과, 길이 t 지각열 수가 <span class="k">mᵗ</span>라는 점이 자주 나와요.</p>
       </div>
     </div>
 

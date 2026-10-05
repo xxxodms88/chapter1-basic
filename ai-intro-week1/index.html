@@ -971,6 +971,56 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
   else if location = A then return Right
   else if location = B then return Left</pre>
       </div>
+      <div class="note">
+        <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+        <h3>위 코드에 한 줄씩 주석 달기</h3>
+        <p class="muted" style="font-size:14px">강의 슬라이드의 의사코드(REFLEX-VACUUM-AGENT)에 주석을 붙인 메모예요. 코드는 그대로이고 <b>// 뒤</b>가 덧붙인 설명이에요.</p>
+<pre class="code">function REFLEX-VACUUM-AGENT([location, status])
+    // 입력: 지금 이 순간의 지각 하나 = [위치, 상태]
+    //   예) [A, Dirty] → location = A, status = Dirty
+    //   지각열(과거 기록)이 아니라 "현재 지각"만 받는다
+  returns an action
+    // 출력: 동작 하나 (Left, Right, Suck 중 하나)
+  if status = Dirty then return Suck
+    // 규칙 ① 지금 칸이 더러우면 → 빨아들인다
+    //   위치와 상관없이 가장 먼저 검사한다
+  else if location = A then return Right
+    // 규칙 ② (깨끗하고) A에 있으면 → 오른쪽 B로 간다
+  else if location = B then return Left
+    // 규칙 ③ (깨끗하고) B에 있으면 → 왼쪽 A로 간다</pre>
+        <div class="table-wrap"><table style="min-width:0">
+          <thead><tr><th>지각 (입력)</th><th>걸리는 규칙</th><th>동작 (출력)</th></tr></thead>
+          <tbody>
+            <tr><td>[A, Dirty]</td><td>① 더러움</td><td>Suck</td></tr>
+            <tr><td>[B, Dirty]</td><td>① 더러움</td><td>Suck</td></tr>
+            <tr><td>[A, Clean]</td><td>② 깨끗 + A</td><td>Right</td></tr>
+            <tr><td>[B, Clean]</td><td>③ 깨끗 + B</td><td>Left</td></tr>
+          </tbody>
+        </table></div>
+        <div class="grid2">
+          <div class="card"><h3>이 코드의 정체</h3><p class="muted"><span class="k">단순 반사 에이전트</span>예요. "조건 → 동작" 규칙(if-then) 세 줄로, 현재 지각만 보고 바로 반응해요. 지각열 표의 끝없는 행을 이 세 줄이 대신해요. 가능한 지각이 4가지뿐이라 규칙 3개면 모두 처리돼요.</p></div>
+          <div class="card"><h3>약점: 기억이 없다</h3><p class="muted">두 칸을 다 치워도 그 사실을 기억하지 못해서 A↔B를 <b>계속 왔다 갔다</b> 해요. NoOp(가만히 있기) 규칙도 없어요. "이동할 때마다 벌점" 같은 성과 측도라면 비합리적이 돼요. 이걸 고치려면 과거를 기억하는 내부 상태(모형 기반 에이전트)가 필요해요.</p></div>
+        </div>
+        <p class="muted" style="font-size:13.5px">실행 예: [A, Dirty] → Suck → [A, Clean] → Right → [B, Dirty] → Suck → [B, Clean] → Left → [A, Clean] → Right → … (끝없이 반복)</p>
+        <h3>옆의 지각열 표: 각 행은 왜 그 동작일까</h3>
+        <p>핵심은 <b>지각열의 맨 마지막 지각</b>이에요. 지각열 [X], [Y]는 "처음에 X를 봤고, <b>지금</b> Y를 보고 있다"는 뜻이라, 지금 해야 할 동작은 지금 보이는 Y로 정해져요. 이 표는 위 코드와 같은 규칙(더러우면 Suck, 깨끗한 A면 Right, 깨끗한 B면 Left)을 마지막 지각에 적용해 채운 거예요.</p>
+        <div class="table-wrap"><table style="min-width:540px">
+          <thead><tr><th>지각열</th><th>지금(마지막) 지각</th><th>동작</th><th>이유</th></tr></thead>
+          <tbody>
+            <tr><td>[A, Clean]</td><td>[A, Clean]</td><td>Right</td><td>A가 깨끗하니 B를 치우러 간다</td></tr>
+            <tr><td>[A, Dirty]</td><td>[A, Dirty]</td><td>Suck</td><td>지금 칸이 더럽다</td></tr>
+            <tr><td>[B, Clean]</td><td>[B, Clean]</td><td>Left</td><td>B가 깨끗하니 A로 간다</td></tr>
+            <tr><td>[B, Dirty]</td><td>[B, Dirty]</td><td>Suck</td><td>지금 칸이 더럽다</td></tr>
+            <tr><td>[A, Clean], [A, Clean]</td><td>[A, Clean]</td><td>Right</td><td>지금도 A가 깨끗하니 B로 간다</td></tr>
+            <tr><td><b>[A, Clean], [A, Dirty]</b></td><td><b>[A, Dirty]</b></td><td><b>Suck</b></td><td><b>아까는 깨끗했지만 지금 A가 더럽다.</b> 과거가 아니라 지금 보이는 먼지에 반응한다</td></tr>
+          </tbody>
+        </table></div>
+        <div class="card">
+          <h3>"[A, Clean] 다음에 [A, Dirty]"는 어떻게 가능하지?</h3>
+          <p class="muted">에이전트 함수의 표는 <b>형식상 가능한 모든 지각열</b>을 행으로 적어요. 그 사이에 먼지가 새로 떨어졌거나(먼지가 다시 생기는 세계), 이동이 실패해 A에 그대로 있었다고 생각하면 돼요. 이 에이전트가 실제로 그 순서를 겪을지와 상관없이, 표는 "만약 그렇게 봤다면 무엇을 할지"를 빠짐없이 정해 두는 거예요.</p>
+          <p class="muted">그리고 이 표에서는 앞의 지각이 무엇이든 <b>마지막 지각이 같으면 동작이 같아요</b>. 이게 바로 단순 반사 에이전트의 특징이에요. 과거를 활용하는 에이전트라면 P* 노트의 5행처럼 같은 마지막 지각에도 다른 동작(예: NoOp)을 고를 수 있어요.</p>
+        </div>
+      </div>
       <p class="muted">표의 규칙성을 찾으면 몇 줄로 같은 함수를 구현할 수 있습니다. 이 프로그램은 현재 지각만 보고 과거를 기억하지 않습니다. 이것이 좋은 에이전트인지 판단하려면 먼저 <b>합리성</b>의 기준이 필요합니다.</p>
     </div>
 

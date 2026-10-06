@@ -1184,6 +1184,47 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
         <li>측도를 잘못 지정하면 유능한 에이전트일수록 더 크게 어긋난다 (1장의 표준 모형 문제, 강화학습의 <b>보상 해킹</b>).</li>
         <li>그래서 4판은 진짜 목적을 확실히 모르는 전제 아래 행동하는 <b>이로운 기계</b>를 제안했다.</li>
       </ul>
+      <p class="note-link">✎ 내 질문 노트: 위 세 줄을 예시와 함께 아래에 풀어 정리</p>
+    </div>
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>성과 측도 세 줄, 예시로 풀기</h2>
+      <p class="muted" style="font-size:14px">"행동이 아니라 결과를 잰다" 아래 세 줄에 보충 설명을 붙인 메모예요. 강의안 내용과 구분해서 보세요.</p>
+
+      <h3>1. "평균적으로 깨끗한 바닥" vs "가끔 매우 깨끗하지만 자주 지저분한 바닥"</h3>
+      <p>결과를 재기로 정해도, <b>결과를 어떻게 요약해 점수로 만들지</b>는 또 골라야 해요. 하루 네 번 바닥의 깨끗함(0~10점)을 쟀다고 해 볼게요.</p>
+      <div class="table-wrap"><table style="min-width:0">
+        <thead><tr><th>로봇</th><th class="num-r">9시</th><th class="num-r">12시</th><th class="num-r">15시</th><th class="num-r">18시</th><th class="num-r">평균</th><th class="num-r">최저</th></tr></thead>
+        <tbody>
+          <tr><td><b>X</b> (늘 적당히)</td><td class="num-r">6</td><td class="num-r">6</td><td class="num-r">6</td><td class="num-r">6</td><td class="num-r">6</td><td class="num-r"><b>6</b></td></tr>
+          <tr><td><b>Y</b> (들쭉날쭉)</td><td class="num-r">10</td><td class="num-r">2</td><td class="num-r">10</td><td class="num-r">2</td><td class="num-r">6</td><td class="num-r">2</td></tr>
+        </tbody>
+      </table></div>
+      <div class="grid3">
+        <div class="card"><h3>"평균"으로 재면</h3><p class="muted">X = Y = 6. 둘을 구별하지 못해요.</p></div>
+        <div class="card"><h3>"최저 점수"로 재면</h3><p class="muted">X(6) &gt; Y(2). 늘 무난해야 하는 <b>병원</b>이라면 이 측도가 맞아요.</p></div>
+        <div class="card"><h3>"9시·15시만" 재면</h3><p class="muted">Y(10) &gt; X(6). 손님이 그 시간에만 오는 <b>가게</b>라면 Y가 나아요.</p></div>
+      </div>
+      <p class="muted">어느 측도가 "정답"인지는 수학으로 정해지지 않고, 사용하는 사람이 <b>무엇을 더 중요하게 여기는지</b>에 달려 있어요. 이게 "측도는 <span class="k">가치 판단</span>을 담는다"의 뜻이에요. 같은 로봇이라도 측도를 무엇으로 고르느냐에 따라 합리적인 행동(언제 청소할지)이 달라져요.</p>
+
+      <h3>2. "유능한 에이전트일수록 더 크게 어긋난다"</h3>
+      <div class="grid2">
+        <div class="card"><h3>왜 능력이 문제를 키우나</h3><p class="muted">에이전트는 우리가 <b>적은 측도</b>를 최대화할 뿐, 우리가 <b>마음속으로 원한 것</b>은 몰라요. 능력이 약하면 측도의 빈틈을 못 찾아서 그럭저럭 원하는 대로 움직여요. 능력이 강할수록 빈틈을 정확히 찾아내 점수는 최고인데 의도와는 정반대인 행동을 해요.</p></div>
+        <div class="card"><h3>보상 해킹 (reward hacking)</h3><p class="muted">측도(보상)의 빈틈을 이용해 진짜 목적은 이루지 않고 점수만 올리는 것. 예) "흡입량"을 재는 청소기가 먼지를 쏟고 다시 빨아들이기. 보트 경주 게임을 학습한 에이전트가 결승선으로 가는 대신 점수 아이템이 있는 곳을 빙글빙글 돌며 점수만 쌓은 사례도 유명해요.</p></div>
+      </div>
+      <p class="muted">이게 1장의 <b>표준 모형 문제</b>와 같은 구조예요. "목표를 주면 그 목표를 최대한 달성"하는 방식은, 목표(측도)를 완벽하게 적을 수 없는 한 늘 이런 위험을 안고 있어요.</p>
+
+      <h3>3. 그래서 "이로운 기계"</h3>
+      <div class="card">
+        <p class="muted">측도를 아무리 잘 만들어도 사람의 진짜 목적을 빠짐없이 담을 수 없다면, 방향을 바꿔서 기계가 <b>"내가 받은 측도는 진짜 목적의 근사일 뿐이고, 진짜 목적은 확실히 모른다"</b>고 여기게 해요. 그러면 측도상 이득은 큰데 평소와 다른 행동(서류함을 넘어뜨려 먼지를 만들기 등) 앞에서 확신을 갖고 밀어붙이지 않고, <b>조심하거나 사람에게 묻고</b>, 사람이 멈추라면 <b>멈춰요</b>.</p>
+        <p class="muted">핵심은 "더 좋은 측도를 만드는 것"이 아니라 "<b>측도를 의심할 줄 아는 기계</b>"라는 점이에요. 과제 1 B5(c) 모범답안도 이 관점이고, 1장 "4가지 접근" 탭의 이로운 기계 메모에 예시가 더 있어요.</p>
+      </div>
+
+      <div class="card">
+        <h3>한 줄 정리</h3>
+        <p>① 무엇을 잴지(결과)뿐 아니라 <b>어떻게 요약할지</b>(평균·최저·특정 시간)도 가치 판단이다. ② 측도에 빈틈이 있으면 <b>유능할수록</b> 그 빈틈을 더 잘 파고든다(보상 해킹). ③ 그래서 측도를 완벽히 만들려 하기보다 <b>목적을 확신하지 않는 기계</b>(이로운 기계)를 만든다.</p>
+      </div>
     </div>
 
     <div class="block">

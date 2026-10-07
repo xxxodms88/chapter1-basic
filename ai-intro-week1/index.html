@@ -1345,7 +1345,7 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
         </table>
       </div>
       <p class="card" style="background:var(--amber-soft);border-color:transparent">가장 어려운 경우: <b>부분 관측 · 다중 · 확률적 · 순차적 · 동적 · 연속적 · 미지</b>. 택시 주행이 거의 그렇습니다.</p>
-      <p class="note-link">✎ 내 질문 노트: "쉬운 쪽/어려운 쪽"의 뜻과 일화적 vs 순차적을 아래에 정리</p>
+      <p class="note-link">✎ 내 질문 노트: "쉬운 쪽/어려운 쪽"의 뜻과 일화적 vs 순차적, 결정론 vs 관측 가능성을 아래에 정리</p>
     </div>
 
     <div class="note">
@@ -1395,6 +1395,61 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       <div class="card">
         <h3>한 줄 정리</h3>
         <p><b>일화적</b> = 결정이 서로 끊겨 있어 "지금"만 잘하면 됨(설계 쉬움). <b>순차적</b> = 지금 결정이 미래를 바꿔 "앞날"까지 계산해야 함(설계 어려움). 표의 쉬운 쪽/어려운 쪽은 <b>에이전트가 고려해야 할 것의 양</b>을 말해요.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>결정론 · 시간 구조 · 관측의 불완전성 · 전이의 확률성, 뭐가 다른가</h2>
+      <p class="muted" style="font-size:14px">표의 "결정론" 줄에 나온 말들이 헷갈려서 따로 정리한 메모예요. 강의안 내용과 구분해서 보세요.</p>
+
+      <h3>1. 네 단어는 사실 세 개의 축</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>단어</th><th>어느 축의 말인가</th></tr></thead>
+        <tbody>
+          <tr><td><b>결정론</b> (결정론적 / 확률적)</td><td rowspan="2">같은 축. "결정론적" = 전이에 확률성이 <b>없음</b>, "확률적" = 전이에 확률성이 <b>있음</b></td></tr>
+          <tr><td><b>전이의 확률성</b></td></tr>
+          <tr><td><b>관측의 불완전성</b></td><td><b>관측 가능성</b> 축. 불완전하면 "부분 관측"</td></tr>
+          <tr><td><b>시간 구조</b> (일화적 / 순차적)</td><td>또 다른 별개의 축</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>2. 한 걸음을 쪼개 보면 각자 다른 곳을 묻는다</h3>
+      <div class="flow"><span class="s">지금 세상의 상태 s</span><span class="arr">→ ① 보이나? →</span><span class="s">에이전트의 지각</span><span class="arr">→</span><span class="s">동작 a</span><span class="arr">→ ② 결과가 하나로 정해지나? →</span><span class="s">다음 상태 s'</span><span class="arr">→ ③ 다음 결정에 이어지나?</span></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>축</th><th>묻는 것</th><th>누구의 문제</th><th>쉬운 쪽 / 어려운 쪽</th></tr></thead>
+        <tbody>
+          <tr><td><b>① 관측 가능성</b></td><td>지금 상태 s가 감지기로 <b>다 보이나</b>?</td><td>에이전트의 <b>눈(감지기)</b></td><td>완전 관측 / 부분 관측 (관측이 불완전)</td></tr>
+          <tr><td><b>② 결정론</b></td><td>상태 s에서 동작 a를 하면 다음 상태 s'가 <b>하나로 정해지나</b>?</td><td>세상의 <b>법칙</b></td><td>결정론적 / 확률적 (전이에 확률성)</td></tr>
+          <tr><td><b>③ 시간 구조</b></td><td>이번 동작이 <b>이후의 상황·결정에 영향</b>을 주나?</td><td>결정들 사이의 <b>연결</b></td><td>일화적 / 순차적</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>3. "관측의 불완전성과 전이의 확률성은 별개"의 뜻</h3>
+      <div class="grid2">
+        <div class="card"><h3>관측의 불완전성 = 안 보여서 모른다</h3><p class="muted">세상은 이미 정해져 있는데 <b>내가 못 볼 뿐</b>이에요. 예) 솔리테어의 뒤집힌 카드: 무슨 카드인지 이미 정해져 있지만 안 보여요. 해결: 기억·내부 상태로 <b>추정</b>하거나, 살펴보는 동작으로 <b>정보 수집</b>.</p></div>
+        <div class="card"><h3>전이의 확률성 = 다 보여도 결과가 운에 달렸다</h3><p class="muted">지금 상태를 완벽히 알아도 <b>다음 결과가 확률적으로</b> 나와요. 예) 백개먼의 주사위: 판은 다 보이지만 다음 눈은 아무도 몰라요. 해결: 결과별 확률로 <b>기대값</b>을 계산하고, 여러 결과에 <b>대비</b>.</p></div>
+      </div>
+      <p class="muted">둘 다 "결과를 확실히 모르겠다"는 느낌은 같지만 <b>원인(내 눈 vs 세상의 법칙)</b>과 <b>대처법</b>이 달라서 따로 분류해요.</p>
+
+      <h3>4. 조합 예: 둘은 서로 독립</h3>
+      <div class="table-wrap"><table style="min-width:0">
+        <thead><tr><th></th><th>결정론적</th><th>확률적</th></tr></thead>
+        <tbody>
+          <tr><td><b>완전 관측</b></td><td>체스(시계 없음), 십자말풀이</td><td>백개먼 (판은 다 보이지만 주사위)</td></tr>
+          <tr><td><b>부분 관측</b></td><td>솔리테어 뒷면 카드, 지도 없는 미로, 2장 진공청소기(현재 칸만 보임)</td><td>포커, 택시 주행</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted">네 칸에 모두 예가 있으니, 하나를 안다고 다른 하나가 정해지지 않아요. 시간 구조도 마찬가지예요. 결함 부품 검출은 <b>일화적</b>이지만 카메라가 흐리면 <b>부분 관측</b>일 수 있고, 체스는 <b>순차적</b>이지만 <b>결정론적</b>이에요.</p>
+
+      <div class="card">
+        <h3>덤: "비결정론적"과 "확률적"의 차이</h3>
+        <p class="muted">둘 다 결과가 여러 개 가능하다는 뜻이지만, <b>확률적</b>은 각 결과의 확률이 주어진 경우(주사위: 1/6씩), <b>비결정론적</b>은 가능한 결과만 알고 확률은 모르는 경우예요. 그래서 표에 "비결정론적 / 확률적"으로 함께 적혀 있어요.</p>
+      </div>
+
+      <div class="card">
+        <h3>한 줄 정리 (시험 단골)</h3>
+        <p><b>관측 가능성</b> = 지금이 다 보이나(내 눈) · <b>결정론</b> = 다음이 하나로 정해지나(세상의 법칙) · <b>시간 구조</b> = 지금 결정이 나중에 이어지나. 셋은 독립이라 "결정론적이면 완전 관측이다"는 <b>거짓</b>이에요(과제 1 B4-4 모범답안: 반례 솔리테어, 역의 반례 백개먼).</p>
       </div>
     </div>
 

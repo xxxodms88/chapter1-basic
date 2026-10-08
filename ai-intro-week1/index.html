@@ -1934,6 +1934,48 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
         </table>
       </div>
       <p class="muted" style="font-size:13.5px">¹ b가 유한하고 해가 있을 때(d 유한) · ² 모든 동작 비용이 어떤 ε &gt; 0 이상일 때 · C* = 최적해 비용</p>
+      <p class="note-link">✎ 내 질문 노트: 왜 IDS는 메모리를 적게 쓰는지 아래에 정리</p>
+    </div>
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>왜 IDS는 메모리를 적게 쓸까 (O(bd) vs BFS의 O(bᵈ))</h2>
+      <p class="muted" style="font-size:14px">위 표의 공간 열을 보고 따로 물어본 내용이에요. 강의안 내용과 구분해서 보세요.</p>
+
+      <h3>1. 메모리에 무엇을 들고 있어야 하나</h3>
+      <div class="grid2">
+        <div class="card"><h3>BFS: 한 층 전체를 들고 있다</h3><p class="muted">얕은 층부터 옆으로 넓게 퍼지니, 깊이 d에 도달할 때쯤 전선에는 <b>그 층의 노드가 전부</b>(약 bᵈ개) 들어 있어요. 게다가 중복을 막으려고 지금까지 만든 상태를 모두 reached에 저장해요. 그래서 공간 O(bᵈ).</p></div>
+        <div class="card"><h3>DFS 계열: 지금 경로만 들고 있다</h3><p class="muted">한 가지를 끝까지 파고들기 때문에, 메모리에는 <b>시작부터 지금 노드까지의 경로</b>와 그 경로의 각 층에서 <b>아직 안 가 본 형제들</b>만 있으면 돼요. 층마다 최대 b개 × 깊이만큼이니 선형. 다 본 가지는 메모리에서 버려요.</p></div>
+      </div>
+      <p class="muted">비유: BFS는 <b>지금까지 가 본 곳을 모두 그린 지도</b>를 들고 다니는 탐험가, DFS·IDS는 <b>돌아갈 길을 표시한 실 한 가닥</b>만 들고 다니는 탐험가예요. 막다른 길이면 실을 감아 되돌아오고, 그 가지는 잊어요.</p>
+
+      <h3>2. IDS = 깊이 제한을 늘려 가며 DFS를 반복</h3>
+      <div class="card">
+        <p class="muted">IDS는 깊이 제한 0, 1, 2, …로 <b>깊이 제한 DFS를 처음부터 다시</b> 해요. 한 번에 DFS 하나만 돌고, 한 바퀴가 끝나면 그 메모리를 <b>통째로 버리고</b> 다음 제한으로 새로 시작해요. 그래서 메모리가 회차마다 쌓이지 않아요.</p>
+        <p class="muted">해가 깊이 d에 있으면 제한이 d일 때 찾고 멈추므로, 경로 길이는 최대 d → 공간은 <b>O(bd)</b>. DFS의 O(bm)과 모양은 같지만, m(최대 깊이, 무한일 수도) 대신 <b>d(해의 깊이)</b>까지만 내려가요.</p>
+      </div>
+
+      <h3>3. 숫자로 비교 (b = 10, d = 5)</h3>
+      <div class="table-wrap"><table style="min-width:0">
+        <thead><tr><th></th><th class="num-r">메모리에 드는 노드 수 (대략)</th><th class="num-r">생성하는 노드 수</th></tr></thead>
+        <tbody>
+          <tr><td><b>BFS</b></td><td class="num-r">bᵈ ≈ <b>100,000</b>개 이상</td><td class="num-r">111,110</td></tr>
+          <tr><td><b>IDS</b></td><td class="num-r">b × d ≈ <b>50</b>개</td><td class="num-r">123,450 (약 11% 더)</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted">깊이가 12만 돼도 BFS는 10¹²개를 들고 있어야 하지만 IDS는 약 120개면 돼요. 실제로 BFS는 <b>시간보다 메모리가 먼저 바닥나요</b>.</p>
+
+      <h3>4. 대가: 같은 노드를 여러 번 다시 만든다</h3>
+      <div class="card">
+        <p class="muted">회차마다 처음부터 다시 하니까 얕은 층 노드는 여러 번 생성돼요(깊이 1은 d번, 깊이 d는 1번). 그래도 노드 대부분이 <b>가장 깊은 층</b>에 몰려 있어서(층이 하나 깊어질 때마다 b배), 얕은 층을 다시 만드는 비용은 작아요. b = 10이면 약 11%만 더 들어요. 시간 복잡도는 BFS와 같은 O(bᵈ)예요.</p>
+        <p class="muted">즉 IDS는 <b>시간을 조금 더 쓰고 메모리를 크게 아끼는</b> 거래예요. 그러면서도 BFS처럼 가장 얕은 해를 찾고(완전, 비용이 같을 때 최적), DFS처럼 선형 메모리를 써요. 그래서 교재는 "상태 공간이 크고 해의 깊이를 모를 때 선호되는 정보 없는 검색"이라고 해요.</p>
+      </div>
+      <p class="muted" style="font-size:13.5px">주의: 이 O(bd)는 지금까지 본 상태를 전부 기억하는 reached 표를 쓰지 않을 때예요. IDS는 순환을 <b>현재 경로 위에서만</b> 검사해요. reached를 다 저장하면 메모리 이점이 사라져요.</p>
+
+      <div class="card">
+        <h3>한 줄 정리</h3>
+        <p>BFS는 <b>한 층 전체</b>를 기억해야 해서 O(bᵈ), IDS는 <b>지금 경로 하나</b>(깊이 d × 형제 b)만 기억하고 회차마다 버리니까 O(bd). 대신 얕은 층을 다시 만드는 약간의 시간을 더 쓴다.</p>
+      </div>
     </div>
 
     <div class="block">

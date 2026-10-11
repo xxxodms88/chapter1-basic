@@ -2722,6 +2722,7 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
         <div style="min-width:0">
           <h3 style="font-size:15px;margin-bottom:4px">단계별 기록</h3>
           <div class="table-wrap" style="max-height:250px;overflow:auto"><table class="slog"><thead><tr><th>단계</th><th>① 꺼냄</th><th>② 목표 검사</th><th>③ 생성</th><th>버림</th><th>전선</th><th>시간</th><th>공간</th></tr></thead><tbody id="tLog"></tbody></table></div>
+          <p class="note-link" style="font-weight:400;margin-top:6px">✎ <b>"버림"은 왜? 공간에 안 들어가나?</b> DFS·IDS(트리형 검색)는 reached를 쓰지 않아요. 그래서 노드를 들고 있는 이유가 딱 두 가지뿐이에요. ① 아직 꺼낼 차례를 기다리는 <b>전선</b>이라서, ② 전선 노드로 돌아가는 <b>경로(조상)</b>라서예요. 자식이 없는 H처럼 다 본 노드는 둘 다 아니고, 그 아래에 목표가 없다는 것도 이미 확인됐어요. 그래서 지워도 잃는 정보가 없어요. 그렇다고 공간 계산에서 빠지는 건 아니에요. H는 들고 있던 동안 공간에 들어가 있었어요(바로 전 단계의 공간 7에 H 포함). 공간 복잡도는 "<b>동시에 들고 있던 최대 개수</b>"라서 이 7이 최대치(= 1 + b·m)로 남아요. 버린 뒤 줄어든 자리는 다음 노드가 다시 써요. 반면 시간은 "만든 총수"라 H도 계속 세어져요. BFS는 reached 때문에 끝까지 못 버려서 공간 = 시간이 돼요.</p>
         </div>
         <div class="cx">
           <h3 style="font-size:15px">복잡도 자세히 보기: 시간은 쌓이기만 하고, 공간은 오르내려요</h3>
@@ -2834,6 +2835,7 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
         <div style="min-width:0">
           <h3 style="font-size:15px;margin-bottom:4px">단계별 기록 (ℓ = 깊이 제한)</h3>
           <div class="table-wrap" style="max-height:250px;overflow:auto"><table class="slog"><thead><tr><th>단계</th><th>① 꺼냄</th><th>② 목표 검사</th><th>③ 생성</th><th>버림</th><th>전선</th><th>시간</th><th>공간</th></tr></thead><tbody id="iLog"></tbody></table></div>
+          <p class="note-link" style="font-weight:400;margin-top:6px">✎ <b>"버림"은 왜? 공간에 안 들어가나?</b> DFS·IDS(트리형 검색)는 reached를 쓰지 않아요. 그래서 노드를 들고 있는 이유가 딱 두 가지뿐이에요. ① 아직 꺼낼 차례를 기다리는 <b>전선</b>이라서, ② 전선 노드로 돌아가는 <b>경로(조상)</b>라서예요. 자식이 없는 H처럼 다 본 노드는 둘 다 아니고, 그 아래에 목표가 없다는 것도 이미 확인됐어요. 그래서 지워도 잃는 정보가 없어요. 그렇다고 공간 계산에서 빠지는 건 아니에요. H는 들고 있던 동안 공간에 들어가 있었어요(바로 전 단계의 공간 7에 H 포함). 공간 복잡도는 "<b>동시에 들고 있던 최대 개수</b>"라서 이 7이 최대치(= 1 + b·m)로 남아요. 버린 뒤 줄어든 자리는 다음 노드가 다시 써요. 반면 시간은 "만든 총수"라 H도 계속 세어져요. BFS는 reached 때문에 끝까지 못 버려서 공간 = 시간이 돼요.</p>
         </div>
         <div class="cx">
           <h3 style="font-size:15px">복잡도 자세히 보기: 시간은 쌓이기만 하고, 공간은 오르내려요</h3>

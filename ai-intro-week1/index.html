@@ -2916,6 +2916,26 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
         </ul>
         <p class="muted">루마니아 예: C* = 278, ε = 80, b = 3 → 3<sup>1+3</sup> = 81이 상한이에요. 실제로는 생성 13번이면 끝나요. 공식은 "최악일 때 이 정도까지 커질 수 있다"는 상한이에요.</p>
       </div>
+      <div class="card">
+        <h3>⑥ k·ε ≤ g(n) ≤ C* 한 줄씩 (O(b<sup>1+⌊C*/ε⌋</sup>)의 근거)</h3>
+        <p class="muted">n은 UCS가 목표를 꺼내기 <b>전에</b> 꺼내서 확장하는 아무 노드예요. k는 출발점에서 n까지 몇 걸음(간선 몇 개)인지, 즉 n의 깊이예요.</p>
+        <ul class="muted">
+          <li><b>왼쪽 k·ε ≤ g(n)</b>: 한 걸음의 비용은 아무리 싸도 ε 이상이에요. k걸음을 걸었으면 비용 합은 최소 ε + ε + … + ε (k번) = k·ε예요. g(n)은 그 k걸음의 비용 합이므로 k·ε보다 작을 수 없어요.</li>
+          <li><b>오른쪽 g(n) ≤ C*</b>: UCS는 g가 작은 순서로 꺼내고, 목표를 꺼내는 순간(g = C*) 끝나요. 그러니 목표보다 먼저 꺼낸 노드는 g가 C* 이하예요. g가 C*보다 큰 노드는 전선에 들어갈 수는 있어도, 꺼낼 차례가 오기 전에 검색이 끝나요.</li>
+          <li><b>둘을 이으면</b> k·ε ≤ C*, 즉 <b>k ≤ C*/ε</b>예요. 걸음 수 k는 정수니까 <b>k ≤ ⌊C*/ε⌋</b>예요. UCS가 확장하는 노드는 모두 깊이 ⌊C*/ε⌋ 이하라는 뜻이에요.</li>
+          <li><b>그래서 시간 복잡도</b>: 깊이 ⌊C*/ε⌋까지의 노드는 최대 약 b<sup>⌊C*/ε⌋</sup>개예요. 그 마지막 층을 확장하면 자식(한 층 더)이 생성되므로 b<sup>1+⌊C*/ε⌋</sup>예요.</li>
+        </ul>
+        <div class="table-wrap"><table>
+          <thead><tr><th>예 (루마니아, ε = 80, C* = 278)</th><th>k</th><th>k·ε ≤ g ≤ C*</th></tr></thead>
+          <tbody>
+            <tr><td>RV (Sib → RV)</td><td>1</td><td>80 ≤ 80 ≤ 278 ✓</td></tr>
+            <tr><td>Pit (Sib → RV → Pit)</td><td>2</td><td>160 ≤ 177 ≤ 278 ✓</td></tr>
+            <tr><td>Cra (Sib → RV → Cra)</td><td>2</td><td>160 ≤ 226 ≤ 278 ✓</td></tr>
+            <tr><td>Buc (Sib → Fag → Buc, 옛 기록)</td><td>2</td><td>160 ≤ 310, 하지만 310 &gt; 278 → 꺼내기 전에 끝남</td></tr>
+          </tbody>
+        </table></div>
+        <p class="muted">⌊278/80⌋ = 3이므로, 이 문제에서 UCS가 확장하는 노드는 깊이 3을 넘지 않아요. 실습 시뮬레이터의 reached 표에 각 상태의 k와 이 부등식을 같이 표시했어요.</p>
+      </div>
     </div>
 
     <div class="block">
@@ -2938,7 +2958,7 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
         <div class="legend"><span><i class="lg lg-un"></i>아직 모름</span><span><i class="lg lg-fr"></i>전선 (대기)</span><span><i class="lg lg-cur"></i>방금 꺼냄</span><span><i class="lg lg-exp"></i>확장함</span><span><i class="lg lg-path"></i>찾은 경로</span></div>
         <div class="grid2">
           <div><h3 style="font-size:15px;margin-bottom:6px">전선 <span class="muted" id="uFrLabel" style="font-weight:400;font-size:13px"></span></h3><div class="frontier" id="uFrontier"></div></div>
-          <div><h3 style="font-size:15px;margin-bottom:6px">reached 표 <span class="muted" style="font-weight:400;font-size:13px">상태마다 가장 싼 기록 하나</span></h3><div class="table-wrap"><table class="cxt"><thead><tr><th>상태</th><th>g</th><th>부모</th><th>처지</th></tr></thead><tbody id="uReach"></tbody></table></div></div>
+          <div><h3 style="font-size:15px;margin-bottom:6px">reached 표 <span class="muted" style="font-weight:400;font-size:13px">상태마다 가장 싼 기록 하나</span></h3><div class="table-wrap"><table class="cxt"><thead><tr><th>상태</th><th>g</th><th>부모</th><th>처지</th><th>k·ε ≤ g ≤ C*</th></tr></thead><tbody id="uReach"></tbody></table></div></div>
         </div>
         <div style="min-width:0">
           <h3 style="font-size:15px;margin-bottom:4px">단계별 기록</h3>
@@ -5210,6 +5230,7 @@ action ← rule.ACTION</pre>
     function frSorted(){return alg==='ucs'?S.fr.slice().sort((a,b)=>a.g-b.g||a.k-b.k):S.fr.slice();}
     function frText(){const o=frSorted();return o.length?o.map(x=>S.reached[x.s]!==x?'<s>'+lab(x.s)+'('+x.g+')</s><span class="muted"> 옛 기록</span>':lab(x.s)+'('+x.g+')').join(', '):'—';}
     function path(n){const p=[];while(n){p.unshift(n.s);n=n.p;}return p;}
+    function kchk(nd){let k=0,x=nd;while(x.p){k++;x=x.p;}const lo=k*G.eps;return `k=${k}: ${lo} ≤ ${nd.g} `+(nd.g<=G.C?`≤ ${G.C} ✓`:`> ${G.C} (C*보다 커서 꺼낼 일 없음)`);}
     function render(){
       const P=S.found?path(S.found):[],pe=new Set();for(let i=1;i<P.length;i++)pe.add(P[i-1]+'|'+P[i]);
       const live=new Set(S.fr.filter(x=>S.reached[x.s]===x).map(x=>x.s));
@@ -5238,7 +5259,7 @@ action ← rule.ACTION</pre>
       $('#uMemBar').style.width=Math.min(100,S.mem/maxGen*100)+'%';
       $('#uFrLabel').textContent=alg==='ucs'?'우선순위 큐: g가 작은 것부터. 옛 기록 = 더 싼 길이 생겨 쓸모없어졌지만 아직 큐에 남아 있는 노드(꺼낼 때 버림)':'큐: 왼쪽(앞)부터 꺼냄';
       $('#uFrontier').innerHTML=frSorted().map((x,i)=>{const st=S.reached[x.s]!==x;return `<span class="chip"${st?' style="opacity:.7"':''}>${i===0?'▶ ':''}${st?'<s>':''}${lab(x.s)} <b>${x.g}</b>${st?'</s> 옛 기록':''}</span>`;}).join('')||'<span class="muted">비어 있음</span>';
-      $('#uReach').innerHTML=Object.entries(S.reached).map(([v,nd])=>`<tr${S.upd===v?' class="now"':''}><td><b>${lab(v)}</b></td><td class="num-r">${nd.g}</td><td>${nd.p?lab(nd.p.s):'—'}</td><td>${S.exp.has(v)?'확장함':live.has(v)?(v===G.goal&&gt==='late'&&!S.done?'전선 <span class="muted">(목표지만 아직 안 꺼냄 → 꺼낼 때 검사)</span>':'전선'):(S.found&&S.found.s===v?'꺼냄 → 목표!':'—')}</td></tr>`).join('');
+      $('#uReach').innerHTML=Object.entries(S.reached).map(([v,nd])=>`<tr${S.upd===v?' class="now"':''}><td><b>${lab(v)}</b></td><td class="num-r">${nd.g}</td><td>${nd.p?lab(nd.p.s):'—'}</td><td>${S.exp.has(v)?'확장함':live.has(v)?(v===G.goal&&gt==='late'&&!S.done?'전선 <span class="muted">(목표지만 아직 안 꺼냄 → 꺼낼 때 검사)</span>':'전선'):(S.found&&S.found.s===v?'꺼냄 → 목표!':'—')}</td><td class="tiny">${kchk(nd)}</td></tr>`).join('');
       let st;
       if(S.found){
         const c=S.found.g;

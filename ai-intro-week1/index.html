@@ -266,6 +266,7 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .slog{min-width:560px;font-size:13px}
 .slog td{line-height:1.6}
 .slog tr.now td{background:var(--amber-soft)}
+.slog tr.sum td{background:var(--accent-soft);line-height:1.7}
 .slog thead th{position:sticky;top:0;z-index:1}
 .ttree{display:block;width:100%;height:auto}
 .ttree .e{stroke:var(--muted);stroke-width:2.5}
@@ -4943,6 +4944,11 @@ action ← rule.ACTION</pre>
     $('#progress').innerHTML=`<span class="chip">${CH[ch].short} 외운 카드 <b>${k}</b> / ${c.deck.length}</span><span class="chip">퀴즈 최고 점수 <b>${best==null?'—':best+'%'}</b></span><span class="chip">퀴즈 <b>${c.quiz.length}</b>문항</span>`;
   }
 
+  function cxSummary(S,cols,formula){
+    if(!S.done)return '';
+    let pi=0;S.hist.forEach((h,i)=>{if(h.m>S.hist[pi].m)pi=i;});
+    return `<tr class="sum"><td colspan="${cols}">■ <b>결과</b> · 시간 = 생성 <b>${S.n}</b>번 · <b>공간 복잡도 = 최대 공간 ${S.peak}개</b> (${S.hist[pi].s}단계 때, 공간 칸에서 가장 큰 값) · ${formula}<br><span class="muted">공간 칸의 숫자는 "그 단계에서 지금 들고 있는 수"이고, 공간 복잡도는 실행 내내 그중 <b>가장 컸던 값</b>이에요.</span></td></tr>`;
+  }
   function cxChart(el,H){
     const W=600,HH=190,l=34,r=92,t=16,bt=24,n=Math.max(H.length-1,1);
       const top=Math.max(4,Math.ceil(Math.max(...H.map(h=>h.t))/4)*4);
@@ -5078,7 +5084,7 @@ action ← rule.ACTION</pre>
       else if(!S.step)st=`${TREES[tk].name} · ${ALGS[alg]} · 목표 검사 ${GT[gt]}. 시작 노드 A만 생성된 상태예요.`;
       else st=alg==='ids'&&!S.cur?`깊이 제한 ℓ = ${S.lim}로 새 회차 시작. 이전 회차의 노드는 모두 버렸어요.`:`${S.step}단계: ${lab(S.cur)}를 꺼냈어요.`;
       $('#'+P+'Status').textContent=st;
-      $('#'+P+'Log').innerHTML=S.log.map((r,i)=>`<tr class="${i===S.log.length-1?'now':''}"><td>${r.s}</td><td><b>${r.pop}</b></td><td>${r.test}</td><td>${r.gen.join(', ')||'—'}</td><td>${r.drop.join(', ')||'—'}</td><td>${r.fr}</td><td>${r.t}</td><td><b>${r.m}</b>${r.ml?`<div class="tiny muted" style="min-width:110px">${r.ml}</div>`:''}</td></tr>`).join('');
+      $('#'+P+'Log').innerHTML=S.log.map((r,i)=>`<tr class="${i===S.log.length-1?'now':''}"><td>${r.s}</td><td><b>${r.pop}</b></td><td>${r.test}</td><td>${r.gen.join(', ')||'—'}</td><td>${r.drop.join(', ')||'—'}</td><td>${r.fr}</td><td>${r.t}</td><td><b>${r.m}</b>${r.ml?`<div class="tiny muted" style="min-width:110px">${r.ml}</div>`:''}</td></tr>`).join('')+cxSummary(S,8,alg==='bfs'?'BFS는 못 버려서 O(bᵈ)':alg==='dfs'?'DFS는 경로 + 형제만 남겨서 O(bm), 꽉 찬 트리면 1 + b·m':'IDS는 회차마다 DFS라 O(bd), 꽉 찬 트리면 1 + b·d');
       const tw=$('#'+P+'Log').closest('.table-wrap');tw.scrollTop=tw.scrollHeight;
       $('#'+P+'Step').disabled=S.done;$('#'+P+'Run').disabled=S.done;
       renderCx(live());
@@ -5233,7 +5239,7 @@ action ← rule.ACTION</pre>
       else if(!S.step)st=`${G.name} · ${ALGS[alg]} · 목표 검사 ${GT[gt]}. 시작 노드 ${lab(G.start)}(g=0)만 전선에 있어요.`;
       else st=`${S.step}단계: ${lab(S.cur.s)}(g=${S.cur.g})를 꺼냈어요.`;
       $('#uStatus').textContent=st;
-      $('#uLog').innerHTML=S.log.map((r,i)=>`<tr class="${i===S.log.length-1?'now':''}"><td>${r.s}</td><td><b>${r.pop}</b></td><td>${r.test}</td><td>${r.gen.join('<br>')||'—'}</td><td>${r.fr}</td><td>${r.t}</td><td><b>${r.m}</b><div class="tiny muted" style="min-width:100px">${r.ml}</div></td></tr>`).join('');
+      $('#uLog').innerHTML=S.log.map((r,i)=>`<tr class="${i===S.log.length-1?'now':''}"><td>${r.s}</td><td><b>${r.pop}</b></td><td>${r.test}</td><td>${r.gen.join('<br>')||'—'}</td><td>${r.fr}</td><td>${r.t}</td><td><b>${r.m}</b><div class="tiny muted" style="min-width:100px">${r.ml}</div></td></tr>`).join('')+cxSummary(S,7,alg==='ucs'?'UCS는 reached + 전선을 들고 있어서 O(b<sup>1+⌊C*/ε⌋</sup>)':'BFS는 못 버려서 O(bᵈ)');
       const tw=$('#uLog').closest('.table-wrap');tw.scrollTop=tw.scrollHeight;
       $('#uStep').disabled=S.done;$('#uRun').disabled=S.done;
       /* 복잡도 */

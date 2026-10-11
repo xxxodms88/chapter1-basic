@@ -2229,6 +2229,21 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
 
       <h3>1. reached는 "이 상태까지 가는 지금까지 가장 좋은 길"을 적어 둔 표</h3>
       <p>reached[s]에는 상태 s에 도달한 노드(= 거기까지의 경로와 비용 g)가 적혀 있어요. 같은 상태에 <b>다른 길로 또 도착</b>하는 일이 그래프에서는 흔한데, 이때 어떻게 하느냐가 BFS와 UCS의 차이예요.</p>
+      <div class="card">
+        <h3>"지금까지 왔던 길을 다 저장하는 거 아니야?"</h3>
+        <p class="muted">절반은 맞아요. 정확히는 <b>"지금까지 도달한 상태는 전부" 저장하지만, 상태 하나마다 "가장 좋은 길 하나만"</b> 저장해요.</p>
+        <div class="table-wrap"><table style="min-width:0">
+          <thead><tr><th>질문</th><th>답</th></tr></thead>
+          <tbody>
+            <tr><td>어떤 상태들이 들어가나?</td><td><b>한 번이라도 도달한 모든 상태</b>가 들어가요(그래서 이름이 reached). 확장이 끝난 상태도, 전선에 있는 상태도 모두.</td></tr>
+            <tr><td>상태 하나에 몇 개가 들어가나?</td><td><b>하나</b>예요. reached는 "상태 → 노드" 사전(딕셔너리)이라, 같은 상태에 두 번째 길로 도착하면 새 칸을 만들지 않고 기존 칸을 <b>더 싼 쪽으로 덮어써요</b>(UCS). BFS는 덮어쓰지도 않아요.</td></tr>
+            <tr><td>그 "길"은 어떻게 저장되나?</td><td>경로 전체를 목록으로 적지 않고, 노드가 <b>부모 노드 포인터와 비용 g</b>만 가져요. 목표를 찾으면 부모를 거꾸로 따라가 길을 복원해요.</td></tr>
+            <tr><td>버려진 길은?</td><td>Bucharest 310짜리처럼 더 비싼 길은 reached에서 지워져요(전선에 남은 옛 노드는 꺼낼 때 무시). 그래서 같은 상태에 대해 길이 여러 개 쌓이지 않아요.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="muted">예) 위 루마니아 예에서 4단계 뒤 reached의 Bucharest 칸에는 "Pitesti 경유, 비용 278" 노드 하나만 있고, "Fagaras 경유, 310"은 더 이상 없어요. 반면 Sibiu, RV, Fagaras, Pitesti, Craiova, Bucharest처럼 도달한 상태는 모두 각자 한 칸씩 있어요.</p>
+      </div>
+
       <div class="table-wrap"><table>
         <thead><tr><th></th><th>BFS</th><th>UCS (최선 우선 검색)</th></tr></thead>
         <tbody>

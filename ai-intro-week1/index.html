@@ -263,6 +263,9 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .frontier{display:flex;flex-wrap:wrap;gap:6px}
 .fchip{font-size:13px;padding:3px 10px;border-radius:999px;background:var(--surface-2);font-variant-numeric:tabular-nums}
 .fchip b{font-family:var(--mono);font-weight:600;font-size:12px}
+.slog{min-width:560px;font-size:13px}
+.slog td{line-height:1.6}
+.slog tr.now td{background:var(--amber-soft)}
 .fchip.next{background:var(--amber-soft);box-shadow:inset 0 0 0 1.5px var(--amber)}
 .exlist{margin:0;padding-left:1.4em;font-size:13.5px;display:grid;gap:2px}
 .num-r{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
@@ -2589,7 +2592,7 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
     <div class="block">
       <span class="eyebrow">검색 시뮬레이터</span>
       <h2>루마니아 지도에서 검색 알고리즘 돌려 보기</h2>
-      <p class="muted">알고리즘과 출발 도시를 고르고 "한 단계"를 누르세요. 목표는 Bucharest입니다. BFS·UCS·<span class="k">탐욕적</span>·A*는 <span class="k">reached</span> 집합을 쓰는 그래프 검색, DFS는 현재 경로에 대해서만 순환을 검사합니다. 같은 비용이면 알파벳 순서를 따릅니다.</p>
+      <p class="muted">알고리즘과 출발 도시를 고르고 "한 단계"를 누르세요. 한 단계마다 전선에서 노드 하나를 <b>꺼내고</b>, 그 이웃 도시들로 자식 노드를 <b>생성</b>해요(아래 단계별 기록 참고). 목표는 Bucharest입니다. BFS·UCS·<span class="k">탐욕적</span>·A*는 <span class="k">reached</span> 집합을 쓰는 그래프 검색, DFS는 현재 경로에 대해서만 순환을 검사합니다. 같은 비용이면 알파벳 순서를 따릅니다.</p>
       <div class="card sim">
         <div class="pick" id="algPick"></div>
         <div class="row" style="justify-content:flex-start">
@@ -2600,10 +2603,15 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
         </div>
         <p class="verdict" id="srStatus"></p>
         <div class="mapwrap"><svg id="romania" viewBox="0 0 640 420" role="img" aria-label="루마니아 지도"></svg></div>
-        <div class="legend" id="srLegend"><span><i class="lg lg-exp"></i>확장됨</span><span><i class="lg lg-fr"></i><span class="k">전선</span></span><span><i class="lg lg-cur"></i>방금 확장</span><span><i class="lg lg-path"></i>찾은 경로</span></div>
+        <div class="legend" id="srLegend"><span><i class="lg lg-exp"></i>꺼내서 확장함</span><span><i class="lg lg-fr"></i>전선 (생성됐지만 아직 안 꺼냄)</span><span><i class="lg lg-cur"></i>방금 꺼내서 확장</span><span><i class="lg lg-path"></i>찾은 경로</span></div>
         <div class="grid2">
           <div><h3 style="font-size:15px;margin-bottom:6px">전선 <span class="muted" id="frLabel" style="font-weight:400;font-size:13px"></span></h3><div class="frontier" id="srFrontier"></div></div>
           <div><h3 style="font-size:15px;margin-bottom:6px">확장 순서</h3><ol class="exlist" id="srExpanded"></ol></div>
+        </div>
+        <div style="min-width:0">
+          <h3 style="font-size:15px;margin-bottom:4px">단계별 기록: ① 꺼냄 → ② 목표 검사 → ③ 생성</h3>
+          <p class="muted" style="font-size:13px">한 단계 = 전선에서 노드 하나를 <b>꺼내고</b>, 목표인지 보고, 아니면 그 도시의 이웃마다 자식 노드를 <b>생성</b>해 전선에 넣을지 정하는 것. 생성된 자식은 다음에 꺼내질 때까지 전선에서 기다려요.</p>
+          <div class="table-wrap" style="max-height:360px;overflow:auto"><table class="slog"><thead><tr><th>단계</th><th>① 전선에서 꺼냄</th><th>② 목표 검사</th><th>③ 생성한 자식 → 처리</th></tr></thead><tbody id="srLog"></tbody></table></div>
         </div>
       </div>
       <p class="muted">해 볼 것: A*와 <span class="k">탐욕적</span> 검색을 번갈아 돌려 450과 418의 차이를 확인하세요. BFS는 동작 수가 가장 적은 경로(Arad → Sibiu → Fagaras → Bucharest)를 찾지만 거리로는 최적이 아닙니다. UCS와 A*는 같은 418을 찾지만 확장 수가 다릅니다.</p>
@@ -3794,7 +3802,7 @@ action ← rule.ACTION</pre>
   function srReset(){
     const start=sel.value;
     const root={s:start,p:null,g:0,depth:0,id:0};
-    S={seq:1,frontier:[root],reached:{[start]:root},expanded:[],cur:null,done:null,msg:'',pruned:0};
+    S={seq:1,frontier:[root],reached:{[start]:root},expanded:[],cur:null,done:null,msg:'',pruned:0,log:[]};
     if(alg==='bfs'&&start===GOAL)S.done=root;
     algPick.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.a===alg?'true':'false'));
     srRender();
@@ -3806,27 +3814,33 @@ action ← rule.ACTION</pre>
     let bi=0;for(let i=1;i<F.length;i++){const a=fOf(F[i]),b=fOf(F[bi]);if(a<b||(a===b&&F[i].id<F[bi].id))bi=i}
     return F.splice(bi,1)[0];
   }
+  const val=n=>alg==='astar'?`f=${n.g}+${CITY[n.s][2]}=${n.g+CITY[n.s][2]}`:alg==='greedy'?`h=${CITY[n.s][2]}`:alg==='ucs'?`g=${n.g}`:`깊이 ${n.depth}`;
   function srStep(){
     if(S.done||S.fail)return;
-    let node;
-    do{
-      if(!S.frontier.length){S.fail=true;srRender();return}
+    let node;const stale=[];
+    while(true){
+      if(!S.frontier.length){S.fail=true;S.log.push({fail:true,stale});srRender();return}
       node=pop();
-    }while(alg!=='bfs'&&alg!=='dfs'&&S.reached[node.s]!==node);
-    if(alg!=='bfs'&&node.s===GOAL){S.done=node;S.cur=null;srRender();return}
+      if(alg!=='bfs'&&alg!=='dfs'&&S.reached[node.s]!==node){stale.push(node);continue}
+      break;
+    }
+    const entry={pop:node,stale,kids:[]};S.log.push(entry);
+    if(alg!=='bfs'&&node.s===GOAL){entry.goal=true;S.done=node;S.cur=null;srRender();return}
     S.cur=node;S.expanded.push(node);
     const kids=[];
     for(const [s2,w] of ADJ[node.s]){
       const child={s:s2,p:node,g:node.g+w,depth:node.depth+1,id:S.seq++};
       if(alg==='bfs'){
-        if(s2===GOAL){S.done=child;break}
-        if(!(s2 in S.reached)){S.reached[s2]=child;kids.push(child)}
+        if(s2===GOAL){S.done=child;entry.kids.push([child,'goal']);break}
+        if(!(s2 in S.reached)){S.reached[s2]=child;kids.push(child);entry.kids.push([child,'new'])}else entry.kids.push([child,'dup']);
       }else if(alg==='dfs'){
-        if(pathOf(node).includes(s2)){S.pruned++;continue}
-        kids.push(child);
+        if(pathOf(node).includes(s2)){S.pruned++;entry.kids.push([child,'cycle']);continue}
+        kids.push(child);entry.kids.push([child,'new']);
       }else{
         const r=S.reached[s2];
-        if(!r||child.g<r.g){S.reached[s2]=child;kids.push(child)}
+        if(!r){S.reached[s2]=child;kids.push(child);entry.kids.push([child,'new'])}
+        else if(child.g<r.g){S.reached[s2]=child;kids.push(child);entry.kids.push([child,'better',r])}
+        else entry.kids.push([child,'worse',r]);
       }
     }
     if(alg==='dfs')kids.reverse();
@@ -3849,7 +3863,6 @@ action ← rule.ACTION</pre>
     let items=S.frontier.filter(n=>alg==='bfs'||alg==='dfs'||S.reached[n.s]===n);
     if(alg==='dfs')items=items.slice().reverse();
     if(alg!=='bfs'&&alg!=='dfs')items=items.slice().sort((a,b)=>fOf(a)-fOf(b)||a.id-b.id);
-    const val=n=>alg==='astar'?`${n.g}+${CITY[n.s][2]}=${n.g+CITY[n.s][2]}`:alg==='greedy'?`${CITY[n.s][2]}`:alg==='ucs'?`${n.g}`:`깊이 ${n.depth}`;
     $('#srFrontier').innerHTML=items.length?items.map((n,i)=>`<span class="fchip${i===0?' next':''}">${short(n.s)} <b>${val(n)}</b></span>`).join(''):'<span class="muted">비어 있음</span>';
     $('#srExpanded').innerHTML=S.expanded.map(n=>`<li>${short(n.s)} <span class="muted">(${alg==='astar'?'f='+(n.g+CITY[n.s][2]):alg==='greedy'?'h='+CITY[n.s][2]:alg==='ucs'?'g='+n.g:'깊이 '+n.depth})</span></li>`).join('');
     let st;
@@ -3858,6 +3871,15 @@ action ← rule.ACTION</pre>
     else if(!S.expanded.length)st=`${ALGS[alg]} · 출발 ${sel.value}. "한 단계"를 누르세요.`;
     else st=`${S.expanded.length}번째 확장: ${S.cur?short(S.cur.s):''}${alg==='dfs'&&S.pruned?` · 순환으로 잘라낸 자식 ${S.pruned}개`:''}`;
     $('#srStatus').textContent=st;
+    const LB={new:'처음 보는 도시 → <b>전선에 추가</b>',dup:'이미 reached에 있음 → 버림',cycle:'현재 경로에 이미 있음(순환) → 버림',better:'더 싼 길 발견 → reached 갱신, <b>전선에 추가</b>',worse:'reached에 더 싼 길이 있음 → 버림',goal:'<b>목표! 생성하자마자 검사(early) → 종료</b>'};
+    $('#srLog').innerHTML=S.log.length?S.log.map((e,i)=>{
+      const stl=e.stale.length?`<div class="muted tiny">먼저 꺼낸 옛 노드 ${e.stale.map(n=>short(n.s)+' '+val(n)).join(', ')}: 더 싼 기록이 있어 버리고 다시 꺼냄</div>`:'';
+      if(e.fail)return `<tr><td>${i+1}</td><td colspan="3">${stl}전선이 비어 더 꺼낼 노드가 없음 → 실패</td></tr>`;
+      const goal=alg==='bfs'?'꺼낼 때는 검사 안 함 (BFS는 생성할 때 검사)':e.goal?'<b>목표! 꺼낼 때 검사(late) → 종료</b>':'목표 아님 → 확장';
+      const kids=e.goal?'—':e.kids.map(([c,t,r])=>`${short(c.s)} <span class="muted">${val(c)}</span> → ${LB[t]}${r&&t!=='new'?` <span class="muted tiny">(기존 g=${r.g})</span>`:''}`).join('<br>');
+      return `<tr${i===S.log.length-1?' class="now"':''}><td>${i+1}</td><td><b>${short(e.pop.s)}</b> <span class="muted">${val(e.pop)}</span>${stl}</td><td>${goal}</td><td>${kids}</td></tr>`;
+    }).join(''):'<tr><td colspan="4" class="muted">"한 단계"를 누르면 여기에 꺼낸 노드와 생성한 자식이 쌓여요.</td></tr>';
+    const lw=$('#srLog').closest('.table-wrap');if(lw)lw.scrollTop=lw.scrollHeight;
     $('#srStep').disabled=$('#srRun').disabled=!!(S.done||S.fail);
   }
   algPick.addEventListener('click',e=>{const b=e.target.closest('button');if(b){alg=b.dataset.a;srReset()}});

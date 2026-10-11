@@ -303,6 +303,11 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .ugraph .gv{font-family:var(--mono);font-size:15px;font-weight:600;fill:var(--muted)}
 .ugraph .gv.up{fill:var(--bad)}
 .ugraph .e.un{stroke-dasharray:none;stroke:var(--line)}
+.flds{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px}
+.flarr{font-size:12px;color:var(--muted);white-space:nowrap}
+.flq{display:flex;gap:4px;flex-wrap:wrap;min-height:30px;padding:4px;border:2px solid var(--amber);border-radius:8px;background:var(--amber-soft);min-width:60px}
+.flst{flex-direction:column;flex-wrap:nowrap}
+.flc{font-family:var(--mono);font-size:13px;font-weight:700;background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:2px 8px;text-align:center}
 .ttree .lim{stroke:var(--amber);stroke-width:2;stroke-dasharray:8 6}
 .ttree .limt{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--amber)}
 .ttree .cnt{font-family:var(--mono);font-size:14px;font-weight:700;fill:var(--note)}
@@ -2704,6 +2709,31 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
           <tr><td>비용 최적성</td><td>비용이 모두 같을 때만</td><td>No (처음 만난 목표 반환)</td></tr>
         </tbody>
       </table></div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">실습 · FIFO vs LIFO</span>
+      <h2>같은 트리, 전선만 다르게: 큐(FIFO)와 스택(LIFO) 나란히 보기</h2>
+      <p class="muted">BFS와 DFS는 코드가 거의 같고 <b>전선 자료구조 하나만</b> 달라요. 둘 다 "전선에서 하나 꺼냄 → 그 자식을 전선에 넣음"을 반복해요. 그런데 <b>어디서 꺼내느냐</b>가 탐색 모양을 완전히 바꿔요. "한 단계"를 누르면 두 쪽이 동시에 한 칸씩 진행해요. 노드 안의 작은 숫자는 몇 번째로 꺼냈는지예요.</p>
+      <div class="card sim">
+        <div class="row" style="justify-content:flex-start;gap:10px 16px">
+          <div><div class="tiny muted">트리</div><div class="pick" id="flPick"></div></div>
+        </div>
+        <div class="row" style="justify-content:flex-start">
+          <button class="btn primary" id="flStep">한 단계</button>
+          <button class="btn" id="flRun">끝까지</button>
+          <button class="btn" id="flReset">처음으로</button>
+        </div>
+        <div class="grid2" id="flPanels"></div>
+        <div class="legend"><span><i class="lg lg-un"></i>아직 생성 안 됨</span><span><i class="lg lg-fr"></i>전선 안에서 대기</span><span><i class="lg lg-cur"></i>방금 꺼냄</span><span><i class="lg lg-exp"></i>꺼내서 확장 끝</span></div>
+        <div class="table-wrap"><table class="cxt"><thead><tr><th></th><th>FIFO 큐 → BFS</th><th>LIFO 스택 → DFS</th></tr></thead><tbody>
+          <tr><td><b>넣는 곳</b></td><td>맨 뒤</td><td>맨 위</td></tr>
+          <tr><td><b>꺼내는 곳</b></td><td>맨 앞 (가장 <b>먼저</b> 들어온 것)</td><td>맨 위 (가장 <b>나중에</b> 들어온 것)</td></tr>
+          <tr><td><b>그래서 탐색 모양</b></td><td>얕은 층부터 한 층씩 <b>옆으로</b> 넓게</td><td>방금 만든 자식부터 한 가지를 <b>아래로</b> 끝까지</td></tr>
+          <tr><td><b>전선에 쌓이는 것</b></td><td>다음 층 전체 → 지수적으로 커짐 (O(bᵈ))</td><td>현재 경로의 형제들뿐 → 선형 (O(bm))</td></tr>
+        </tbody></table></div>
+        <p class="muted" style="font-size:13.5px">DFS 쪽은 자식을 <b>오른쪽부터</b> 스택에 넣어요. 그래야 왼쪽 자식이 맨 위에 와서 왼쪽부터 내려가요. 같은 트리인데 꺼내는 순서가 BFS는 A, B, C, D, E…(층 순서), DFS는 A, B, D, H, I…(왼쪽 가지 먼저)로 갈라지는 것을 확인하세요.</p>
+      </div>
     </div>
 
     <div class="block">
@@ -5162,6 +5192,64 @@ action ← rule.ACTION</pre>
   }
   makeTreeSim('t',{trees:['bfs','dfs','full','b3','skew','lastO'],algs:['bfs','dfs']});
   makeTreeSim('i',{trees:['idsF','dfs','bfs','full','b3','skew','lastO'],algs:['ids','bfs','dfs'],alg:'ids'});
+
+  /* ===== 3장 실습: FIFO vs LIFO 나란히 ===== */
+  (function(){
+    const box=$('#flPanels'); if(!box) return;
+    const FULL={A:['B','C'],B:['D','E'],C:['F','G'],D:['H','I'],E:['J','K'],F:['L','M'],G:['N','O']};
+    const TR={
+      full:{name:'완전 이진 트리 (깊이 3)',n:FULL},
+      b3:{name:'분기 3 트리',n:{A:['B','C','D'],B:['E','F','G'],C:['H','I','J'],D:['K','L','M']}},
+      skew:{name:'왼쪽만 깊은 트리',n:{A:['B','C'],B:['D','E'],D:['H'],H:['K'],K:['N'],C:['F','G']}}
+    };
+    let tk='full',L,P;
+    const kids=x=>TR[tk].n[x]||[];
+    function layout(){
+      const pos={},dep={};let leaf=0,maxD=0;
+      (function walk(x,d){dep[x]=d;maxD=Math.max(maxD,d);const k=kids(x);if(!k.length)pos[x]=leaf++;else{k.forEach(c=>walk(c,d+1));pos[x]=(pos[k[0]]+pos[k[k.length-1]])/2;}})('A',0);
+      return {all:Object.keys(dep),maxD,x:v=>20+(pos[v]+.5)*(560/leaf),y:v=>28+dep[v]*64};
+    }
+    function mk(kind){return {kind,fr:['A'],gen:new Set(['A']),exp:new Set(),ord:{},cur:null,n:0,last:'시작: 전선에 A만 들어 있어요.',maxFr:1};}
+    function reset(){L=layout();P=[mk('fifo'),mk('lifo')];render();}
+    function stepOne(s){
+      if(!s.fr.length)return;
+      const n=s.kind==='fifo'?s.fr.shift():s.fr.pop();
+      s.cur=n;s.n++;s.ord[n]=s.n;s.exp.add(n);
+      const k=kids(n);k.forEach(c=>s.gen.add(c));
+      if(s.kind==='fifo')s.fr.push(...k);else s.fr.push(...k.slice().reverse());
+      s.maxFr=Math.max(s.maxFr,s.fr.length);
+      s.last=`<b>${n}</b>를 ${s.kind==='fifo'?'맨 앞':'맨 위'}에서 꺼냄 → `+(k.length?`자식 ${k.join(', ')}를 ${s.kind==='fifo'?'맨 뒤에 차례로':'오른쪽부터(왼쪽이 맨 위로)'} 넣음`:'자식 없음, 넣을 것 없음');
+    }
+    function step(){P.forEach(stepOne);render();}
+    function tree(s){
+      const H=28+L.maxD*64+30,fr=new Set(s.fr);let g='';
+      L.all.forEach(v=>kids(v).forEach(c=>{g+=`<line class="e ${s.gen.has(c)?'':'un'}" x1="${L.x(v)}" y1="${L.y(v)}" x2="${L.x(c)}" y2="${L.y(c)}"/>`;}));
+      L.all.forEach(v=>{
+        const cls=v===s.cur?'cur':s.exp.has(v)?'ex':fr.has(v)?'fr':'un';
+        g+=`<g class="nd ${cls}"><circle cx="${L.x(v)}" cy="${L.y(v)}" r="18"/><text x="${L.x(v)}" y="${L.y(v)}">${v}</text></g>`;
+        if(s.ord[v])g+=`<text class="cnt" x="${L.x(v)+16}" y="${L.y(v)-16}">${s.ord[v]}</text>`;
+      });
+      return `<svg class="ttree" viewBox="0 0 600 ${H}" role="img" aria-label="${s.kind} 트리">${g}</svg>`;
+    }
+    function ds(s){
+      const cell=v=>`<span class="flc">${v}</span>`;
+      if(s.kind==='fifo')
+        return `<div class="flds"><span class="flarr">꺼냄 ←</span><div class="flq">${s.fr.map(cell).join('')||'<span class="muted">비어 있음</span>'}</div><span class="flarr">← 넣음</span></div>`;
+      const top=s.fr.slice().reverse();
+      return `<div class="flds"><span class="flarr">꺼냄·넣음 ↕ 맨 위</span><div class="flq flst">${top.map(cell).join('')||'<span class="muted">비어 있음</span>'}</div><span class="flarr">맨 아래</span></div>`;
+    }
+    function render(){
+      box.innerHTML=P.map(s=>`<div style="min-width:0"><h3 style="font-size:15px;margin-bottom:4px">${s.kind==='fifo'?'FIFO 큐 → BFS':'LIFO 스택 → DFS'}</h3>${tree(s)}<p class="tiny muted" style="margin:4px 0">${s.last}</p>${ds(s)}<p class="tiny" style="margin:6px 0 0">꺼낸 순서: <b>${Object.keys(s.ord).sort((a,b)=>s.ord[a]-s.ord[b]).join(' → ')||'—'}</b></p><p class="tiny muted" style="margin:2px 0 0">전선 크기 지금 ${s.fr.length} · 최대 ${s.maxFr}</p></div>`).join('');
+      const done=P.every(s=>!s.fr.length);$('#flStep').disabled=done;$('#flRun').disabled=done;
+    }
+    const pk=$('#flPick');
+    const draw=()=>{pk.innerHTML=Object.entries(TR).map(([k,v])=>`<button data-k="${k}" aria-pressed="${k===tk}">${v.name}</button>`).join('');};
+    pk.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;tk=b.dataset.k;draw();reset();});
+    $('#flStep').addEventListener('click',step);
+    $('#flRun').addEventListener('click',()=>{let g=0;while(P.some(s=>s.fr.length)&&g++<99)P.forEach(stepOne);render();});
+    $('#flReset').addEventListener('click',reset);
+    draw();reset();
+  })();
 
   /* ===== 3장 실습: UCS 가중치 그래프 ===== */
   (function(){

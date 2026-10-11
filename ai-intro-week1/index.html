@@ -2199,6 +2199,37 @@ return failure
 
 EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
   cost ← node.PATH-COST + ACTION-COST(s, a, s') ; yield NODE(s', node, a, cost)</pre>
+      <div class="note">
+        <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+        <h3>위 BFS 코드, 한 줄씩 풀기</h3>
+        <div class="table-wrap"><table style="min-width:0">
+          <thead><tr><th>코드</th><th>뜻</th></tr></thead>
+          <tbody>
+            <tr><td><code>node ← NODE(problem.INITIAL)</code></td><td>초기 상태로 루트 노드를 만든다(부모 없음, 비용 0).</td></tr>
+            <tr><td><code>if IS-GOAL(node.STATE) then return node</code></td><td>시작하자마자 목표면 바로 끝.</td></tr>
+            <tr><td><code>frontier ← FIFO 큐(node)</code></td><td>전선을 <b>먼저 들어온 것이 먼저 나가는</b> 큐로 만들고 루트를 넣는다.</td></tr>
+            <tr><td><code>reached ← {INITIAL}</code></td><td>이미 본 상태 목록. 처음엔 시작 상태 하나.</td></tr>
+            <tr><td><code>while frontier가 비어 있지 않음</code></td><td>확장할 노드가 남아 있는 동안 반복. 비면 해가 없는 것.</td></tr>
+            <tr><td><code>node ← POP(frontier)</code></td><td>큐의 맨 앞(가장 먼저 들어온 = 가장 얕은) 노드를 꺼낸다.</td></tr>
+            <tr><td><code>for each child in EXPAND(problem, node)</code></td><td>그 노드에서 할 수 있는 동작마다 자식 노드를 만든다(= 확장).</td></tr>
+            <tr><td><code>s ← child.STATE</code></td><td>자식의 상태를 꺼내 둔다.</td></tr>
+            <tr><td><code>if IS-GOAL(s) then return child</code></td><td><b>만들자마자</b> 목표 검사(early goal test). 얕은 층부터 보므로 처음 만난 목표가 가장 얕다.</td></tr>
+            <tr><td><code>if s ∉ reached: …</code></td><td>처음 보는 상태면 reached에 적고 전선 <b>맨 뒤</b>에 넣는다. 이미 본 상태면 버린다(순환·중복 방지).</td></tr>
+            <tr><td><code>return failure</code></td><td>전선이 다 비었는데 목표를 못 찾았으면 실패.</td></tr>
+            <tr><td><code>EXPAND</code></td><td>상태 s에서 가능한 동작 a마다 RESULT(s, a)로 다음 상태 s'을 구하고, 비용 = 부모 비용 + 동작 비용으로 <b>자식 노드(s', 부모=node, 동작=a, 비용)</b>를 하나씩 내놓는다(yield). 부모를 적어 두기 때문에 나중에 경로를 거꾸로 복원할 수 있다.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="muted"><b>작은 예로 따라가기</b> (S → A, B / A → C, G / B → D, 목표 G)</p>
+        <div class="table-wrap"><table style="min-width:0">
+          <thead><tr><th>단계</th><th>POP</th><th>만든 자식 (검사 결과)</th><th>전선 (앞 → 뒤)</th><th>reached</th></tr></thead>
+          <tbody>
+            <tr><td>시작</td><td>—</td><td>—</td><td>S</td><td>S</td></tr>
+            <tr><td>1</td><td>S</td><td>A (목표 아님), B (목표 아님)</td><td>A, B</td><td>S, A, B</td></tr>
+            <tr><td>2</td><td>A</td><td>C (목표 아님), <b>G (목표!)</b></td><td colspan="2">G를 만들자마자 반환. 부모를 따라가면 S → A → G</td></tr>
+          </tbody>
+        </table></div>
+        <p class="muted">B와 D는 확장하지 않고 끝났어요. 깊이 2의 G를 <b>만드는 순간</b> 검사했기 때문이에요. UCS·A*는 이 줄을 "꺼낼 때(POP 직후)" 검사로 바꾸고, 전선을 FIFO 대신 g나 f 기준 우선순위 큐로 바꾼 것이에요.</p>
+      </div>
       <div class="card" style="background:var(--amber-soft);border-color:transparent">
         <h3>메모리가 먼저 바닥난다</h3>
         <p>b = 10, 노드당 1KB, 초당 100만 노드 생성이라 하면 d = 10: 10¹⁰ 노드 = <b>3시간, 10TB</b>. d = 14: <b>3.5년, 100PB</b>. 시간보다 공간이 문제이며, 지수 복잡도 문제는 정보 없는 검색으로 풀 수 없습니다. (실습 탭의 계산기로 직접 바꿔 보세요)</p>

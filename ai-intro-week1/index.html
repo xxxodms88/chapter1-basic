@@ -2121,6 +2121,61 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       </div>
     </div>
 
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>공간 복잡도 식 네 개, 왜 이렇게 되나 (비교)</h2>
+      <p class="muted" style="font-size:14px">위 비교표의 공간 열을 BFS·UCS·DFS·IDS 순서로 하나씩 유도한 메모예요. 강의안 내용과 구분해서 보세요.</p>
+
+      <div class="card">
+        <h3>먼저: "공간"은 무엇을 세나</h3>
+        <p class="muted">검색하는 동안 <b>한꺼번에 메모리에 들고 있어야 하는 노드의 최대 개수</b>예요. 핵심 질문은 하나예요: <b>"이 전략은 한 층 전체를 들고 있나, 경로 하나만 들고 있나?"</b> 한 층 전체면 지수(b의 거듭제곱), 경로 하나면 선형(b × 깊이)이 돼요.</p>
+      </div>
+
+      <h3>① BFS: O(bᵈ) — 한 층 전체</h3>
+      <div class="card">
+        <p class="muted">깊이별 노드 수는 1, b, b², …, bᵈ. BFS는 층을 차례로 다 펼치므로, 깊이 d에서 목표를 만날 때 전선에는 <b>깊이 d 층 전체(약 bᵈ개)</b>가 들어 있고 reached에는 지금까지 만든 모든 노드 1 + b + … + bᵈ가 들어 있어요. 이 합은 마지막 항이 압도해서(b = 10이면 11,111 중 10,000) <b>O(bᵈ)</b>예요.</p>
+        <p class="muted">생성할 때 바로 목표 검사(early)를 하니까 깊이 d+1 층까지 만들 필요가 없어서 bᵈ⁺¹이 아니라 bᵈ예요.</p>
+      </div>
+
+      <h3>② UCS: O(b^(1+⌊C*/ε⌋)) — "깊이" 대신 "비용"으로 정해지는 층</h3>
+      <div class="card">
+        <p class="muted">UCS는 깊이가 아니라 <b>경로 비용 g</b> 순서로 퍼져요. 그래서 d 대신 "비용으로 따지면 얼마나 깊이 내려갈 수 있나"를 세야 해요.</p>
+        <ul class="clean muted">
+          <li><b>C*</b> = 최적해의 비용, <b>ε</b> = 동작 하나의 최소 비용.</li>
+          <li>UCS는 비용이 C*보다 작은 노드를 모두 확장해요. 한 걸음에 최소 ε씩 드니, 비용 C* 안에서 갈 수 있는 걸음 수는 최대 <b>⌊C*/ε⌋</b>. 비용이 싼 동작만 이어 가면 그만큼 깊이 내려가요.</li>
+          <li>꺼낼 때 목표 검사(late)를 하므로, 그 깊이의 노드를 확장하며 <b>한 층 더(+1)</b> 자식을 만들어 둔 상태가 돼요.</li>
+          <li>그래서 "유효 깊이" = 1 + ⌊C*/ε⌋, 공간 = 그 깊이 층 전체 = <b>O(b^(1+⌊C*/ε⌋))</b>.</li>
+        </ul>
+        <p class="muted"><b>확인</b>: 모든 동작 비용이 같으면(ε = 단위 비용) C*/ε = d가 되어 O(bᵈ⁺¹). BFS보다 한 층 더 큰 이유는 late goal test 때문이에요. 반대로 아주 싼 동작이 많으면(ε가 작으면) C*/ε가 커져 BFS보다 훨씬 많은 메모리를 쓸 수 있어요.</p>
+      </div>
+
+      <h3>③ DFS: O(bm) — 경로 하나 + 형제</h3>
+      <div class="card">
+        <p class="muted">DFS는 한 가지를 끝까지 내려가요. 들고 있는 것은 <b>지금 경로</b>(최대 깊이 m)와, 경로의 각 층에서 <b>아직 안 가 본 형제들</b>(층마다 최대 b개)뿐이에요. 다 본 가지는 버려요. 그래서 깊이 m × 층당 b = <b>O(bm)</b>. 예) b = 10, m = 12 → 약 120개.</p>
+        <p class="muted">주의: 시간은 O(bᵐ)(모든 가지를 돌 수 있음)이지만 공간은 선형이에요. 단, 지금까지 본 상태를 전부 reached에 저장하면 이 장점이 사라지므로, DFS는 보통 현재 경로 위에서만 순환을 검사해요.</p>
+      </div>
+
+      <h3>④ IDS: O(bd) — DFS인데 깊이 d에서 멈춤</h3>
+      <div class="card">
+        <p class="muted">IDS의 매 회차는 깊이 제한 DFS라서 공간 구조는 DFS와 같아요(경로 + 형제). 다만 해가 깊이 d에 있으면 제한이 d일 때 찾고 멈추므로, m 대신 <b>d</b>까지만 내려가요 → <b>O(bd)</b>. 회차가 끝날 때마다 메모리를 비우고 새로 시작하니 회차 수만큼 쌓이지도 않아요.</p>
+      </div>
+
+      <h3>한 표로 비교 (b = 10, d = 5, m = 12, C*/ε = 6 이라고 가정)</h3>
+      <div class="table-wrap"><table style="min-width:0">
+        <thead><tr><th>전략</th><th>들고 있는 것</th><th>공간 식</th><th class="num-r">대략 노드 수</th></tr></thead>
+        <tbody>
+          <tr><td><b>BFS</b></td><td>깊이 d 층 전체</td><td>O(bᵈ)</td><td class="num-r">10⁵ = 100,000</td></tr>
+          <tr><td><b>UCS</b></td><td>비용 C* 안의 층 전체 + 1층</td><td>O(b^(1+⌊C*/ε⌋))</td><td class="num-r">10⁷ = 10,000,000</td></tr>
+          <tr><td><b>DFS</b></td><td>깊이 m 경로 + 형제</td><td>O(bm)</td><td class="num-r">10 × 12 = 120</td></tr>
+          <tr><td><b>IDS</b></td><td>깊이 d 경로 + 형제</td><td>O(bd)</td><td class="num-r">10 × 5 = 50</td></tr>
+        </tbody>
+      </table></div>
+      <div class="card">
+        <h3>한 줄 정리</h3>
+        <p><b>BFS·UCS</b>는 "넓게" 퍼지므로 한 층 전체를 들고 있어 <b>지수</b>(b의 거듭제곱, 지수는 d 또는 1+⌊C*/ε⌋). <b>DFS·IDS</b>는 "깊게" 한 줄로 가므로 경로 하나만 들고 있어 <b>선형</b>(b × 깊이, 깊이는 m 또는 d). DFS와 IDS의 차이는 "끝까지(m)"냐 "해의 깊이까지(d)"냐뿐이에요.</p>
+      </div>
+    </div>
+
     <div class="block">
       <span class="eyebrow">너비 우선</span>
       <h2>BFS (Breadth-First Search)</h2>

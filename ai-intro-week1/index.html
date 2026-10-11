@@ -2211,7 +2211,7 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
       <p><b>확장 규칙:</b> <span class="k">초기 상태</span>로부터의 <span class="k">경로 비용</span> <span class="k">g(n)</span>이 가장 작은 <span class="k">전선</span> 노드를 확장. "균일"은 비용 순으로 일관되게 넓혀 간다는 뜻.</p>
       <ul class="clean">
         <li><b><span class="k">최선 우선</span> 검색(best-first) 틀</b>: <span class="k">전선</span> = 평가 함수 f(n)으로 정렬된 <span class="k">우선순위 큐</span>. UCS는 <b>f(n) = g(n)</b>인 특수 경우.</li>
-        <li>BFS와의 차이: 더 싼 경로로 다시 도달하면 <span class="k">reached</span>를 갱신하고 노드를 다시 <span class="k">전선</span>에 넣는다.</li>
+        <li>BFS와의 차이: 더 싼 경로로 다시 도달하면 <span class="k">reached</span>를 갱신하고 노드를 다시 <span class="k">전선</span>에 넣는다.<br><span class="note-link">✎ 내 질문 노트: 이 줄을 예시로 아래에 풀어 정리</span></li>
         <li><span class="k">목표 검사</span>는 <b>꺼낼 때(late)</b>. 처음 생성된 목표 경로가 최적이 아닐 수 있다.</li>
         <li>BFS는 모든 비용이 같을 때의 UCS.</li>
       </ul>
@@ -2221,6 +2221,47 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
       </div>
     </div>
 
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>"더 싼 경로로 다시 도달하면 reached를 갱신한다"는 뜻</h2>
+      <p class="muted" style="font-size:14px">UCS 설명의 "BFS와의 차이" 줄을 풀어 쓴 메모예요. 강의안 내용과 구분해서 보세요.</p>
+
+      <h3>1. reached는 "이 상태까지 가는 지금까지 가장 좋은 길"을 적어 둔 표</h3>
+      <p>reached[s]에는 상태 s에 도달한 노드(= 거기까지의 경로와 비용 g)가 적혀 있어요. 같은 상태에 <b>다른 길로 또 도착</b>하는 일이 그래프에서는 흔한데, 이때 어떻게 하느냐가 BFS와 UCS의 차이예요.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>BFS</th><th>UCS (최선 우선 검색)</th></tr></thead>
+        <tbody>
+          <tr><td><b>이미 본 상태에 다시 도착하면</b></td><td>무시한다. 처음 도착한 길만 남긴다</td><td>새 길의 비용이 <b>더 싸면</b> reached를 그 길로 바꾸고, 그 노드를 전선에 <b>다시 넣는다</b></td></tr>
+          <tr><td><b>코드로</b></td><td><code>if s not in reached:</code> 추가</td><td><code>if s not in reached or child.g &lt; reached[s].g:</code> 갱신 + 추가</td></tr>
+          <tr><td><b>왜 그래도 되나</b></td><td>모든 동작 비용이 같으면 <b>처음 도착한 길 = 가장 얕은 길 = 가장 싼 길</b>이라 다시 볼 필요가 없다</td><td>비용이 다르면 <b>나중에 찾은 길이 더 쌀 수 있다</b>. 처음 길만 남기면 최적을 놓친다</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>2. 루마니아 예로 따라가기: Sibiu에서 Bucharest로</h3>
+      <p class="muted">Bucharest로 가는 두 길만 보이도록 지도를 줄였어요(Sibiu의 다른 이웃 Arad·Oradea, Craiova 너머 도로 등은 생략). 남긴 도로: Sibiu→Fagaras 99, Fagaras→Bucharest 211, Sibiu→Rimnicu Vilcea 80, RV→Pitesti 97, Pitesti→Bucharest 101, RV→Craiova 146</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>단계</th><th>꺼내서 확장</th><th>새로 생긴 일</th><th>reached[Bucharest]</th><th>전선 (g 작은 순)</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Sibiu (0)</td><td>RV 80, Fagaras 99 생성</td><td>—</td><td>RV 80, Fagaras 99</td></tr>
+          <tr><td>2</td><td>RV (80)</td><td>Pitesti 177, Craiova 226 생성</td><td>—</td><td>Fagaras 99, Pitesti 177, Craiova 226</td></tr>
+          <tr><td>3</td><td>Fagaras (99)</td><td>Bucharest <b>310</b> 처음 도착 → reached에 기록</td><td>310 (Fagaras 경유)</td><td>Pitesti 177, Craiova 226, Bucharest 310</td></tr>
+          <tr><td>4</td><td>Pitesti (177)</td><td>Bucharest에 <b>다시 도착</b>, 비용 177 + 101 = <b>278</b> &lt; 310 → <b>reached 갱신</b>, 새 노드를 전선에 넣음</td><td><b>278 (Pitesti 경유)</b></td><td>Craiova 226, <b>Bucharest 278</b>, (옛 Bucharest 310)</td></tr>
+          <tr><td>5</td><td>Craiova (226)</td><td>Bucharest로 가는 더 싼 길 없음</td><td>278</td><td>Bucharest 278, (310)</td></tr>
+          <tr><td>6</td><td>Bucharest (278)</td><td>꺼낼 때 목표 검사 → <b>목표! 278 반환</b></td><td>278</td><td>(310은 쓰이지 않음)</td></tr>
+        </tbody>
+      </table></div>
+      <div class="grid2">
+        <div class="card"><h3>BFS처럼 했다면</h3><p class="muted">3단계에서 처음 도착한 310짜리 길만 reached에 남기고, 4단계의 278짜리 길은 "이미 본 상태"라 무시해요. 결과는 <b>310(최적 아님)</b>.</p></div>
+        <div class="card"><h3>그래서 late goal test와 짝</h3><p class="muted">3단계에서 Bucharest를 <b>생성하자마자</b> 목표 검사를 했다면 역시 310을 반환했을 거예요. "갱신"과 "꺼낼 때 검사"가 함께 있어야, 더 싼 길이 나타날 기회를 준 뒤 g가 가장 작은 목표를 꺼내 최적을 보장해요.</p></div>
+      </div>
+      <p class="muted" style="font-size:13.5px">참고: 다익스트라 알고리즘에서는 이 갱신을 "완화(relaxation)"라고 불러요. 옛 노드(310)는 전선에서 지우거나, 남겨 두었다가 꺼낼 때 "reached에 더 싼 기록이 있으면 버린다"로 처리해요.</p>
+
+      <div class="card">
+        <h3>한 줄 정리</h3>
+        <p>BFS는 "처음 찾은 길이 최선"이라 다시 안 보지만, UCS는 비용이 달라서 <b>나중에 찾은 더 싼 길로 기록을 바꾸고 다시 줄을 세운다</b>. 이 갱신과 late goal test 덕분에 UCS(그리고 A*)는 최적해를 찾는다.</p>
+      </div>
+    </div>
 
     <div class="ckpt">
       <div class="ckpt-h"><span class="ckpt-badge">✏️ 중간 점검</span><b>BFS · UCS</b><span class="muted" style="font-size:13px">개념 확인 2 · 심화 2 — 답을 먼저 떠올린 뒤 펼쳐 보세요</span></div>

@@ -266,24 +266,27 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .slog{min-width:560px;font-size:13px}
 .slog td{line-height:1.6}
 .slog tr.now td{background:var(--amber-soft)}
-#ttree{display:block;width:100%;height:auto}
-#ttree .e{stroke:var(--muted);stroke-width:2.5}
-#ttree .e.un{stroke:var(--line);stroke-dasharray:6 6}
-#ttree .e.gone{stroke:var(--line);stroke-dasharray:2 5}
-#ttree .e.pa{stroke:var(--good);stroke-width:5}
-#ttree .nd circle{fill:var(--surface);stroke:var(--line);stroke-width:2.5;stroke-dasharray:5 4}
-#ttree .nd text{font-family:var(--sans);font-size:19px;font-weight:700;text-anchor:middle;dominant-baseline:central;fill:var(--line)}
-#ttree .nd.fr circle{fill:var(--amber-soft);stroke:var(--amber);stroke-width:3.5;stroke-dasharray:none}
-#ttree .nd.fr text{fill:var(--ink)}
-#ttree .nd.ex circle{fill:var(--accent);stroke:var(--accent);stroke-dasharray:none}
-#ttree .nd.cur circle{fill:var(--bad);stroke:var(--bad);stroke-dasharray:none}
-#ttree .nd.pa circle{fill:var(--good);stroke:var(--good);stroke-dasharray:none}
-#ttree .nd.ex text,#ttree .nd.cur text,#ttree .nd.pa text{fill:var(--bg)}
-#ttree .nd.gone circle{fill:var(--surface-2);stroke:var(--muted);stroke-dasharray:2 4}
-#ttree .nd.gone text{fill:var(--muted)}
-#ttree .gl{font-family:var(--sans);font-size:14px;font-weight:700;fill:var(--bad)}
-#ttree .xl{font-family:var(--sans);font-size:13px;fill:var(--muted)}
-#ttree .dl{font-family:var(--mono);font-size:13px;fill:var(--muted)}
+.ttree{display:block;width:100%;height:auto}
+.ttree .e{stroke:var(--muted);stroke-width:2.5}
+.ttree .e.un{stroke:var(--line);stroke-dasharray:6 6}
+.ttree .e.gone{stroke:var(--line);stroke-dasharray:2 5}
+.ttree .e.pa{stroke:var(--good);stroke-width:5}
+.ttree .nd circle{fill:var(--surface);stroke:var(--line);stroke-width:2.5;stroke-dasharray:5 4}
+.ttree .nd text{font-family:var(--sans);font-size:19px;font-weight:700;text-anchor:middle;dominant-baseline:central;fill:var(--line)}
+.ttree .nd.fr circle{fill:var(--amber-soft);stroke:var(--amber);stroke-width:3.5;stroke-dasharray:none}
+.ttree .nd.fr text{fill:var(--ink)}
+.ttree .nd.ex circle{fill:var(--accent);stroke:var(--accent);stroke-dasharray:none}
+.ttree .nd.cur circle{fill:var(--bad);stroke:var(--bad);stroke-dasharray:none}
+.ttree .nd.pa circle{fill:var(--good);stroke:var(--good);stroke-dasharray:none}
+.ttree .nd.ex text,.ttree .nd.cur text,.ttree .nd.pa text{fill:var(--bg)}
+.ttree .nd.gone circle{fill:var(--surface-2);stroke:var(--muted);stroke-dasharray:2 4}
+.ttree .nd.gone text{fill:var(--muted)}
+.ttree .gl{font-family:var(--sans);font-size:14px;font-weight:700;fill:var(--bad)}
+.ttree .xl{font-family:var(--sans);font-size:13px;fill:var(--muted)}
+.ttree .lim{stroke:var(--amber);stroke-width:2;stroke-dasharray:8 6}
+.ttree .limt{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--amber)}
+.ttree .cnt{font-family:var(--mono);font-size:14px;font-weight:700;fill:var(--note)}
+.ttree .dl{font-family:var(--mono);font-size:13px;fill:var(--muted)}
 .tmeter{display:grid;gap:10px}
 .tmeter .bar{height:12px;border-radius:6px;background:var(--surface-2);overflow:hidden;margin-top:4px}
 .tmeter .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
@@ -2703,7 +2706,7 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
           <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>시간</b>: 지금까지 생성한 노드 (누적)</span><b id="tTime"></b></div><div class="bar"><i id="tTimeBar"></i></div></div>
           <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>공간</b>: 지금 메모리에 든 노드 <span class="muted" id="tPeak"></span></span><b id="tMem"></b></div><div class="bar m"><i id="tMemBar"></i></div></div>
         </div>
-        <div style="overflow:hidden"><svg id="ttree" viewBox="0 0 600 300" role="img" aria-label="검색 트리"></svg></div>
+        <div style="overflow:hidden"><svg id="ttree" class="ttree" viewBox="0 0 600 300" role="img" aria-label="검색 트리"></svg></div>
         <div class="legend"><span><i class="lg lg-un"></i>아직 생성 안 됨</span><span><i class="lg lg-fr"></i>전선 (생성됨, 대기)</span><span><i class="lg lg-cur"></i>방금 꺼냄</span><span><i class="lg lg-exp"></i>확장함 (메모리에 있음)</span><span><i class="lg lg-gone"></i>버림 (메모리에서 지움)</span><span><i class="lg lg-path"></i>찾은 경로</span></div>
         <div><h3 style="font-size:15px;margin-bottom:6px">전선 <span class="muted" id="tFrLabel" style="font-weight:400;font-size:13px"></span></h3><div class="frontier" id="tFrontier"></div></div>
         <div style="min-width:0">
@@ -2723,6 +2726,107 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
         <li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>b = 2, 깊이 3인 완전 이진 트리(노드 15개)에 목표가 없을 때, BFS(그래프 검색)와 DFS(트리형 검색)의 ① 생성한 노드 수와 ② 동시에 메모리에 든 최대 노드 수를 각각 구하고, 차이가 나는 이유를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>① 둘 다 트리 전체를 봐야 하므로 생성 수는 <b>15</b>로 같다(시간은 같다). ② BFS는 전선과 reached에 모든 노드를 끝까지 들고 있으므로 최대 <b>15</b>다(전선만 따지면 마지막 층 8개). DFS는 A→B→D까지 내려간 순간 경로 A, B, D와 각 층의 자식·형제 C, E, H, I를 들고 있는 <b>7 = 1 + b·m</b>개가 최대다. H, I를 다 본 뒤에는 D, H, I를 지운다. 차이의 이유는 DFS가 <b>다 본 가지를 버릴 수 있기</b> 때문이다. 시간은 "만든 총수"라 줄지 않지만 공간은 "지금 든 수"라 버리면 줄어든다.</p></details></li>
         <li><div class="ckpt-q"><span class="num">Q5</span><span class="ckpt-tag d">심화</span></div><p>b = 10, d = 2, m = 20인 문제에서 BFS와 DFS의 최악 시간을 대략 비교하고, 어떤 상황에서 DFS가 그래도 쓸 만한지 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>BFS는 1 + 10 + 100 = <b>111개</b> 정도면 깊이 2의 해를 찾는다. DFS는 최악에 깊이 20까지 트리 전체, 약 <b>10²⁰개</b>를 볼 수 있다(m ≫ d). DFS는 메모리가 매우 부족하거나, 해가 많고 깊은 곳에 고르게 퍼져 있어 아무 가지나 내려가도 해를 금방 만날 때 쓸 만하다. 또는 IDS처럼 깊이 제한과 함께 쓸 때 유용하다.</p></details></li>
         <li><div class="ckpt-q"><span class="num">Q6</span><span class="ckpt-tag d">심화</span></div><p>슬라이드는 "시간보다 공간이 문제"라고 한다. b = 10, 노드당 1KB, 초당 10⁶ 노드, d = 10일 때의 시간과 메모리를 계산하고 이 문장의 의미를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>노드 약 10¹⁰개다. 시간은 10¹⁰ / 10⁶ = 10⁴초 ≈ <b>3시간</b>이다. 메모리는 10¹⁰ × 1KB = <b>10TB</b>다. 3시간은 기다리면 끝나지만, 10TB의 메모리는 보통 컴퓨터에 없어서 탐색 자체를 할 수 없다. 즉 BFS는 시간 한계보다 메모리 한계에 <b>먼저</b> 부딪힌다. 이 때문에 메모리를 O(bd)만 쓰는 IDS가 정보 없는 검색에서 선호된다.</p></details></li>
+      </ol>
+    </div>
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>IDS 한 줄씩: 왜 "반복"하는데도 시간은 O(bᵈ), 공간은 O(bd)인가</h2>
+      <p class="muted" style="font-size:14px">「정보 없는 검색」 탭의 IDS 슬라이드(완전성 Yes · 최적성 조건부 · 시간 O(bᵈ) · 공간 O(bd) · 123,450)를 풀어 쓴 메모예요. 아래 IDS 시뮬레이터로 그대로 확인할 수 있어요.</p>
+
+      <div class="card">
+        <h3>① 동작 방식: 깊이 제한 DFS를 ℓ = 0, 1, 2, …로 처음부터 다시</h3>
+        <ul class="muted">
+          <li><b>깊이 제한 DFS</b>는 DFS와 똑같이 스택으로 왼쪽부터 깊게 내려가요. 다만 깊이 ℓ에 도달한 노드는 꺼내서 목표 검사만 하고 <b>자식을 만들지 않아요</b>. 이렇게 잘린 것을 <b>cutoff</b>라고 해요.</li>
+          <li><b>한 회차가 끝났을 때 결과는 세 가지예요.</b>
+            <ul>
+              <li><b>해</b>를 찾았으면 → 끝</li>
+              <li>못 찾았는데 <b>잘린 곳이 있으면(cutoff)</b> → "더 깊은 곳에 목표가 있을지도" → ℓ을 1 늘려 <b>뿌리부터 다시</b></li>
+              <li>못 찾았고 잘린 곳도 <b>없으면</b> → 트리를 끝까지 다 봤다는 뜻 → <b>failure</b>(해 없음)</li>
+            </ul>
+          </li>
+          <li>새 회차를 시작할 때 <b>이전 회차의 트리는 전부 버려요</b>. 그래서 위쪽 노드(A, B, C …)는 회차마다 <b>다시 생성</b>돼요. 시뮬레이터에서 노드 옆의 <b>×2, ×3</b> 표시가 그 재생성 횟수예요.</li>
+        </ul>
+        <p class="muted">비유: 손전등으로 동굴을 탐색하는데, 첫날엔 1m까지만, 둘째 날엔 2m까지만, 셋째 날엔 3m까지만 들어가 보는 것이에요. 매일 입구부터 다시 걷는 건 낭비 같지만, 기억해야 할 것은 "지금 걷는 길" 하나뿐이에요.</p>
+      </div>
+
+      <div class="card">
+        <h3>② 완전성 Yes · 비용 최적성 조건부: BFS의 장점을 그대로</h3>
+        <ul class="muted">
+          <li><b>얕은 해부터 찾는다</b>: 제한 ℓ = 0일 때 깊이 0을, ℓ = 1일 때 깊이 1까지를 다 봐요. 깊이 d의 목표는 ℓ = d 회차에서 처음 보이므로, <b>가장 얕은 목표를 가장 먼저</b> 찾아요. 순서는 다르지만 결과는 BFS와 같아요.</li>
+          <li><b>완전성 Yes</b>: 깊이 제한이 있어서 DFS처럼 무한 경로로 빠지지 않아요. b가 유한하면 각 회차도 유한하게 끝나요. 해가 깊이 d에 있으면 ℓ = d 회차에서 반드시 찾아요.</li>
+          <li><b>비용 최적성 조건부</b>: "가장 얕은 해 = 가장 싼 해"는 <b>동작 비용이 모두 같을 때만</b> 성립해요. BFS와 같은 조건이에요.</li>
+          <li>확인: DFS 그림 트리를 DFS로 돌리면 깊이 3의 I를 찾지만, <b>IDS</b>로 돌리면 ℓ = 1 회차에서 깊이 1의 <b>C</b>를 찾아요.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>③ 공간 O(bd): 매 회차는 그냥 DFS라서</h3>
+        <p class="muted">회차가 바뀔 때 이전 트리를 버리므로, 어느 순간에나 메모리에는 <b>지금 회차의 DFS 하나</b>만 있어요. DFS의 공간이 "경로 + 각 층의 형제" = b × (깊이)였죠. IDS는 해를 찾는 회차의 깊이가 d이므로 <b>b × d</b>, 즉 O(bd)예요. DFS의 O(bm)과 달리 m이 아니라 d예요. 제한 때문에 d보다 깊이 내려가지 않기 때문이에요. 시뮬레이터에서 목표 F(깊이 2) 트리를 돌리면 최대 메모리가 5개(= 1 + b·d = 1 + 2·2)예요. 깊이 3의 H~O는 한 번도 생성되지 않아요.</p>
+      </div>
+
+      <div class="card">
+        <h3>④ 시간 O(bᵈ): 반복해도 "마지막 층"이 거의 전부라서</h3>
+        <p class="muted">회차 ℓ = d에서 깊이 d 노드(bᵈ개)는 <b>1번</b>만 생성돼요. 깊이 d−1 노드는 ℓ = d−1, d 두 회차에서 <b>2번</b>, … 깊이 1 노드(b개)는 <b>d번</b> 생성돼요. 다 더하면:</p>
+        <p style="font-family:var(--mono);font-size:14px">N(IDS) = d·b + (d−1)·b² + … + 2·bᵈ⁻¹ + 1·bᵈ</p>
+        <p class="muted">b = 10, d = 5이면 5·10 + 4·100 + 3·1,000 + 2·10,000 + 1·100,000 = 50 + 400 + 3,000 + 20,000 + 100,000 = <b>123,450</b>이에요. BFS는 10 + 100 + 1,000 + 10,000 + 100,000 = <b>111,110</b>이에요. 둘 다 뿌리는 세지 않은 수예요. 재생성 때문에 더 드는 것은 약 <b>11%</b>뿐이에요. 왜 이렇게 작을까요? 노드 대부분이 <b>마지막 층(100,000개)</b>에 있고, 그 층은 한 번만 만들어요. 여러 번 만드는 위층은 다 합쳐도 마지막 층의 약 1/(b−1)밖에 안 돼요.</p>
+        <p class="muted"><b>주의, b가 작으면 낭비 비율이 커요.</b> 시뮬레이터의 완전 이진 트리(b = 2, 목표 없음, 깊이 3)에서 IDS는 뿌리 포함 <b>26번</b>(1 + 3 + 7 + 15), BFS는 <b>15번</b> 생성해요. 약 b/(b−1) = 2배예요. 강의의 "분기 계수가 클수록 낭비 비율은 줄어든다"가 바로 이 뜻이에요.</p>
+      </div>
+
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>BFS</th><th>DFS</th><th>IDS</th></tr></thead>
+        <tbody>
+          <tr><td>방식</td><td>층 단위 (큐)</td><td>한 가지 끝까지 (스택)</td><td>깊이 제한 DFS를 ℓ = 0, 1, 2…로 반복</td></tr>
+          <tr><td>완전성</td><td>Yes</td><td>유한 + 순환 검사일 때만</td><td>Yes</td></tr>
+          <tr><td>비용 최적성</td><td>비용이 같을 때</td><td>No</td><td>비용이 같을 때</td></tr>
+          <tr><td>시간</td><td>O(bᵈ)</td><td>O(bᵐ)</td><td>O(bᵈ) (재생성으로 상수배 더)</td></tr>
+          <tr><td>공간</td><td>O(bᵈ)</td><td>O(bm)</td><td>O(bd)</td></tr>
+          <tr><td>한마디</td><td>얕은 해, 메모리 폭발</td><td>메모리 적음, 해 품질·완전성 없음</td><td><b>BFS의 결과 + DFS의 메모리</b>, 대가는 약간의 재생성</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted" style="font-size:13.5px">그래서 강의 결론: IDS는 <b>검색 공간이 크고 해의 깊이를 모를 때</b> 선호되는 정보 없는 검색이에요. 단, IDS는 reached를 쓰지 않는 트리형 검색이라 같은 상태로 가는 중복 경로가 아주 많은 그래프에서는 같은 상태를 여러 번 탐색해 느려질 수 있어요.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">실습 · IDS 따라가기</span>
+      <h2>IDS 한 단계씩: 깊이 제한이 늘어날 때마다 처음부터</h2>
+      <p class="muted">"한 단계"를 누르면 위 시뮬레이터처럼 노드 하나를 꺼내고 생성해요. 주황 점선(오른쪽 끝 "ℓ=숫자")이 현재 <b>깊이 제한 ℓ</b>이에요. 그 아래로는 내려가지 않아요. 회차가 끝나 전선이 비면 다음 단계에서 ℓ이 1 늘고 <b>뿌리부터 다시</b> 시작해요. 노드 옆 <b>×n</b>은 지금까지 몇 번 생성됐는지예요. 알고리즘을 BFS·DFS로 바꿔 같은 트리에서 비교해 보세요.</p>
+      <div class="card sim">
+        <div class="row" style="justify-content:flex-start;gap:10px 16px">
+          <div><div class="tiny muted">트리</div><div class="pick" id="itPick"></div></div>
+          <div><div class="tiny muted">알고리즘</div><div class="pick" id="iaPick"></div></div>
+          <div><div class="tiny muted">목표 검사 시점</div><div class="pick" id="igPick"></div></div>
+        </div>
+        <div class="row" style="justify-content:flex-start">
+          <button class="btn primary" id="iStep">한 단계</button>
+          <button class="btn" id="iRun">끝까지</button>
+          <button class="btn" id="iReset">처음으로</button>
+        </div>
+        <p class="verdict" id="iStatus"></p>
+        <div class="tmeter">
+          <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>시간</b>: 생성한 횟수 (재생성 포함, 누적)</span><b id="iTime"></b></div><div class="bar"><i id="iTimeBar"></i></div></div>
+          <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>공간</b>: 지금 메모리에 든 노드 <span class="muted" id="iPeak"></span></span><b id="iMem"></b></div><div class="bar m"><i id="iMemBar"></i></div></div>
+        </div>
+        <div style="overflow:hidden"><svg id="itree" class="ttree" viewBox="0 0 600 300" role="img" aria-label="IDS 검색 트리"></svg></div>
+        <div class="legend"><span><i class="lg lg-un"></i>이번 회차에 아직 생성 안 됨</span><span><i class="lg lg-fr"></i>전선 (대기)</span><span><i class="lg lg-cur"></i>방금 꺼냄</span><span><i class="lg lg-exp"></i>확장함</span><span><i class="lg lg-gone"></i>버림</span><span><i class="lg lg-path"></i>찾은 경로</span></div>
+        <div><h3 style="font-size:15px;margin-bottom:6px">전선 <span class="muted" id="iFrLabel" style="font-weight:400;font-size:13px"></span></h3><div class="frontier" id="iFrontier"></div></div>
+        <div style="min-width:0">
+          <h3 style="font-size:15px;margin-bottom:4px">단계별 기록 (ℓ = 깊이 제한)</h3>
+          <div class="table-wrap" style="max-height:340px;overflow:auto"><table class="slog"><thead><tr><th>단계</th><th>① 꺼냄</th><th>② 목표 검사</th><th>③ 생성</th><th>버림</th><th>전선</th><th>시간</th><th>공간</th></tr></thead><tbody id="iLog"></tbody></table></div>
+        </div>
+      </div>
+      <p class="muted">해 볼 것: ① 목표 F 트리를 IDS로 돌려 ℓ = 0 → 1 → 2 세 회차와 A의 ×3을 확인하세요. 생성은 1 + 3 + 7 = 11번, 최대 메모리는 5 = 1 + b·d예요. ② 같은 트리를 DFS로 돌려 깊이 3(H, I, J, K)까지 쓸데없이 내려가는 것을 비교하세요. ③ DFS 그림 트리에서 IDS는 C(깊이 1)를, DFS는 I(깊이 3)를 찾아요. ④ 목표 없는 완전 이진 트리에서 IDS 26번 vs BFS 15번 (b = 2라 낭비가 커요).</p>
+    </div>
+
+    <div class="ckpt">
+      <div class="ckpt-h"><span class="ckpt-badge">✏️ 중간 점검</span><b>IDS</b><span class="muted" style="font-size:13px">개념 확인 3 · 심화 3 — 답을 먼저 떠올린 뒤 펼쳐 보세요</span></div>
+      <ol class="ckpt-list">
+        <li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>깊이 제한 DFS가 반환하는 cutoff와 failure의 차이를 쓰고, IDS가 각각의 경우 무엇을 하는지 쓰시오.</p><details class="ans"><summary>답 보기</summary><p><b>cutoff</b>: 깊이 ℓ에서 자식이 있는 노드를 잘랐다. 즉 더 깊은 곳을 안 봤으니 해가 있을 수도 있다. IDS는 ℓ을 1 늘려 처음부터 다시 한다. <b>failure</b>: 잘린 곳 없이 트리를 끝까지 다 봤는데 해가 없다. IDS는 더 늘려도 소용없으므로 failure를 반환하고 끝낸다.</p></details></li>
+        <li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>IDS는 DFS를 반복하는데도 BFS처럼 가장 얕은 해를 찾는다. 그 이유를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>깊이 제한을 0, 1, 2, …로 <b>1씩</b> 늘리므로, 회차 ℓ에서는 깊이 ℓ 이하만 본다. 깊이 d의 목표는 ℓ = d 회차에서 처음 보이고, 그보다 얕은 목표가 있었다면 그 이전 회차에서 이미 찾았을 것이다. 따라서 처음 찾은 해가 가장 얕은 해다. 동작 비용이 모두 같으면 그것이 최적 해다.</p></details></li>
+        <li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag c">개념 확인</span></div><p>IDS의 공간 복잡도가 O(bd)인 이유를 DFS의 O(bm)과 비교해 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>IDS는 회차마다 이전 트리를 버리고, 한 회차는 깊이 제한 DFS이므로 "현재 경로 + 각 층의 형제"만 메모리에 둔다. DFS는 최대 깊이 m까지 내려갈 수 있어 O(bm)이다. IDS는 해를 찾는 회차의 제한이 d이므로 d보다 깊이 내려가지 않아 O(bd)다.</p></details></li>
+        <li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>b = 10, d = 5일 때 IDS와 BFS가 생성하는 노드 수를 각각 계산하고(뿌리 제외), IDS의 추가 비용이 작은 이유를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>IDS: 5·10 + 4·100 + 3·1,000 + 2·10,000 + 1·100,000 = <b>123,450</b>. BFS: 10 + 100 + 1,000 + 10,000 + 100,000 = <b>111,110</b>. 약 11% 차이다. 노드 대부분이 마지막 층(10⁵개)에 있고 그 층은 한 번만 생성된다. 여러 번 다시 만드는 위층들은 다 합쳐도 마지막 층에 비해 작다(약 1/(b−1)).</p></details></li>
+        <li><div class="ckpt-q"><span class="num">Q5</span><span class="ckpt-tag d">심화</span></div><p>b = 2, 깊이 3인 완전 이진 트리에 목표가 없을 때 IDS가 생성하는 노드 수를 회차별로 쓰고, BFS와의 비율이 b = 10일 때보다 큰 이유를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>뿌리 포함 ℓ = 0: 1, ℓ = 1: 3, ℓ = 2: 7, ℓ = 3: 15 → 합 <b>26</b>. BFS는 <b>15</b>다. 뿌리 제외 공식으로는 3·2 + 2·4 + 1·8 = 22 vs 14다. ℓ = 3 회차에서 잘린 곳이 없으므로 그다음에 failure로 끝난다. b가 작으면 마지막 층이 위층 전체보다 별로 크지 않아(b = 2면 마지막 층 8 vs 위층 합 7) 재생성 비중이 커진다. 비율은 약 b/(b−1)로, b = 2면 약 2배, b = 10이면 약 1.11배다.</p></details></li>
+        <li><div class="ckpt-q"><span class="num">Q6</span><span class="ckpt-tag d">심화</span></div><p>"IDS는 BFS와 DFS의 장점을 결합했다"는 말을 완전성, 비용 최적성, 시간, 공간 네 기준으로 정당화하시오. 대가는 무엇인가?</p><details class="ans"><summary>답 보기</summary><p>BFS에서 가져온 것: 완전성 Yes, 비용이 같을 때 최적(얕은 해부터), 시간 O(bᵈ)(m이 아니라 d에 좌우). DFS에서 가져온 것: 공간 O(bd)(선형, 경로 + 형제만). 대가: 위층 노드를 회차마다 다시 생성하는 시간이다. 상수배이고 b가 크면 작다(b = 10에서 약 11%). 그래서 검색 공간이 크고 해의 깊이를 모를 때 선호된다.</p></details></li>
       </ol>
     </div>
 
@@ -4699,23 +4803,26 @@ action ← rule.ACTION</pre>
     $('#progress').innerHTML=`<span class="chip">${CH[ch].short} 외운 카드 <b>${k}</b> / ${c.deck.length}</span><span class="chip">퀴즈 최고 점수 <b>${best==null?'—':best+'%'}</b></span><span class="chip">퀴즈 <b>${c.quiz.length}</b>문항</span>`;
   }
 
-  /* ===== 3장 실습: BFS·DFS 슬라이드 트리 ===== */
-  (function(){
-    const svg=$('#ttree'); if(!svg) return;
-    const TREES={
+  /* ===== 3장 실습: BFS·DFS·IDS 슬라이드 트리 ===== */
+  function makeTreeSim(P,cfg){
+    const svg=$('#'+P+'tree'); if(!svg) return;
+    const FULL={A:['B','C'],B:['D','E'],C:['F','G'],D:['H','I'],E:['J','K'],F:['L','M'],G:['N','O']};
+    const ALLT={
       bfs:{name:'BFS 그림 트리',alg:'bfs',n:{A:['B','C'],B:['D','E'],C:['F','G'],D:['E2','C2']},goal:['C','C2'],lab:{E2:'E',C2:'C'}},
       dfs:{name:'DFS 그림 트리',alg:'dfs',n:{A:['B','C'],B:['D','E'],D:['H','I']},goal:['C','I'],lab:{}},
-      full:{name:'완전 이진 트리 (목표 없음)',alg:'dfs',n:{A:['B','C'],B:['D','E'],C:['F','G'],D:['H','I'],E:['J','K'],F:['L','M'],G:['N','O']},goal:[],lab:{}}
+      idsF:{name:'완전 이진 트리 (목표 F, 깊이 2)',alg:'ids',n:FULL,goal:['F'],lab:{}},
+      full:{name:'완전 이진 트리 (목표 없음)',alg:'dfs',n:FULL,goal:[],lab:{}}
     };
-    const ALGS={bfs:'BFS (큐·FIFO)',dfs:'DFS (스택·LIFO)'};
+    const ALLA={bfs:'BFS (큐·FIFO)',dfs:'DFS (스택·LIFO)',ids:'IDS (깊이 제한 DFS 반복)'};
+    const pickObj=(src,keys)=>Object.fromEntries(keys.map(k=>[k,src[k]]));
+    const TREES=pickObj(ALLT,cfg.trees),ALGS=pickObj(ALLA,cfg.algs);
     const GT={early:'생성할 때 (early)',late:'꺼낼 때 (late)'};
-    let tk='bfs',alg='bfs',gt='early',S,L;
+    let tk=cfg.trees[0],alg=cfg.alg||TREES[tk].alg,gt=alg==='bfs'?'early':'late',S,L;
     const kids=x=>TREES[tk].n[x]||[], lab=x=>TREES[tk].lab[x]||x, isG=x=>TREES[tk].goal.includes(x);
     function layout(){
       const pos={},dep={};let leaf=0,maxD=0;
       (function walk(x,d){dep[x]=d;maxD=Math.max(maxD,d);const k=kids(x);if(!k.length)pos[x]=leaf++;else{k.forEach(c=>walk(c,d+1));pos[x]=(pos[k[0]]+pos[k[k.length-1]])/2;}})('A',0);
-      const all=Object.keys(dep);
-      return {all,dep,maxD,x:v=>70+(pos[v]+.5)*(500/leaf),y:v=>34+dep[v]*82};
+      return {all:Object.keys(dep),dep,maxD,x:v=>70+(pos[v]+.5)*(500/leaf),y:v=>34+dep[v]*82};
     }
     function live(){
       if(alg==='bfs') return new Set(S.gen);
@@ -4726,33 +4833,46 @@ action ← rule.ACTION</pre>
     }
     function reset(){
       L=layout();
-      S={fr:['A'],gen:new Set(['A']),exp:new Set(),par:{},cur:null,found:null,done:false,step:0,peak:1,log:[],gone:new Set(),mem:1};
+      S={fr:['A'],gen:new Set(['A']),ever:new Set(['A']),cnt:{A:1},n:1,exp:new Set(),par:{},cur:null,found:null,done:false,step:0,peak:1,log:[],gone:new Set(),mem:1,lim:0,cut:false};
+      render();
+    }
+    function genNode(c,p){S.gen.add(c);S.ever.add(c);S.par[c]=p;S.n++;S.cnt[c]=(S.cnt[c]||0)+1;}
+    function restart(){
+      const old=[...S.gen].filter(v=>!S.gone.has(v)).map(lab);
+      S.lim++;S.cut=false;S.fr=['A'];S.gen=new Set();S.exp=new Set();S.gone=new Set();S.par={};S.cur=null;
+      genNode('A',undefined);S.step++;S.mem=1;
+      S.log.push({s:S.step+' (ℓ='+S.lim+')',pop:'<i>전선이 비었고 잘린 곳이 있음 → 깊이 제한 '+(S.lim-1)+' → '+S.lim+'로 처음부터</i>',test:'—',gen:['A <span class="muted">(다시 생성)</span>'],drop:old,fr:'A',t:S.n,m:1});
       render();
     }
     function step(){
       if(S.done) return;
-      if(!S.fr.length){S.done=true;render();return;}
+      if(!S.fr.length){ if(alg==='ids'&&S.cut){restart();return;} S.done=true;render();return; }
       const n=alg==='bfs'?S.fr.shift():S.fr.pop();
       S.cur=n;S.step++;
-      const row={s:S.step,pop:lab(n),test:'',gen:[],drop:[]};
+      const row={s:alg==='ids'?S.step+' (ℓ='+S.lim+')':S.step,pop:lab(n),test:'',gen:[],drop:[]};
       if(gt==='late'&&isG(n)){S.found=n;S.done=true;row.test='<b style="color:var(--good)">목표! → 종료</b>';}
       else{
         row.test=gt==='early'?'<span class="muted">생성할 때 이미 검사</span>':'목표 아님';
-        S.exp.add(n);
-        const add=[];
-        for(const c of kids(n)){
-          S.gen.add(c);S.par[c]=n;
-          if(gt==='early'&&isG(c)){S.found=c;S.done=true;row.gen.push(lab(c)+' <b style="color:var(--good)">★목표 → 즉시 종료</b>');break;}
-          row.gen.push(lab(c));add.push(c);
+        if(alg==='ids'&&L.dep[n]>=S.lim){
+          if(kids(n).length){S.cut=true;row.gen.push('<span style="color:var(--amber)">깊이 제한 '+S.lim+' 도달 → 확장 안 함 (cutoff)</span>');}
+          else row.gen.push('<span class="muted">자식 없음 (막다른 곳)</span>');
+        }else{
+          S.exp.add(n);
+          const add=[];
+          for(const c of kids(n)){
+            genNode(c,n);
+            if(gt==='early'&&isG(c)){S.found=c;S.done=true;row.gen.push(lab(c)+' <b style="color:var(--good)">★목표 → 즉시 종료</b>');break;}
+            row.gen.push(lab(c)+(S.cnt[c]>1?'<sup class="muted">×'+S.cnt[c]+'</sup>':''));add.push(c);
+          }
+          if(alg==='bfs')S.fr.push(...add);else S.fr.push(...add.slice().reverse());
+          if(!kids(n).length)row.gen.push('<span class="muted">자식 없음 (막다른 곳)</span>');
         }
-        if(alg==='bfs')S.fr.push(...add);else S.fr.push(...add.slice().reverse());
-        if(!kids(n).length)row.gen.push('<span class="muted">자식 없음 (막다른 곳)</span>');
       }
       const lv=live();
       S.gen.forEach(v=>{if(!lv.has(v)&&!S.gone.has(v)){S.gone.add(v);row.drop.push(lab(v));}});
       S.mem=lv.size;S.peak=Math.max(S.peak,S.mem);
-      if(!S.done&&!S.fr.length)S.done=true;
-      row.fr=frText();row.t=S.gen.size;row.m=S.mem;
+      if(!S.done&&!S.fr.length&&!(alg==='ids'&&S.cut))S.done=true;
+      row.fr=frText();row.t=S.n;row.m=S.mem;
       S.log.push(row);render();
     }
     function frOrder(){return alg==='bfs'?S.fr.slice():S.fr.slice().reverse();}
@@ -4763,6 +4883,7 @@ action ← rule.ACTION</pre>
       svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
       let s='';
       for(let d=0;d<=L.maxD;d++)s+=`<text class="dl" x="4" y="${34+d*82+5}">깊이 ${d}</text>`;
+      if(alg==='ids'&&S.lim<L.maxD){const y=34+S.lim*82+41;s+=`<line class="lim" x1="60" y1="${y}" x2="562" y2="${y}"/><text class="limt" x="598" y="${y+5}" text-anchor="end">ℓ=${S.lim}</text>`;}
       L.all.forEach(v=>kids(v).forEach(c=>{
         const cls=pa.has(c)?'pa':S.gone.has(c)?'gone':S.gen.has(c)?'':'un';
         s+=`<line class="e ${cls}" x1="${L.x(v)}" y1="${L.y(v)}" x2="${L.x(c)}" y2="${L.y(c)}"/>`;
@@ -4772,24 +4893,26 @@ action ← rule.ACTION</pre>
         s+=`<g class="nd ${cls}"><circle cx="${L.x(v)}" cy="${L.y(v)}" r="20"/><text x="${L.x(v)}" y="${L.y(v)}">${lab(v)}</text></g>`;
         if(isG(v))s+=`<text class="gl" x="${L.x(v)+25}" y="${L.y(v)-14}">Goal</text>`;
         if(S.gone.has(v))s+=`<text class="xl" x="${L.x(v)}" y="${L.y(v)+36}" text-anchor="middle">버림</text>`;
+        if(alg==='ids'&&(S.cnt[v]||0)>1)s+=`<text class="cnt" x="${L.x(v)-24}" y="${L.y(v)-16}" text-anchor="end">×${S.cnt[v]}</text>`;
       });
       svg.innerHTML=s;
-      const tot=L.all.length;
-      $('#tTime').textContent=S.gen.size+' / '+tot;
-      $('#tMem').textContent=S.mem+' / '+tot;
-      $('#tPeak').textContent='(최대 '+S.peak+')';
-      $('#tTimeBar').style.width=(S.gen.size/tot*100)+'%';
-      $('#tMemBar').style.width=(S.mem/tot*100)+'%';
-      $('#tFrLabel').textContent=alg==='bfs'?'큐: 왼쪽(앞)부터 꺼냄':'스택: 왼쪽(맨 위)부터 꺼냄';
-      $('#tFrontier').innerHTML=frOrder().map((v,i)=>`<span class="chip">${i===0?'▶ ':''}${lab(v)}</span>`).join('')||'<span class="muted">비어 있음</span>';
+      const tot=L.all.length,scale=tot*(alg==='ids'?2:1);
+      $('#'+P+'Time').textContent=S.n+(S.n>S.ever.size?` (서로 다른 노드 ${S.ever.size}개 + 재생성 ${S.n-S.ever.size}번)`:' / '+tot);
+      $('#'+P+'Mem').textContent=S.mem+' / '+tot;
+      $('#'+P+'Peak').textContent='(최대 '+S.peak+')';
+      $('#'+P+'TimeBar').style.width=Math.min(100,S.n/scale*100)+'%';
+      $('#'+P+'MemBar').style.width=(S.mem/scale*100)+'%';
+      $('#'+P+'FrLabel').textContent=alg==='bfs'?'큐: 왼쪽(앞)부터 꺼냄':'스택: 왼쪽(맨 위)부터 꺼냄';
+      $('#'+P+'Frontier').innerHTML=frOrder().map((v,i)=>`<span class="chip">${i===0?'▶ ':''}${lab(v)}</span>`).join('')||'<span class="muted">비어 있음</span>';
+      const gd=TREES[tk].goal.map(g=>L.dep[g]),minD=gd.length?Math.min(...gd):null;
       let st;
-      if(S.found){const d=L.dep[S.found];st=`목표 ${lab(S.found)} 발견 (깊이 ${d}, 비용 ${d}). 생성 ${S.gen.size}개, 최대 메모리 ${S.peak}개.`+(tk!=='full'&&d>1?' 깊이 1의 목표 C를 놓쳤어요 → 비용 최적 아님.':'');}
-      else if(S.done)st=`전선이 비었어요: 목표 없음, 트리 전체 탐색 끝. 시간(생성) ${S.gen.size}개, 공간 최대 ${S.peak}개.`;
+      if(S.found){const d=L.dep[S.found];st=`목표 ${lab(S.found)} 발견 (깊이 ${d}, 비용 ${d}${alg==='ids'?', 깊이 제한 ℓ = '+S.lim:''}). 생성 ${S.n}번, 최대 메모리 ${S.peak}개.`+(d>minD?` 깊이 ${minD}의 더 싼 목표를 놓쳤어요 → 비용 최적 아님.`:' 가장 얕은 목표예요.');}
+      else if(S.done)st=`전선이 비었고 잘린 곳도 없어요: 목표 없음, 트리 전체 탐색 끝. 시간(생성) ${S.n}번, 공간 최대 ${S.peak}개.`;
       else if(!S.step)st=`${TREES[tk].name} · ${ALGS[alg]} · 목표 검사 ${GT[gt]}. 시작 노드 A만 생성된 상태예요.`;
-      else st=`${S.step}단계: ${lab(S.cur)}를 꺼냈어요.`;
-      $('#tStatus').textContent=st;
-      $('#tLog').innerHTML=S.log.map((r,i)=>`<tr class="${i===S.log.length-1?'now':''}"><td>${r.s}</td><td><b>${r.pop}</b></td><td>${r.test}</td><td>${r.gen.join(', ')||'—'}</td><td>${r.drop.join(', ')||'—'}</td><td>${r.fr}</td><td>${r.t}</td><td>${r.m}</td></tr>`).join('');
-      $('#tStep').disabled=S.done;$('#tRun').disabled=S.done;
+      else st=alg==='ids'&&!S.cur?`깊이 제한 ℓ = ${S.lim}로 새 회차 시작. 이전 회차의 노드는 모두 버렸어요.`:`${S.step}단계: ${lab(S.cur)}를 꺼냈어요.`;
+      $('#'+P+'Status').textContent=st;
+      $('#'+P+'Log').innerHTML=S.log.map((r,i)=>`<tr class="${i===S.log.length-1?'now':''}"><td>${r.s}</td><td><b>${r.pop}</b></td><td>${r.test}</td><td>${r.gen.join(', ')||'—'}</td><td>${r.drop.join(', ')||'—'}</td><td>${r.fr}</td><td>${r.t}</td><td>${r.m}</td></tr>`).join('');
+      $('#'+P+'Step').disabled=S.done;$('#'+P+'Run').disabled=S.done;
     }
     function pick(el,opts,get,set){
       const draw=()=>{el.innerHTML=Object.entries(opts).map(([k,v])=>`<button data-k="${k}" aria-pressed="${k===get()}">${typeof v==='string'?v:v.name}</button>`).join('');};
@@ -4797,16 +4920,18 @@ action ← rule.ACTION</pre>
       return draw;
     }
     const drawers=[
-      pick($('#ttPick'),TREES,()=>tk,k=>{tk=k;alg=TREES[k].alg;gt=alg==='bfs'?'early':'late';}),
-      pick($('#taPick'),ALGS,()=>alg,k=>{alg=k;gt=k==='bfs'?'early':'late';}),
-      pick($('#tgPick'),GT,()=>gt,k=>{gt=k;})
+      pick($('#'+P+'tPick'),TREES,()=>tk,k=>{tk=k;if(!cfg.alg){alg=TREES[k].alg;gt=alg==='bfs'?'early':'late';}}),
+      pick($('#'+P+'aPick'),ALGS,()=>alg,k=>{alg=k;gt=k==='bfs'?'early':'late';}),
+      pick($('#'+P+'gPick'),GT,()=>gt,k=>{gt=k;})
     ];
     function drawAll(){drawers.forEach(f=>f());}
-    $('#tStep').addEventListener('click',step);
-    $('#tRun').addEventListener('click',()=>{let g=0;while(!S.done&&g++<99)step();});
-    $('#tReset').addEventListener('click',reset);
+    $('#'+P+'Step').addEventListener('click',step);
+    $('#'+P+'Run').addEventListener('click',()=>{let g=0;while(!S.done&&g++<200)step();});
+    $('#'+P+'Reset').addEventListener('click',reset);
     drawAll();reset();
-  })();
+  }
+  makeTreeSim('t',{trees:['bfs','dfs','full'],algs:['bfs','dfs']});
+  makeTreeSim('i',{trees:['idsF','dfs','bfs','full'],algs:['ids','bfs','dfs'],alg:'ids'});
 
   const h=(location.hash||'').slice(1);
   if(h==='hw'||h.startsWith('hw-'))setChapter(10,h.startsWith('hw-')?h:null);

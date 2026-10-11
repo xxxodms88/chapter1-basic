@@ -2943,7 +2943,14 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
         <div style="min-width:0">
           <h3 style="font-size:15px;margin-bottom:4px">단계별 기록</h3>
           <div class="table-wrap" style="max-height:250px;overflow:auto"><table class="slog"><thead><tr><th>단계</th><th>① 꺼냄 (g)</th><th>② 목표 검사</th><th>③ 생성한 자식 → 처리</th><th>전선 (꺼낼 순서)</th><th>시간</th><th>공간 = 지금 메모리</th></tr></thead><tbody id="uLog"></tbody></table></div>
-          <p class="note-link" style="font-weight:400;margin-top:6px">✎ <b>"버림"은 상태가 아니라 방금 만든 자식 노드 하나를 버리는 거예요.</b> 길은 양방향이라, 어떤 도시를 확장하면 이웃마다 자식을 만들어요. 그 이웃에는 방금 지나온 도시(예: RV를 확장하면 Sib)도 포함돼요. 생성한 뒤 reached 표와 비교해서, 그 상태가 이미 더 싸게 적혀 있으면 이 자식만 버려요. reached의 기록(Sib g=0)은 그대로예요. 그래서 다른 도시(Fag)를 확장할 때 Sib가 또 이웃으로 나오면 다시 생성되고(99+99=198), 다시 비교해서 다시 버려요. 생성은 확장할 때마다 이웃 수만큼 일어나요. 그래서 버린 자식도 "시간"(생성 횟수)에는 들어가요.</p>
+          <div class="card" style="background:var(--note-soft);border:1px dashed var(--note);padding:12px 14px">
+            <p style="margin:0 0 6px;font-weight:600;color:var(--note)">✎ 기록 표 읽는 법, 쉽게</p>
+            <ul class="muted" style="margin:0;padding-left:18px;font-size:14px;line-height:1.7">
+              <li><b>꺼내는 순서 = g가 작은 순서</b>예요. 전선에 <b>언제 들어왔는지는 상관없어요</b>. 나중에 들어와도 g가 가장 작으면 다음 차례에 바로 꺼내요. 들어온 순서는 g가 똑같을 때만 따져요(먼저 온 것 먼저).</li>
+              <li>예 (그래프 「짧은 길 vs 싼 길」): 1단계에서 G(10)가 먼저 전선에 들어가요. 2단계에서 B(2)가 <b>나중에</b> 들어와요. 그래도 3단계에 꺼내는 건 B(2)예요. G(10)는 계속 뒤로 밀려요.</li>
+              <li><b>"버림"</b> = 방금 만든 자식이 reached 표에 적힌 값보다 싸지 않아서, 그 자식 <b>하나만</b> 전선에 안 넣는 것이에요. 표의 기록은 그대로예요. 길이 양방향이라 왔던 도시로 돌아가는 자식이 자주 버려져요.</li>
+            </ul>
+          </div>
         </div>
         <div class="cx">
           <h3 style="font-size:15px">복잡도 자세히 보기</h3>

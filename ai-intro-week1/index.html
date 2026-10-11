@@ -241,7 +241,7 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .bubble::after{content:"";position:absolute;top:-10px;left:42px;border:12px solid transparent;border-top:0;border-bottom-color:var(--note-soft)}
 .fc-note{width:100%;max-width:560px;align-content:start;transition:opacity .25s,transform .25s}
 .fc-note.off{visibility:hidden;opacity:0;transform:translateY(8px)}
-.fc-note p{font-size:15px;line-height:1.75}
+.fc-note p{font-size:15px;line-height:1.75;white-space:pre-line}
 .note-link{font-size:13.5px;color:var(--note);font-weight:600}
 /* 3장 */
 .sel{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
@@ -4158,7 +4158,7 @@ action ← rule.ACTION</pre>
     '갔던 곳으로 다시 돌아오는 경로예요. 예) 아라드 → 지비우 → 아라드. 이걸 막지 않으면 같은 길을 빙빙 돌며 검색이 끝나지 않아요.',
     '같은 장소에 가는 서로 다른 길이에요. 예) A에서 C로 바로 가는 길과 B를 거쳐 가는 길. 둘 중 비싼 길은 절대 최적해의 일부가 될 수 없으니 버려도 돼요. 다만 다 기억하려면 메모리가 들어요.',
     '상태는 "세상이 지금 어떤 모습인가"(예: 지비우에 있음)이고, 노드는 검색 트리에 붙이는 메모 카드예요. 노드에는 상태와 함께 "어디서 왔나(부모), 어떤 동작으로 왔나, 여기까지 비용이 얼마인가"가 적혀 있어요. 같은 상태에 다른 길로 오면 노드가 여러 개 생길 수 있어요.',
-    '"가 볼 수 있는 곳으로 알아냈지만 아직 직접 가서 살펴보지 않은 곳"의 목록이에요. 할 일 목록처럼, 검색은 이 목록에서 하나를 꺼내 살펴보고 새로 알게 된 곳을 다시 목록에 넣는 걸 반복해요.',
+    '"가 볼 수 있는 곳으로 알아냈지만 아직 직접 가서 살펴보지 않은 곳"의 목록이에요. 할 일 목록처럼, 검색은 이 목록에서 하나를 꺼내 살펴보고 새로 알게 된 곳을 다시 목록에 넣는 걸 반복해요.\n\n■ 노드의 세 가지 처지\n· 확장됨(explored): 꺼내서 자식까지 다 만든 노드 → 이미 "가 본 곳"\n· 전선(frontier): 만들어지긴 했지만 아직 꺼내서 확장하지 않은 노드 → "알지만 아직 안 가 본 곳"\n· 아직 모름: 한 번도 만들어지지 않은 상태 → 검색이 존재 자체를 모르는 곳\n"전선의 모든 노드"는 지금 이 순간 두 번째 처지에 있는 노드 전체, 즉 "가 본 영역"과 "모르는 영역" 사이의 경계선을 이루는 노드들이에요. 그래서 이름이 전선(경계)이에요.\n\n■ 예 (S → A, B / A → C, D)\n1) 시작: 전선 = {S}\n2) S를 꺼내 확장 → A, B 생성: 전선 = {A, B}, 확장됨 = {S}\n3) A를 꺼내 확장 → C, D 생성: 전선 = {B, C, D}, 확장됨 = {S, A}\n이때 "전선의 모든 노드"는 B, C, D 세 개예요. 다음에 이 중 무엇을 꺼낼지가 전략의 차이예요(BFS는 먼저 들어온 B, DFS는 나중에 들어온 D, UCS는 g가 가장 작은 것, A*는 g + h가 가장 작은 것).\n\n■ 왜 중요한가\n· 공간 복잡도: 전선에 동시에 몇 개가 들어 있느냐가 메모리 사용량을 정해요(BFS는 한 층 전체 ≈ bᵈ, DFS는 경로 옆 형제들 ≈ bm).\n· A*의 성질 "f(n) < C*인 노드는 모두 확장"도 전선에서 꺼내는 순서로 설명돼요.\n· 전선이 비면 더 가 볼 곳이 없다는 뜻이라 검색은 실패를 반환해요.',
     '지금까지 한 번이라도 만들어 본 상태를 모두 적어 둔 기록장이에요. 같은 곳을 또 찾으면 이 기록을 보고 "이미 봤다"며 건너뛰어 시간을 아껴요.',
     '목표인지 확인하는 시점의 차이예요. early: 새로 만들자마자 확인(빨리 끝남). late: 목록에서 꺼낼 때 확인. 길마다 비용이 다르면 먼저 만들어진 목표가 더 비쌀 수 있어서, 비용을 따지는 UCS·A*는 late로 해야 최적해를 놓치지 않아요.',
     '검색 방법을 비교하는 네 기준이에요. ① 완전성: 답이 있으면 반드시 찾나 ② 비용 최적성: 찾은 답이 가장 싼가 ③ 시간: 얼마나 오래 걸리나 ④ 공간: 메모리를 얼마나 쓰나.',

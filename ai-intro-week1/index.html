@@ -266,6 +266,7 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .slog{min-width:560px;font-size:13px}
 .slog td{line-height:1.6}
 .slog tr.now td{background:var(--amber-soft)}
+.slog thead th{position:sticky;top:0;z-index:1}
 .ttree{display:block;width:100%;height:auto}
 .ttree .e{stroke:var(--muted);stroke-width:2.5}
 .ttree .e.un{stroke:var(--line);stroke-dasharray:6 6}
@@ -283,6 +284,19 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .ttree .nd.gone text{fill:var(--muted)}
 .ttree .gl{font-family:var(--sans);font-size:14px;font-weight:700;fill:var(--bad)}
 .ttree .xl{font-family:var(--sans);font-size:13px;fill:var(--muted)}
+.ttree{max-height:220px}
+.cx{border-top:1px solid var(--line);padding-top:14px;display:grid;gap:12px}
+.cxchart{display:block;width:100%;height:auto;max-height:230px}
+.cxchart .ax{stroke:var(--line);stroke-width:1}
+.cxchart .re{stroke:var(--note);stroke-width:1;stroke-dasharray:3 4}
+.cxchart .lt{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
+.cxchart .lm{fill:none;stroke:var(--amber);stroke-width:2;stroke-linejoin:round}
+.cxchart .dt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.cxchart .dm,.cxchart .pk{fill:var(--amber);stroke:var(--surface);stroke-width:2}
+.cxchart text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.cxchart .lb{font-size:12px;fill:var(--ink);font-weight:600}
+.cxchart .hit{fill:transparent}.cxchart .hit:hover{fill:var(--surface-2)}
+.cxt{min-width:0;font-size:13px}
 .ttree .lim{stroke:var(--amber);stroke-width:2;stroke-dasharray:8 6}
 .ttree .limt{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--amber)}
 .ttree .cnt{font-family:var(--mono);font-size:14px;font-weight:700;fill:var(--note)}
@@ -2689,7 +2703,7 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
     <div class="block">
       <span class="eyebrow">실습 · 슬라이드 트리 따라가기</span>
       <h2>BFS·DFS 한 단계씩: 시간(생성한 총수) vs 공간(지금 메모리)</h2>
-      <p class="muted">트리와 알고리즘을 고르고 "한 단계"를 누르세요. 한 단계마다 전선에서 노드 하나를 <b>꺼내고</b>, 그 자식을 <b>생성</b>해요. 위쪽 두 막대를 보세요. <b>시간</b> 막대는 생성할 때마다 늘기만 해요. <b>공간</b> 막대는 DFS에서 다 본 가지를 버릴 때 줄어들어요.</p>
+      <p class="muted">트리와 알고리즘을 고르고 "한 단계"를 누르세요. 한 단계마다 전선에서 노드 하나를 <b>꺼내고</b>, 그 자식을 <b>생성</b>해요. 아래 <b>복잡도 자세히 보기</b>에서 막대와 그래프를 보세요. <b>시간</b>은 생성할 때마다 늘기만 해요. <b>공간</b>은 DFS에서 다 본 가지를 버릴 때 줄어들어요.</p>
       <div class="card sim">
         <div class="row" style="justify-content:flex-start;gap:10px 16px">
           <div><div class="tiny muted">트리</div><div class="pick" id="ttPick"></div></div>
@@ -2702,16 +2716,27 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
           <button class="btn" id="tReset">처음으로</button>
         </div>
         <p class="verdict" id="tStatus"></p>
-        <div class="tmeter">
-          <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>시간</b>: 지금까지 생성한 노드 (누적)</span><b id="tTime"></b></div><div class="bar"><i id="tTimeBar"></i></div></div>
-          <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>공간</b>: 지금 메모리에 든 노드 <span class="muted" id="tPeak"></span></span><b id="tMem"></b></div><div class="bar m"><i id="tMemBar"></i></div></div>
-        </div>
         <div style="overflow:hidden"><svg id="ttree" class="ttree" viewBox="0 0 600 300" role="img" aria-label="검색 트리"></svg></div>
         <div class="legend"><span><i class="lg lg-un"></i>아직 생성 안 됨</span><span><i class="lg lg-fr"></i>전선 (생성됨, 대기)</span><span><i class="lg lg-cur"></i>방금 꺼냄</span><span><i class="lg lg-exp"></i>확장함 (메모리에 있음)</span><span><i class="lg lg-gone"></i>버림 (메모리에서 지움)</span><span><i class="lg lg-path"></i>찾은 경로</span></div>
         <div><h3 style="font-size:15px;margin-bottom:6px">전선 <span class="muted" id="tFrLabel" style="font-weight:400;font-size:13px"></span></h3><div class="frontier" id="tFrontier"></div></div>
         <div style="min-width:0">
           <h3 style="font-size:15px;margin-bottom:4px">단계별 기록</h3>
-          <div class="table-wrap" style="max-height:340px;overflow:auto"><table class="slog"><thead><tr><th>단계</th><th>① 꺼냄</th><th>② 목표 검사</th><th>③ 생성</th><th>버림</th><th>전선</th><th>시간</th><th>공간</th></tr></thead><tbody id="tLog"></tbody></table></div>
+          <div class="table-wrap" style="max-height:250px;overflow:auto"><table class="slog"><thead><tr><th>단계</th><th>① 꺼냄</th><th>② 목표 검사</th><th>③ 생성</th><th>버림</th><th>전선</th><th>시간</th><th>공간</th></tr></thead><tbody id="tLog"></tbody></table></div>
+        </div>
+        <div class="cx">
+          <h3 style="font-size:15px">복잡도 자세히 보기: 시간은 쌓이기만 하고, 공간은 오르내려요</h3>
+          <div class="tmeter">
+          <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>시간</b>: 지금까지 생성한 노드 (누적)</span><b id="tTime"></b></div><div class="bar"><i id="tTimeBar"></i></div></div>
+          <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>공간</b>: 지금 메모리에 든 노드 <span class="muted" id="tPeak"></span></span><b id="tMem"></b></div><div class="bar m"><i id="tMemBar"></i></div></div>
+        </div>
+          <div class="legend"><span><i class="lg" style="background:var(--accent)"></i>시간: 지금까지 생성한 횟수 (누적)</span><span><i class="lg" style="background:var(--amber)"></i>공간: 그 단계에서 메모리에 든 노드</span></div>
+          <div style="min-width:0"><svg id="tChart" class="cxchart" viewBox="0 0 600 190" role="img" aria-label="단계별 시간과 공간 그래프"></svg><p class="tiny muted" style="margin:0">가로축: 단계 · 세로축: 노드 수 · 점에 마우스를 올리면 그 단계의 값이 보여요</p></div>
+          <p class="muted" style="font-size:13.5px" id="tComp"></p>
+          <div class="grid2">
+            <div><div class="tiny muted" style="margin-bottom:4px">깊이별로 보기</div><div class="table-wrap"><table class="cxt"><thead><tr><th>깊이</th><th>트리 노드</th><th>생성 횟수</th><th>지금 메모리</th></tr></thead><tbody id="tDep"></tbody></table></div></div>
+            <div><div class="tiny muted" style="margin-bottom:4px">공식(최악)과 이번 실행 비교</div><div class="table-wrap"><table class="cxt"><thead><tr><th></th><th>공식</th><th>공식 값</th><th>이번 실행</th></tr></thead><tbody id="tForm"></tbody></table></div></div>
+          </div>
+          <p class="muted" style="font-size:13px" id="tNote"></p>
         </div>
       </div>
       <p class="muted">해 볼 것: ① BFS 그림 트리에서 목표 검사를 "생성할 때"와 "꺼낼 때"로 바꿔 생성 수를 비교하세요(3 vs 5, early goal test). ② DFS 그림 트리를 DFS로 돌려 I를 찾는 것과, BFS로 돌려 C를 찾는 것을 비교하세요(비용 최적성). ③ 완전 이진 트리(목표 없음)에서 BFS와 DFS 모두 시간은 15지만 최대 공간은 15 vs 7(= 1 + b·m)인 것을 확인하세요.</p>
@@ -2803,16 +2828,27 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
           <button class="btn" id="iReset">처음으로</button>
         </div>
         <p class="verdict" id="iStatus"></p>
-        <div class="tmeter">
-          <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>시간</b>: 생성한 횟수 (재생성 포함, 누적)</span><b id="iTime"></b></div><div class="bar"><i id="iTimeBar"></i></div></div>
-          <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>공간</b>: 지금 메모리에 든 노드 <span class="muted" id="iPeak"></span></span><b id="iMem"></b></div><div class="bar m"><i id="iMemBar"></i></div></div>
-        </div>
         <div style="overflow:hidden"><svg id="itree" class="ttree" viewBox="0 0 600 300" role="img" aria-label="IDS 검색 트리"></svg></div>
         <div class="legend"><span><i class="lg lg-un"></i>이번 회차에 아직 생성 안 됨</span><span><i class="lg lg-fr"></i>전선 (대기)</span><span><i class="lg lg-cur"></i>방금 꺼냄</span><span><i class="lg lg-exp"></i>확장함</span><span><i class="lg lg-gone"></i>버림</span><span><i class="lg lg-path"></i>찾은 경로</span></div>
         <div><h3 style="font-size:15px;margin-bottom:6px">전선 <span class="muted" id="iFrLabel" style="font-weight:400;font-size:13px"></span></h3><div class="frontier" id="iFrontier"></div></div>
         <div style="min-width:0">
           <h3 style="font-size:15px;margin-bottom:4px">단계별 기록 (ℓ = 깊이 제한)</h3>
-          <div class="table-wrap" style="max-height:340px;overflow:auto"><table class="slog"><thead><tr><th>단계</th><th>① 꺼냄</th><th>② 목표 검사</th><th>③ 생성</th><th>버림</th><th>전선</th><th>시간</th><th>공간</th></tr></thead><tbody id="iLog"></tbody></table></div>
+          <div class="table-wrap" style="max-height:250px;overflow:auto"><table class="slog"><thead><tr><th>단계</th><th>① 꺼냄</th><th>② 목표 검사</th><th>③ 생성</th><th>버림</th><th>전선</th><th>시간</th><th>공간</th></tr></thead><tbody id="iLog"></tbody></table></div>
+        </div>
+        <div class="cx">
+          <h3 style="font-size:15px">복잡도 자세히 보기: 시간은 쌓이기만 하고, 공간은 오르내려요</h3>
+          <div class="tmeter">
+          <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>시간</b>: 생성한 횟수 (재생성 포함, 누적)</span><b id="iTime"></b></div><div class="bar"><i id="iTimeBar"></i></div></div>
+          <div><div class="row" style="justify-content:space-between;font-size:13.5px"><span><b>공간</b>: 지금 메모리에 든 노드 <span class="muted" id="iPeak"></span></span><b id="iMem"></b></div><div class="bar m"><i id="iMemBar"></i></div></div>
+        </div>
+          <div class="legend"><span><i class="lg" style="background:var(--accent)"></i>시간: 지금까지 생성한 횟수 (누적)</span><span><i class="lg" style="background:var(--amber)"></i>공간: 그 단계에서 메모리에 든 노드</span></div>
+          <div style="min-width:0"><svg id="iChart" class="cxchart" viewBox="0 0 600 190" role="img" aria-label="단계별 시간과 공간 그래프"></svg><p class="tiny muted" style="margin:0">가로축: 단계 · 세로축: 노드 수 · 점에 마우스를 올리면 그 단계의 값이 보여요</p></div>
+          <p class="muted" style="font-size:13.5px" id="iComp"></p>
+          <div class="grid2">
+            <div><div class="tiny muted" style="margin-bottom:4px">깊이별로 보기</div><div class="table-wrap"><table class="cxt"><thead><tr><th>깊이</th><th>트리 노드</th><th>생성 횟수</th><th>지금 메모리</th></tr></thead><tbody id="iDep"></tbody></table></div></div>
+            <div><div class="tiny muted" style="margin-bottom:4px">공식(최악)과 이번 실행 비교</div><div class="table-wrap"><table class="cxt"><thead><tr><th></th><th>공식</th><th>공식 값</th><th>이번 실행</th></tr></thead><tbody id="iForm"></tbody></table></div></div>
+          </div>
+          <p class="muted" style="font-size:13px" id="iNote"></p>
         </div>
       </div>
       <p class="muted">해 볼 것: ① 목표 F 트리를 IDS로 돌려 ℓ = 0 → 1 → 2 세 회차와 A의 ×3을 확인하세요. 생성은 1 + 3 + 7 = 11번, 최대 메모리는 5 = 1 + b·d예요. ② 같은 트리를 DFS로 돌려 깊이 3(H, I, J, K)까지 쓸데없이 내려가는 것을 비교하세요. ③ DFS 그림 트리에서 IDS는 C(깊이 1)를, DFS는 I(깊이 3)를 찾아요. ④ 목표 없는 완전 이진 트리에서 IDS 26번 vs BFS 15번 (b = 2라 낭비가 커요).</p>
@@ -4822,7 +4858,7 @@ action ← rule.ACTION</pre>
     function layout(){
       const pos={},dep={};let leaf=0,maxD=0;
       (function walk(x,d){dep[x]=d;maxD=Math.max(maxD,d);const k=kids(x);if(!k.length)pos[x]=leaf++;else{k.forEach(c=>walk(c,d+1));pos[x]=(pos[k[0]]+pos[k[k.length-1]])/2;}})('A',0);
-      return {all:Object.keys(dep),dep,maxD,x:v=>70+(pos[v]+.5)*(500/leaf),y:v=>34+dep[v]*82};
+      return {all:Object.keys(dep),dep,maxD,x:v=>70+(pos[v]+.5)*(500/leaf),y:v=>30+dep[v]*70};
     }
     function live(){
       if(alg==='bfs') return new Set(S.gen);
@@ -4833,14 +4869,14 @@ action ← rule.ACTION</pre>
     }
     function reset(){
       L=layout();
-      S={fr:['A'],gen:new Set(['A']),ever:new Set(['A']),cnt:{A:1},n:1,exp:new Set(),par:{},cur:null,found:null,done:false,step:0,peak:1,log:[],gone:new Set(),mem:1,lim:0,cut:false};
+      S={fr:['A'],gen:new Set(['A']),ever:new Set(['A']),cnt:{A:1},n:1,exp:new Set(),par:{},cur:null,found:null,done:false,step:0,peak:1,log:[],gone:new Set(),mem:1,lim:0,cut:false,hist:[{s:0,t:1,m:1}],byDep:{0:1},iter:{0:1}};
       render();
     }
-    function genNode(c,p){S.gen.add(c);S.ever.add(c);S.par[c]=p;S.n++;S.cnt[c]=(S.cnt[c]||0)+1;}
+    function genNode(c,p){S.gen.add(c);S.ever.add(c);S.par[c]=p;S.n++;S.cnt[c]=(S.cnt[c]||0)+1;const k=L.dep[c];S.byDep[k]=(S.byDep[k]||0)+1;S.iter[S.lim]=(S.iter[S.lim]||0)+1;}
     function restart(){
       const old=[...S.gen].filter(v=>!S.gone.has(v)).map(lab);
       S.lim++;S.cut=false;S.fr=['A'];S.gen=new Set();S.exp=new Set();S.gone=new Set();S.par={};S.cur=null;
-      genNode('A',undefined);S.step++;S.mem=1;
+      genNode('A',undefined);S.step++;S.mem=1;S.hist.push({s:S.step,t:S.n,m:1,re:S.lim});
       S.log.push({s:S.step+' (ℓ='+S.lim+')',pop:'<i>전선이 비었고 잘린 곳이 있음 → 깊이 제한 '+(S.lim-1)+' → '+S.lim+'로 처음부터</i>',test:'—',gen:['A <span class="muted">(다시 생성)</span>'],drop:old,fr:'A',t:S.n,m:1});
       render();
     }
@@ -4870,7 +4906,7 @@ action ← rule.ACTION</pre>
       }
       const lv=live();
       S.gen.forEach(v=>{if(!lv.has(v)&&!S.gone.has(v)){S.gone.add(v);row.drop.push(lab(v));}});
-      S.mem=lv.size;S.peak=Math.max(S.peak,S.mem);
+      S.mem=lv.size;S.peak=Math.max(S.peak,S.mem);S.hist.push({s:S.step,t:S.n,m:S.mem});
       if(!S.done&&!S.fr.length&&!(alg==='ids'&&S.cut))S.done=true;
       row.fr=frText();row.t=S.n;row.m=S.mem;
       S.log.push(row);render();
@@ -4879,11 +4915,11 @@ action ← rule.ACTION</pre>
     function frText(){const o=frOrder();return o.length?o.map(lab).join(', '):'—';}
     function path(){const p=new Set();let v=S.found;while(v){p.add(v);v=S.par[v];}return p;}
     function render(){
-      const pa=path(),fr=new Set(S.fr),W=600,H=34+L.maxD*82+44;
+      const pa=path(),fr=new Set(S.fr),W=600,H=30+L.maxD*70+40;
       svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
       let s='';
-      for(let d=0;d<=L.maxD;d++)s+=`<text class="dl" x="4" y="${34+d*82+5}">깊이 ${d}</text>`;
-      if(alg==='ids'&&S.lim<L.maxD){const y=34+S.lim*82+41;s+=`<line class="lim" x1="60" y1="${y}" x2="562" y2="${y}"/><text class="limt" x="598" y="${y+5}" text-anchor="end">ℓ=${S.lim}</text>`;}
+      for(let d=0;d<=L.maxD;d++)s+=`<text class="dl" x="4" y="${30+d*70+5}">깊이 ${d}</text>`;
+      if(alg==='ids'&&S.lim<L.maxD){const y=30+S.lim*70+35;s+=`<line class="lim" x1="60" y1="${y}" x2="562" y2="${y}"/><text class="limt" x="598" y="${y+5}" text-anchor="end">ℓ=${S.lim}</text>`;}
       L.all.forEach(v=>kids(v).forEach(c=>{
         const cls=pa.has(c)?'pa':S.gone.has(c)?'gone':S.gen.has(c)?'':'un';
         s+=`<line class="e ${cls}" x1="${L.x(v)}" y1="${L.y(v)}" x2="${L.x(c)}" y2="${L.y(c)}"/>`;
@@ -4912,7 +4948,57 @@ action ← rule.ACTION</pre>
       else st=alg==='ids'&&!S.cur?`깊이 제한 ℓ = ${S.lim}로 새 회차 시작. 이전 회차의 노드는 모두 버렸어요.`:`${S.step}단계: ${lab(S.cur)}를 꺼냈어요.`;
       $('#'+P+'Status').textContent=st;
       $('#'+P+'Log').innerHTML=S.log.map((r,i)=>`<tr class="${i===S.log.length-1?'now':''}"><td>${r.s}</td><td><b>${r.pop}</b></td><td>${r.test}</td><td>${r.gen.join(', ')||'—'}</td><td>${r.drop.join(', ')||'—'}</td><td>${r.fr}</td><td>${r.t}</td><td>${r.m}</td></tr>`).join('');
+      const tw=$('#'+P+'Log').closest('.table-wrap');tw.scrollTop=tw.scrollHeight;
       $('#'+P+'Step').disabled=S.done;$('#'+P+'Run').disabled=S.done;
+      renderCx(live());
+    }
+    const SUP=n=>String(n).replace(/\d/g,c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+    function renderCx(lv){
+      const b=2,m=L.maxD,gd=TREES[tk].goal.map(g=>L.dep[g]),d=gd.length?Math.min(...gd):m;
+      const sum=(f,lo,hi)=>{let s=0;for(let k=lo;k<=hi;k++)s+=f(k);return s;};
+      /* 깊이별 표 */
+      const tree={},mem={};
+      L.all.forEach(v=>{const k=L.dep[v];tree[k]=(tree[k]||0)+1;});
+      lv.forEach(v=>{const k=L.dep[v];mem[k]=(mem[k]||0)+1;});
+      let rows='';
+      for(let k=0;k<=m;k++)rows+=`<tr><td>${k}</td><td class="num-r">${tree[k]}</td><td class="num-r"><b>${S.byDep[k]||0}</b></td><td class="num-r">${mem[k]||0}</td></tr>`;
+      rows+=`<tr><td><b>합</b></td><td class="num-r">${L.all.length}</td><td class="num-r"><b>${S.n}</b> = 시간</td><td class="num-r"><b>${lv.size}</b> = 지금 공간</td></tr>`;
+      $('#'+P+'Dep').innerHTML=rows;
+      /* 공식 vs 실제 */
+      let tf,tv,sf,sv;
+      if(alg==='bfs'){const dd=Math.min(gt==='early'?d:d+1,m);tf='1 + b + … + b'+SUP(dd);tv=sum(k=>b**k,0,dd);sf='≈ 시간 (거의 다 기억)';sv=tv;}
+      else if(alg==='dfs'){tf='1 + b + … + bᵐ';tv=sum(k=>b**k,0,m);sf='1 + b·m';sv=1+b*m;}
+      else{tf='(d+1)·1 + d·b + … + 1·bᵈ';tv=sum(k=>(d+1-k)*b**k,0,d);sf='1 + b·d';sv=1+b*d;}
+      $('#'+P+'Form').innerHTML=`<tr><td><b>시간</b></td><td>${tf}</td><td class="num-r">${tv}</td><td class="num-r"><b>${S.n}</b></td></tr><tr><td><b>공간</b> (최대)</td><td>${sf}</td><td class="num-r">${sv}</td><td class="num-r"><b>${S.peak}</b></td></tr>`;
+      const goalTxt=gd.length?`d = ${d} (가장 얕은 목표)`:`목표 없음 → 트리를 끝까지 봐야 하므로 공식의 d 자리에 m = ${m}을 넣어요`;
+      $('#'+P+'Note').innerHTML=`b = 2, ${goalTxt}${gd.length?', m = '+m:''}. 공식 값은 <b>꽉 찬 트리의 최악</b> 기준 상한이에요. 그림 트리는 비어 있는 가지가 있고, 목표를 찾으면 일찍 멈추므로 실제 값이 더 작을 수 있어요.`+(alg==='ids'?` 회차별 생성: ${Object.keys(S.iter).map(l=>`ℓ=${l}: ${S.iter[l]}`).join(' + ')} = <b>${S.n}</b>.`:'');
+      /* 지금 공간 구성 */
+      const f=S.fr.length,rest=lv.size-f;
+      $('#'+P+'Comp').innerHTML=`<b>지금 공간 ${lv.size}개</b> = 전선 ${f}개 + `+(alg==='bfs'?`확장이 끝났지만 reached에 남아 있는 노드 ${rest}개 (BFS는 못 버림)`:`전선 노드들의 조상, 즉 돌아갈 경로 ${rest}개 (다 본 가지는 버림)`)+`. 시간 ${S.n}번 중 ${S.n-lv.size}번은 만들었다가 `+(alg==='bfs'?'아직 하나도 안 버렸어요.':'이미 메모리에서 지운 노드예요.');
+      if(alg==='bfs')$('#'+P+'Comp').innerHTML=`<b>지금 공간 ${lv.size}개</b> = 전선 ${f}개 + 확장이 끝났지만 reached에 남아 있는 노드 ${rest}개. BFS는 만든 노드를 하나도 버리지 않으므로 공간 = 시간(${S.n})이에요.`;
+      chart();
+    }
+    function chart(){
+      const H=S.hist,W=600,HH=190,l=34,r=92,t=16,bt=24,n=Math.max(H.length-1,1);
+      const top=Math.max(4,Math.ceil(Math.max(...H.map(h=>h.t))/4)*4);
+      const X=i=>l+(W-l-r)*i/n,Y=v=>t+(HH-t-bt)*(1-v/top);
+      let s='';
+      const w=(W-l-r)/n;
+      H.forEach((h,i)=>{s+=`<rect class="hit" x="${X(i)-w/2}" y="${t}" width="${w}" height="${HH-t-bt}"><title>단계 ${h.s}: 시간 ${h.t}, 공간 ${h.m}</title></rect>`;});
+      [0,top/2,top].forEach(v=>{s+=`<line class="ax" x1="${l}" x2="${W-r}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${l-6}" y="${Y(v)+4}" text-anchor="end">${v}</text>`;});
+      H.forEach((h,i)=>{if(h.re)s+=`<line class="re" x1="${X(i)}" x2="${X(i)}" y1="${t}" y2="${HH-bt}"/><text x="${X(i)+3}" y="${t+9}">ℓ=${h.re}</text>`;});
+      const ev=Math.max(1,Math.ceil(n/12));
+      H.forEach((h,i)=>{if(i%ev===0||i===H.length-1)s+=`<text x="${X(i)}" y="${HH-6}" text-anchor="middle">${i}</text>`;});
+      const pts=k=>H.map((h,i)=>`${X(i).toFixed(1)},${Y(h[k]).toFixed(1)}`).join(' ');
+      s+=`<polyline class="lt" points="${pts('t')}"/><polyline class="lm" points="${pts('m')}"/>`;
+      let pi=0;H.forEach((h,i)=>{if(h.m>H[pi].m)pi=i;});
+      s+=`<circle class="pk" cx="${X(pi)}" cy="${Y(H[pi].m)}" r="5"/><text x="${X(pi)}" y="${Y(H[pi].m)-9}" text-anchor="middle">최대 ${H[pi].m}</text>`;
+      const last=H[H.length-1],x=X(H.length-1);let yt=Y(last.t),ym=Y(last.m);
+      if(Math.abs(yt-ym)<14){if(yt<=ym)ym=yt+14;else yt=ym+14;}
+      s+=`<circle class="dt" cx="${x}" cy="${Y(last.t)}" r="4"/><circle class="dm" cx="${x}" cy="${Y(last.m)}" r="4"/>`;
+      s+=`<text class="lb" x="${x+9}" y="${yt+4}">시간 ${last.t}</text><text class="lb" x="${x+9}" y="${ym+4}">공간 ${last.m}</text>`;
+      s+=`<text x="${(W-r+l)/2}" y="${HH-6}" text-anchor="middle" opacity="0">.</text>`;
+      $('#'+P+'Chart').innerHTML=s;
     }
     function pick(el,opts,get,set){
       const draw=()=>{el.innerHTML=Object.entries(opts).map(([k,v])=>`<button data-k="${k}" aria-pressed="${k===get()}">${typeof v==='string'?v:v.name}</button>`).join('');};

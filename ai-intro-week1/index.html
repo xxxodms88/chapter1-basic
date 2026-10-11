@@ -5238,7 +5238,7 @@ action ← rule.ACTION</pre>
       $('#uMemBar').style.width=Math.min(100,S.mem/maxGen*100)+'%';
       $('#uFrLabel').textContent=alg==='ucs'?'우선순위 큐: g가 작은 것부터 (취소선 = 옛 기록)':'큐: 왼쪽(앞)부터 꺼냄';
       $('#uFrontier').innerHTML=frSorted().map((x,i)=>{const st=S.reached[x.s]!==x;return `<span class="chip"${st?' style="opacity:.55;text-decoration:line-through"':''}>${i===0?'▶ ':''}${lab(x.s)} <b>${x.g}</b></span>`;}).join('')||'<span class="muted">비어 있음</span>';
-      $('#uReach').innerHTML=Object.entries(S.reached).map(([v,nd])=>`<tr${S.upd===v?' class="now"':''}><td><b>${lab(v)}</b></td><td class="num-r">${nd.g}</td><td>${nd.p?lab(nd.p.s):'—'}</td><td>${S.exp.has(v)?'확장함':live.has(v)?'전선':'—'}</td></tr>`).join('');
+      $('#uReach').innerHTML=Object.entries(S.reached).map(([v,nd])=>`<tr${S.upd===v?' class="now"':''}><td><b>${lab(v)}</b></td><td class="num-r">${nd.g}</td><td>${nd.p?lab(nd.p.s):'—'}</td><td>${S.exp.has(v)?'확장함':live.has(v)?(v===G.goal&&gt==='late'&&!S.done?'전선 <span class="muted">(목표지만 아직 안 꺼냄 → 꺼낼 때 검사)</span>':'전선'):(S.found&&S.found.s===v?'꺼냄 → 목표!':'—')}</td></tr>`).join('');
       let st;
       if(S.found){
         const c=S.found.g;

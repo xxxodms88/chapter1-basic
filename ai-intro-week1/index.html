@@ -308,6 +308,21 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .flq{display:flex;gap:4px;flex-wrap:wrap;min-height:30px;padding:4px;border:2px solid var(--amber);border-radius:8px;background:var(--amber-soft);min-width:60px}
 .flst{flex-direction:column;flex-wrap:nowrap}
 .flc{font-family:var(--mono);font-size:13px;font-weight:700;background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:2px 8px;text-align:center}
+#hsMap{display:block;width:100%;min-width:560px;height:auto}
+#hsMap .rd{stroke:var(--line);stroke-width:2.5}
+#hsMap .rd.pa{stroke:var(--good);stroke-width:6}
+#hsMap .rdw{font-family:var(--mono);font-size:10px;fill:var(--muted);text-anchor:middle}
+#hsMap .ct{fill:var(--surface);stroke:var(--muted);stroke-width:1.5;cursor:pointer}
+#hsMap .ct.sel{fill:var(--accent);stroke:var(--accent)}
+#hsMap .ct.goal{fill:var(--ink);stroke:var(--ink)}
+#hsMap .ctl{font-size:11px;fill:var(--ink);pointer-events:none}
+#hsMap .sl{stroke:var(--bad);stroke-width:2.5;stroke-dasharray:8 6}
+#hsMap .slt{font-family:var(--mono);font-size:14px;font-weight:700;fill:var(--bad);paint-order:stroke;stroke:var(--surface);stroke-width:4}
+.hsrow{display:grid;grid-template-columns:96px 1fr 44px;gap:8px;align-items:center;font-size:13.5px;margin-top:6px}
+.hsrow b{text-align:right;font-family:var(--mono)}
+.hsb{height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden;margin:2px 0}
+.hsb i{display:block;height:100%;border-radius:5px}
+.hsb i.h{background:var(--bad)}.hsb i.hs{background:var(--good)}
 .ttree .lim{stroke:var(--amber);stroke-width:2;stroke-dasharray:8 6}
 .ttree .limt{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--amber)}
 .ttree .cnt{font-family:var(--mono);font-size:14px;font-weight:700;fill:var(--note)}
@@ -2442,6 +2457,19 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
       </ul>
       <p class="muted">좋은 <span class="k">휴리스틱</span>의 두 조건: <b>실제 비용에 가깝게, 그러나 넘지 않게</b> + <b>계산이 싸게</b>.</p>
       <div class="table-wrap"><table id="sldTable" style="min-width:0"></table></div>
+      <div class="card sim" style="margin-top:12px">
+        <h3 style="font-size:15px">시각화: 직선 거리(추정 h) vs 실제 최단 도로(진짜 h*)</h3>
+        <p class="muted" style="font-size:14px">도시를 고르거나 지도에서 도시 점을 누르세요. <b style="color:var(--bad)">빨간 점선</b>은 그 도시에서 Bucharest까지의 <b>직선 거리 h<sub>SLD</sub></b>(휴리스틱 값)이에요. <b style="color:var(--good)">초록 굵은 선</b>은 도로를 따라가는 <b>실제 최단 경로</b>이고, 그 길이가 진짜 남은 비용 h*예요. 직선은 도로보다 길 수 없으니 항상 h ≤ h*예요.</p>
+        <div class="row" style="justify-content:flex-start"><label class="switch" for="hsCity" style="font-size:14px">도시 <select id="hsCity" class="sel"></select></label></div>
+        <p class="verdict" id="hsStatus"></p>
+        <div class="mapwrap"><svg id="hsMap" viewBox="0 0 640 420" role="img" aria-label="직선 거리와 실제 도로 거리 비교 지도"></svg></div>
+        <div class="legend"><span><i style="background:var(--bad)"></i>직선 거리 h<sub>SLD</sub> (추정)</span><span><i style="background:var(--good)"></i>실제 최단 도로 h* (진짜)</span></div>
+        <div id="hsBars"></div>
+        <details class="ans"><summary>모든 도시 한눈에 보기: h<sub>SLD</sub> vs h*</summary>
+          <p class="muted" style="font-size:13.5px">막대 두 개 중 위가 h<sub>SLD</sub>, 아래가 h*예요. 모든 도시에서 위 막대가 아래 막대보다 짧거나 같아요. 그래서 h<sub>SLD</sub>는 <b>허용 가능</b>(절대 과대평가하지 않음)이에요. 비율이 1에 가까울수록 정보가 많은 좋은 휴리스틱이에요.</p>
+          <div class="table-wrap"><table class="cxt"><thead><tr><th>도시</th><th>h<sub>SLD</sub></th><th>h*</th><th style="min-width:140px">비교</th><th>h / h*</th></tr></thead><tbody id="hsAll"></tbody></table></div>
+        </details>
+      </div>
     </div>
 
     <div class="block">
@@ -4229,6 +4257,34 @@ action ← rule.ACTION</pre>
     svg.innerHTML=h;
   })();
   const roadIdx=(a,b)=>ROADS.findIndex(r=>(r[0]===a&&r[1]===b)||(r[0]===b&&r[1]===a));
+  /* ---------- 3장: h_SLD vs 실제 최단 거리 시각화 ---------- */
+  (function(){
+    const svg=$('#hsMap'); if(!svg) return;
+    const G='Bucharest',dist={[G]:0},par={},done=new Set();
+    for(;;){let u=null;for(const v in dist)if(!done.has(v)&&(u===null||dist[v]<dist[u]))u=v;if(u===null)break;done.add(u);ADJ[u].forEach(([w,c])=>{if(dist[w]===undefined||dist[u]+c<dist[w]){dist[w]=dist[u]+c;par[w]=u;}});}
+    const route=c=>{const p=[c];while(p[p.length-1]!==G)p.push(par[p[p.length-1]]);return p;};
+    const sel=$('#hsCity');
+    sel.innerHTML=names.filter(c=>c!==G).map(c=>`<option ${c==='Arad'?'selected':''}>${c}</option>`).join('');
+    const maxV=Math.max(...names.map(c=>dist[c]));
+    const bar=(v,cls)=>`<div class="hsb"><i class="${cls}" style="width:${v/maxV*100}%"></i></div>`;
+    $('#hsAll').innerHTML=names.filter(c=>c!==G).sort((a,b)=>CITY[a][2]/dist[a]-CITY[b][2]/dist[b]).map(c=>`<tr><td>${c}</td><td class="num-r">${CITY[c][2]}</td><td class="num-r">${dist[c]}</td><td>${bar(CITY[c][2],'h')}${bar(dist[c],'hs')}</td><td class="num-r">${(CITY[c][2]/dist[c]).toFixed(2)}</td></tr>`).join('');
+    function draw(){
+      const c=sel.value,p=route(c),on=new Set();for(let i=1;i<p.length;i++)on.add(roadIdx(p[i-1],p[i]));
+      let h='';
+      ROADS.forEach(([a,b,w],i)=>{const [x1,y1]=px(a),[x2,y2]=px(b);h+=`<line class="rd${on.has(i)?' pa':''}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/><text class="rdw" x="${(x1+x2)/2}" y="${(y1+y2)/2-3}">${w}</text>`;});
+      const [sx,sy]=px(c),[gx,gy]=px(G);
+      h+=`<line class="sl" x1="${sx}" y1="${sy}" x2="${gx}" y2="${gy}"/>`;
+      Object.keys(CITY).forEach(k=>{const [x,y]=px(k);h+=`<circle class="ct${k===c?' sel':''}${k===G?' goal':''}" data-c="${k}" cx="${x}" cy="${y}" r="${k===c||k===G?9:7}"><title>${k}: h=${CITY[k][2]}, h*=${dist[k]}</title></circle><text class="ctl" x="${x+10}" y="${y+4}">${k==='Rimnicu Vilcea'?'Rimnicu V.':k}</text>`;});
+      h+=`<text class="slt" x="${(sx+gx)/2}" y="${(sy+gy)/2-8}" text-anchor="middle">h = ${CITY[c][2]}</text>`;
+      svg.innerHTML=h;
+      const hv=CITY[c][2],hs=dist[c];
+      $('#hsStatus').innerHTML=`${c}: 직선 거리 h<sub>SLD</sub> = <b>${hv}</b> ≤ 실제 최단 도로 h* = <b>${hs}</b> (${p.map(x=>x==='Rimnicu Vilcea'?'RV':x).join(' → ')}). 추정이 실제의 ${Math.round(hv/hs*100)}% → 과대평가 없음.`;
+      $('#hsBars').innerHTML=`<div class="hsrow"><span>h<sub>SLD</sub> (직선)</span>${bar(hv,'h')}<b>${hv}</b></div><div class="hsrow"><span>h* (도로)</span>${bar(hs,'hs')}<b>${hs}</b></div><p class="tiny muted" style="margin:4px 0 0">차이 ${hs-hv} = 길이 굽어 있어서 직선보다 더 가야 하는 만큼이에요. 차이가 작을수록 A*가 덜 헤매요.</p>`;
+    }
+    sel.addEventListener('change',draw);
+    svg.addEventListener('click',e=>{const t=e.target.closest('circle[data-c]');if(!t||t.dataset.c===G)return;sel.value=t.dataset.c;draw();});
+    draw();
+  })();
 
   const ALGS={bfs:'너비 우선 (BFS)',ucs:'균일 비용 (UCS)',dfs:'깊이 우선 (DFS)',greedy:'탐욕적 최선 우선',astar:'A*'};
   const algPick=$('#algPick');

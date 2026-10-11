@@ -5208,7 +5208,7 @@ action ← rule.ACTION</pre>
       S.log.push(row);render();
     }
     function frSorted(){return alg==='ucs'?S.fr.slice().sort((a,b)=>a.g-b.g||a.k-b.k):S.fr.slice();}
-    function frText(){const o=frSorted();return o.length?o.map(x=>(S.reached[x.s]!==x?'<s>':'')+lab(x.s)+'('+x.g+')'+(S.reached[x.s]!==x?'</s>':'')).join(', '):'—';}
+    function frText(){const o=frSorted();return o.length?o.map(x=>S.reached[x.s]!==x?'<s>'+lab(x.s)+'('+x.g+')</s><span class="muted"> 옛 기록</span>':lab(x.s)+'('+x.g+')').join(', '):'—';}
     function path(n){const p=[];while(n){p.unshift(n.s);n=n.p;}return p;}
     function render(){
       const P=S.found?path(S.found):[],pe=new Set();for(let i=1;i<P.length;i++)pe.add(P[i-1]+'|'+P[i]);
@@ -5236,8 +5236,8 @@ action ← rule.ACTION</pre>
       $('#uPeak').textContent='(최대 '+S.peak+')';
       $('#uTimeBar').style.width=Math.min(100,S.n/maxGen*100)+'%';
       $('#uMemBar').style.width=Math.min(100,S.mem/maxGen*100)+'%';
-      $('#uFrLabel').textContent=alg==='ucs'?'우선순위 큐: g가 작은 것부터 (취소선 = 옛 기록)':'큐: 왼쪽(앞)부터 꺼냄';
-      $('#uFrontier').innerHTML=frSorted().map((x,i)=>{const st=S.reached[x.s]!==x;return `<span class="chip"${st?' style="opacity:.55;text-decoration:line-through"':''}>${i===0?'▶ ':''}${lab(x.s)} <b>${x.g}</b></span>`;}).join('')||'<span class="muted">비어 있음</span>';
+      $('#uFrLabel').textContent=alg==='ucs'?'우선순위 큐: g가 작은 것부터. 옛 기록 = 더 싼 길이 생겨 쓸모없어졌지만 아직 큐에 남아 있는 노드(꺼낼 때 버림)':'큐: 왼쪽(앞)부터 꺼냄';
+      $('#uFrontier').innerHTML=frSorted().map((x,i)=>{const st=S.reached[x.s]!==x;return `<span class="chip"${st?' style="opacity:.7"':''}>${i===0?'▶ ':''}${st?'<s>':''}${lab(x.s)} <b>${x.g}</b>${st?'</s> 옛 기록':''}</span>`;}).join('')||'<span class="muted">비어 있음</span>';
       $('#uReach').innerHTML=Object.entries(S.reached).map(([v,nd])=>`<tr${S.upd===v?' class="now"':''}><td><b>${lab(v)}</b></td><td class="num-r">${nd.g}</td><td>${nd.p?lab(nd.p.s):'—'}</td><td>${S.exp.has(v)?'확장함':live.has(v)?(v===G.goal&&gt==='late'&&!S.done?'전선 <span class="muted">(목표지만 아직 안 꺼냄 → 꺼낼 때 검사)</span>':'전선'):(S.found&&S.found.s===v?'꺼냄 → 목표!':'—')}</td></tr>`).join('');
       let st;
       if(S.found){

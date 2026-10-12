@@ -337,6 +337,9 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .m5chain .vss{width:132px}
 .m5a{display:grid;font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--accent);text-align:center}
 .m5a small{font-weight:400;color:var(--muted);font-size:11px}
+.q8{display:grid;grid-template-columns:repeat(8,26px);grid-auto-rows:26px;border:2px solid var(--muted)}
+.q8c{display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--surface);color:var(--note)}
+.q8c.d{background:var(--surface-2)}
 .ttree .lim{stroke:var(--amber);stroke-width:2;stroke-dasharray:8 6}
 .ttree .limt{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--amber)}
 .ttree .cnt{font-family:var(--mono);font-size:14px;font-weight:700;fill:var(--note)}
@@ -2101,10 +2104,46 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
         <div class="card"><h3>좋은 추상화 조건 1: 타당성 (valid)</h3><p class="muted">추상 해를 세부 세계에서 실제로 실행할 수 있어야 한다. 추상 동작 하나가 세부 동작열로 실현된다.</p></div>
         <div class="card"><h3>좋은 추상화 조건 2: 유용성 (useful)</h3><p class="muted">추상 동작 수행이 원래 문제보다 쉬워야 한다. "Sibiu로 운전"은 도로를 따라가면 되므로 별도 검색이 필요 없다.</p></div>
         <div class="card"><h3>너무 요약하면 (over-abstraction)</h3><p class="muted">해가 실행되지 않는다(<span class="k">타당성</span> 위반). 예) 도로 연결을 버리면 인접하지 않은 도시로 가는 해가 나옴. 청결 여부를 버린 청소기는 목표 판정 불가.</p></div>
-        <div class="card"><h3>너무 세부적이면 (under-abstraction)</h3><p class="muted"><span class="k">상태 공간</span> 폭발. 8-퀸을 "아무 칸에나" 놓으면 C(64,8) ≈ 4.4×10⁹, "열마다 하나씩"이면 8⁸ ≈ 1.7×10⁷. 같은 문제가 260배 차이.</p></div>
+        <div class="card"><h3>너무 세부적이면 (under-abstraction)</h3><p class="muted"><span class="k">상태 공간</span> 폭발. 8-퀸을 "아무 칸에나" 놓으면 C(64,8) ≈ 4.4×10⁹, "열마다 하나씩"이면 8⁸ ≈ 1.7×10⁷. 같은 문제가 260배 차이.</p><p class="note-link">✎ 내 질문 노트: 숫자 풀이를 아래에 정리</p></div>
       </div>
       <p class="muted"><b>형식화 점검 세 질문:</b> 이 세부를 지워도 목표 판정과 비용 계산이 되는가?(유관성) · 추상 해를 실제로 실행할 수 있는가?(<span class="k">타당성</span>) · 추상 동작 하나를 검색 없이 수행할 수 있는가?(<span class="k">유용성</span>)</p>
     </div>
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>"너무 세부적이면" 카드 풀기: 8-퀸 C(64,8) vs 8⁸</h2>
+      <p class="muted" style="font-size:14px">위 블록 마지막 카드(under-abstraction)의 숫자를 풀어 쓴 메모예요.</p>
+      <div class="grid2">
+        <div class="card">
+          <h3>① 8-퀸 문제가 뭐냐면</h3>
+          <p class="muted">8×8 체스판에 퀸 8개를 <b>서로 공격하지 않게</b> 놓는 문제예요. 퀸은 가로(같은 행), 세로(같은 열), 대각선으로 공격해요. 그래서 어떤 두 퀸도 같은 행·열·대각선에 있으면 안 돼요. 오른쪽은 해 중 하나예요(해는 모두 92개).</p>
+        </div>
+        <div class="card" style="display:grid;place-items:center"><div class="q8"><span class="q8c">♛</span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d">♛</span><span class="q8c"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c">♛</span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c">♛</span><span class="q8c"></span><span class="q8c d">♛</span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c">♛</span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d">♛</span><span class="q8c"></span><span class="q8c d"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d">♛</span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span><span class="q8c d"></span><span class="q8c"></span></div></div>
+      </div>
+      <div class="card">
+        <h3>② 같은 문제를 두 가지로 표현하기</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th></th><th>표현 1: "아무 칸에나"</th><th>표현 2: "열마다 하나씩"</th></tr></thead>
+          <tbody>
+            <tr><td><b>상태</b></td><td>64칸 중 퀸이 놓인 8칸</td><td>각 열(8개)에 퀸이 몇 번째 행에 있나</td></tr>
+            <tr><td><b>세는 법</b></td><td>64칸에서 8칸 고르기 = C(64,8) = 64! / (8! · 56!)</td><td>열마다 행 8개 중 하나 → 8 × 8 × … × 8 (8번) = 8⁸</td></tr>
+            <tr><td><b>개수</b></td><td class="num-r">4,426,165,368 ≈ <b>4.4 × 10⁹</b></td><td class="num-r">16,777,216 ≈ <b>1.7 × 10⁷</b></td></tr>
+            <tr><td><b>포함된 쓸데없는 배치</b></td><td>한 열에 퀸 2개 이상인 배치(무조건 실패)까지 전부</td><td>그런 배치는 아예 표현할 수 없음</td></tr>
+          </tbody>
+        </table></div>
+        <p class="muted">4.4 × 10⁹ ÷ 1.7 × 10⁷ ≈ 264 → <b>약 260배</b> 차이예요. 그런데 해 92개는 두 표현 모두에 그대로 들어 있어요. 해는 하나도 잃지 않고 <b>어차피 답이 될 수 없는 배치만</b> 빠진 거예요.</p>
+      </div>
+      <div class="card">
+        <h3>③ 이게 왜 "너무 세부적인(under-abstraction)" 예인가</h3>
+        <ul class="muted">
+          <li>"두 퀸이 같은 열에 있으면 반드시 공격한다"는 건 문제를 보자마자 아는 사실이에요. 표현 1은 이 사실을 무시하고 "아무 칸이나"라는 <b>불필요한 자유(세부)</b>를 남겨 둬요. 그래서 검색할 상태가 쓸데없이 많아져요(상태 공간 폭발).</li>
+          <li>표현 2는 그 세부를 처음부터 지우고 "열마다 행 하나"만 남겨요. 목표 판정(서로 공격 안 함)에는 아무 영향이 없고, 검색 공간만 260배 줄어요.</li>
+          <li>더 줄일 수도 있어요. 왼쪽 열부터 하나씩 놓되 <b>이미 공격받는 칸에는 놓지 않게</b> 동작을 정하면, 가능한 상태가 <b>2,057개</b>까지 줄어요(AIMA 교재 예).</li>
+          <li>교훈: 같은 문제라도 <b>상태·동작을 어떻게 정하느냐(형식화)</b>에 따라 검색량이 수백~수백만 배 달라져요. 반대로 너무 지우면(over-abstraction) 해가 실행 불가능해지니, 목표에 필요한 것만 남기는 게 핵심이에요.</li>
+        </ul>
+      </div>
+    </div>
+
 
 
     <div class="ckpt">

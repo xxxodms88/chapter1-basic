@@ -3221,9 +3221,54 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
           </div>
         </div>
         <p class="muted" id="h2detail" style="font-size:13.5px"></p>
+        <details class="ans" open><summary>타일별 계산 (지금 판 기준)</summary><div class="table-wrap"><table class="cxt"><thead><tr><th>타일</th><th>지금 (행,열)</th><th>목표 (행,열)</th><th>제자리? → h₁</th><th>|Δ행| + |Δ열| → h₂</th></tr></thead><tbody id="h8tbl"></tbody></table></div></details>
         <div class="row" style="justify-content:flex-start"><button class="btn" id="puzReset">강의 예제로</button><button class="btn" id="puzShuffle">가볍게 섞기 (목표에서 12수)</button></div>
       </div>
     </div>
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>h₁과 h₂ 자세히: 무엇을 세고, 왜 허용 가능하고, 왜 h₂가 더 좋은가</h2>
+      <p class="muted" style="font-size:14px">위 8-퍼즐 실습을 풀어 쓴 메모예요. 실습 판 아래 "타일별 계산" 표가 지금 판 기준으로 같은 계산을 실시간으로 보여 줘요.</p>
+      <div class="card">
+        <h3>① 8-퍼즐이 뭐냐면</h3>
+        <p class="muted">3×3 판에 숫자 타일 1~8과 빈칸 하나가 있어요. 빈칸 옆 타일을 빈칸으로 미는 게 한 번의 이동(비용 1)이에요. 목표 배치(오른쪽 판)를 만드는 <b>최소 이동 수</b>를 찾는 게 문제예요. 강의 예제 시작 판의 최적 해는 <b>26수</b>예요. h(n)은 "지금 판에서 목표까지 앞으로 몇 수 남았나"를 <b>빠르게 어림한 값</b>이에요.</p>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <h3>② h₁ = 제자리에 없는 타일 수</h3>
+          <p class="muted">타일 1~8 중 목표 위치와 다른 칸에 있는 타일을 셉니다(빈칸은 안 셈). 강의 예제는 <b>8개 모두</b> 제자리가 아니라서 h₁ = <b>8</b>이에요.</p>
+          <p class="muted"><b>왜 과대평가 안 하나</b>: 제자리가 아닌 타일은 적어도 한 번은 움직여야 해요. 한 수에 타일 하나만 움직이니, 남은 수는 최소 h₁ 이상이에요.</p>
+        </div>
+        <div class="card">
+          <h3>③ h₂ = 맨해튼 거리 합</h3>
+          <p class="muted">타일마다 지금 칸에서 목표 칸까지 <b>|행 차이| + |열 차이|</b>(가로·세로로만 가는 칸 수)를 구해 모두 더해요. 강의 예제: 타일 1~8이 3 + 1 + 2 + 2 + 2 + 3 + 3 + 2 = <b>18</b>.</p>
+          <p class="muted"><b>왜 과대평가 안 하나</b>: 한 수에 타일 하나가 <b>한 칸</b>만 움직여요. 그러니 각 타일은 적어도 자기 맨해튼 거리만큼 움직여야 하고, 다 더한 h₂도 실제 남은 수를 넘을 수 없어요.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>④ 예: 타일 1의 맨해튼 거리 3</h3>
+        <p class="muted">강의 예제에서 타일 1은 <b>3행 3열</b>(오른쪽 아래)에 있고, 목표 위치는 <b>1행 2열</b>이에요. 행 차이 |3 − 1| = 2, 열 차이 |3 − 2| = 1 → 2 + 1 = <b>3</b>. 다른 타일이 길을 막지 않는다 쳐도 최소 3번은 움직여야 해요.</p>
+      </div>
+      <div class="card">
+        <h3>⑤ 완화된 문제로 보기 (휴리스틱을 만드는 방법)</h3>
+        <ul class="muted">
+          <li><b>h₁</b> = 규칙을 크게 풀어서 "타일이 <b>어디로든 한 번에 순간이동</b>할 수 있다"고 할 때의 정확한 최소 수예요. 제자리가 아닌 타일마다 1번이면 되니까요.</li>
+          <li><b>h₂</b> = "타일이 <b>옆 칸으로는 움직이는데, 그 칸이 비어 있지 않아도 된다</b>"고 할 때의 정확한 최소 수예요. 각 타일이 맨해튼 거리만큼 걸어가면 돼요.</li>
+          <li>완화된 문제는 원래 문제보다 쉬우니(제약이 적으니) 그 최소 비용은 원래 비용보다 클 수 없어요 → <b>자동으로 허용 가능</b>. h₂의 완화가 h₁보다 덜 풀어 줬기 때문에(원래 문제에 더 가까워서) 값이 더 커요.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>⑥ 왜 h₂가 더 좋은가 (지배 관계)</h3>
+        <ul class="muted">
+          <li>제자리가 아닌 타일은 맨해튼 거리가 최소 1이에요. 그러니 어떤 판에서든 <b>h₂ ≥ h₁</b>이에요(예제: 18 ≥ 8). 이를 "h₂가 h₁을 <b>지배</b>한다"고 해요.</li>
+          <li>둘 다 실제 값(26) 이하라서 둘 다 안전하지만, h₂가 실제 값에 <b>더 가까워요</b>(18/26 vs 8/26). A*는 f = g + h가 최적 비용 C*보다 작은 노드를 모두 확장해야 해요. h가 클수록 f가 커져서 그 조건에 걸리는 노드가 줄어요 → 확장이 줄어요.</li>
+          <li>수치(d = 12): IDS 3,644,035개 → A*(h₁) 227개 → A*(h₂) <b>73개</b>. 유효 분기 계수도 2.78 → 1.42 → 1.24로 1에 가까워져요.</li>
+        </ul>
+        <p class="muted">실습 판에서 타일을 움직여 보면 h₁, h₂가 어떻게 변하는지 보여요. 한 수에 h₂는 정확히 1씩만 변해요(움직인 타일 하나가 목표 쪽 또는 반대쪽으로 한 칸). 그래서 h₂는 "목표까지 최소 몇 수"를 꽤 잘 따라가요.</p>
+      </div>
+    </div>
+
 
     <div class="block">
       <span class="eyebrow">계산기</span>
@@ -4517,6 +4562,7 @@ action ← rule.ACTION</pre>
     drawBoard($('#board'),puz,true);drawBoard($('#goalBoard'),GOALP,false);
     const h1=puz.filter((t,i)=>t!==0&&t!==GOALP[i]).length,[h2,parts]=man(puz);
     $('#h1v').textContent=h1;$('#h2v').textContent=h2;$('#mvv').textContent=moves;
+    $('#h8tbl').innerHTML=[1,2,3,4,5,6,7,8].map(t=>{const i=puz.indexOf(t),g=GOALP.indexOf(t),r=(i/3|0)+1,c=i%3+1,gr=(g/3|0)+1,gc=g%3+1,ok=i===g;return `<tr><td><b>${t}</b></td><td>(${r},${c})</td><td>(${gr},${gc})</td><td>${ok?'예 → 0':'아니오 → <b>1</b>'}</td><td>|${r}−${gr}| + |${c}−${gc}| = <b>${Math.abs(r-gr)+Math.abs(c-gc)}</b></td></tr>`;}).join('')+`<tr><td colspan="3"><b>합</b></td><td><b>h₁ = ${h1}</b></td><td><b>h₂ = ${h2}</b></td></tr>`;
     $('#h2detail').textContent=h1===0?`목표 도달! ${moves}수 만에 풀었어요.`:`h₂ 내역 (타일 1~8): ${parts.join(' + ')} = ${h2}`;
   }
   $('#board').addEventListener('click',e=>{

@@ -347,6 +347,11 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .h8m i.gl{border-color:var(--good)}
 .tile.hl{outline:3px solid var(--accent);outline-offset:2px}
 .note>*,.note .grid2>*,.note .card{min-width:0}
+.h8cmp{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
+.h8bd{display:inline-grid;grid-template-columns:repeat(3,28px);grid-auto-rows:28px;gap:3px;margin-top:4px}
+.h8bd i{font-style:normal;font-family:var(--mono);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);border-radius:5px}
+.h8bd i.e{background:var(--surface-2);border-color:transparent}
+.h8bd i.x{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
 .ttree .lim{stroke:var(--amber);stroke-width:2;stroke-dasharray:8 6}
 .ttree .limt{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--amber)}
 .ttree .cnt{font-family:var(--mono);font-size:14px;font-weight:700;fill:var(--note)}
@@ -3245,6 +3250,23 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
       <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
       <h2>h₁과 h₂ 자세히: 무엇을 세고, 왜 허용 가능하고, 왜 h₂가 더 좋은가</h2>
       <p class="muted" style="font-size:14px">위 8-퍼즐 실습을 풀어 쓴 메모예요. 실습 판 아래 "타일별 계산" 표가 지금 판 기준으로 같은 계산을 실시간으로 보여 줘요.</p>
+      <div class="card" style="border:2px solid var(--note)">
+        <h3>⓪ 어려우면 이것부터: 한 장으로 이해하기</h3>
+        <ul class="muted">
+          <li><b>휴리스틱 h</b> = "목표까지 대충 몇 수 남았을까?"를 <b>빠르게 어림한 점수</b>예요. A*는 이 점수가 작은 판(목표에 가까워 보이는 판)부터 먼저 살펴봐요.</li>
+          <li><b>h₁</b>은 "<b>틀린 자리에 있는 타일이 몇 개냐</b>"만 세요. 얼마나 멀리 있는지는 안 봐요.</li>
+          <li><b>h₂</b>는 "<b>타일마다 제자리까지 몇 칸 떨어졌냐</b>"를 다 더해요. 멀리 있는 타일일수록 점수가 커져요.</li>
+          <li><b>둘 다 "실제보다 크게 말하지 않는다"</b>(허용 가능): 틀린 타일은 적어도 1번, 그리고 적어도 떨어진 칸 수만큼은 움직여야 하니까요. 그래서 둘 다 A*에 써도 최적 해를 보장해요.</li>
+        </ul>
+        <p class="muted" style="margin-bottom:6px"><b>h₂가 더 좋은 이유를 그림 하나로</b>: 아래 두 판은 둘 다 타일 하나만 틀렸어요(빨간 타일). 그래서 <b>h₁은 둘 다 1</b>로 똑같아요. 하지만 왼쪽은 한 칸만 옮기면 끝나고, 오른쪽은 7이 맨 아래 줄까지 돌아가야 해요(다른 타일을 비켜 가며 실제로 11수).</p>
+        <div class="h8cmp">
+          <div><div class="tiny muted">판 P</div><span class="h8bd"><i class="x">1</i><i class="e"></i><i class="">2</i><i class="">3</i><i class="">4</i><i class="">5</i><i class="">6</i><i class="">7</i><i class="">8</i></span><p class="tiny">h₁ = 1 · h₂ = <b>1</b><br>실제로 1수면 끝</p></div>
+          <div><div class="tiny muted">판 Q</div><span class="h8bd"><i class="x">7</i><i class="">1</i><i class="">2</i><i class="">3</i><i class="">4</i><i class="">5</i><i class="">6</i><i class="e"></i><i class="">8</i></span><p class="tiny">h₁ = 1 · h₂ = <b>3</b><br>실제로는 11수 걸림</p></div>
+          <div><div class="tiny muted">목표</div><span class="h8bd"><i class="e"></i><i class="">1</i><i class="">2</i><i class="">3</i><i class="">4</i><i class="">5</i><i class="">6</i><i class="">7</i><i class="">8</i></span></div>
+        </div>
+        <p class="muted">h₁은 두 판을 <b>구별하지 못해요</b>(둘 다 1). h₂는 "Q가 훨씬 멀다"를 알아채요(1 vs 3). 그래서 A*가 h₂를 쓰면 가망 없는 판을 덜 펼쳐 보고 목표 쪽으로 곧장 가요. 이게 "h₂가 h₁을 지배한다, 더 정보가 많다"의 뜻이에요. 아래 ①~⑥은 이걸 하나씩 자세히 쓴 거예요.</p>
+      </div>
+
       <div class="card">
         <h3>① 8-퍼즐이 뭐냐면</h3>
         <p class="muted">3×3 판에 숫자 타일 1~8과 빈칸 하나가 있어요. 빈칸 옆 타일을 빈칸으로 미는 게 한 번의 이동(비용 1)이에요. 목표 배치(오른쪽 판)를 만드는 <b>최소 이동 수</b>를 찾는 게 문제예요. 강의 예제 시작 판의 최적 해는 <b>26수</b>예요. h(n)은 "지금 판에서 목표까지 앞으로 몇 수 남았나"를 <b>빠르게 어림한 값</b>이에요.</p>

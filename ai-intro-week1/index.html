@@ -333,6 +333,10 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .vsc{position:relative;height:42px;border:1px solid var(--line);border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:2px;font-size:18px}
 .vsc i{font-style:normal;color:var(--amber);font-size:16px}
 .vsc small{position:absolute;left:4px;bottom:1px;font-size:10px;color:var(--muted)}
+.m5chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.m5chain .vss{width:132px}
+.m5a{display:grid;font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--accent);text-align:center}
+.m5a small{font-weight:400;color:var(--muted);font-size:11px}
 .ttree .lim{stroke:var(--amber);stroke-width:2;stroke-dasharray:8 6}
 .ttree .limt{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--amber)}
 .ttree .cnt{font-family:var(--mono);font-size:14px;font-weight:700;fill:var(--note)}
@@ -1816,6 +1820,36 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       <details class="ans"><summary>기억 사용 에이전트는 어떤 정보를 기억해야 할까?</summary><p>각 칸을 마지막으로 확인했을 때 깨끗했는지. 두 칸이 모두 깨끗하다는 사실을 알면 이동하지 않고 NoOp을 선택해 이동 벌점을 피합니다.</p></details>
       <details class="ans"><summary>먼지가 다시 생긴다면 계속 NoOp 해도 될까?</summary><p>안 됩니다. "4단계 뒤 A칸 재오염"을 켜고 실행해 보세요. 기억 에이전트는 A가 깨끗하다고 믿고 있어서 다시 치우지 않습니다. 점검 간격을 정하려면 먼지 발생률, 이동 비용, 남은 시간, 마지막으로 확인한 시점 같은 정보가 필요합니다.</p></details>
     </div>
+
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>진공청소기 세계의 검색 트리: 왜 최대 깊이 m = 5인가 (longest path with cycles removed)</h2>
+      <p class="muted" style="font-size:14px">진공청소기 세계를 검색 문제로 볼 때 b = 3, d = 3, m = 5가 나오는 이유를 정리한 메모예요. 상태 번호는 2장 「에이전트 구조」 탭 메모의 8개 상태 그림과 같아요.</p>
+      <div class="card">
+        <h3>① 먼저 기호</h3>
+        <ul class="muted">
+          <li><b>b = 3</b>: 어느 상태에서나 할 수 있는 동작이 Left, Right, Suck 세 개예요.</li>
+          <li><b>d = 3</b>: 상태 1(A에 있음, 둘 다 더러움)에서 가장 짧은 해는 Suck → Right → Suck, 3걸음이에요.</li>
+          <li><b>m = 트리의 최대 깊이</b>: 그냥 두면 Left, Right, Left, Right…로 끝없이 왔다 갔다 할 수 있어서 경로가 무한히 길어져요. 그래서 <b>순환을 뺀(cycles removed)</b> 경로, 즉 <b>같은 상태를 두 번 밟지 않는 경로</b> 중 가장 긴 것의 길이를 m으로 써요.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>② 가장 긴 순환 없는 경로: 5걸음</h3>
+        <p class="muted" style="font-size:14px">상태 1에서 시작해 일부러 가장 돌아가는 길이에요. 6개 상태를 한 번씩 밟고, 동작은 5번이에요.</p>
+        <div class="m5chain"><div class="vss" style="cursor:default"><span class="vsn">상태 1</span><span class="vsrow"><span class="vsc">🤖<i>●</i><small>A</small></span><span class="vsc"><i>●</i><small>B</small></span></span></div><span class="m5a">Right →<small>1걸음</small></span><div class="vss" style="cursor:default"><span class="vsn">상태 5</span><span class="vsrow"><span class="vsc"><i>●</i><small>A</small></span><span class="vsc">🤖<i>●</i><small>B</small></span></span></div><span class="m5a">Suck →<small>2걸음</small></span><div class="vss" style="cursor:default"><span class="vsn">상태 6</span><span class="vsrow"><span class="vsc"><i>●</i><small>A</small></span><span class="vsc">🤖<small>B</small></span></span></div><span class="m5a">Left →<small>3걸음</small></span><div class="vss" style="cursor:default"><span class="vsn">상태 2</span><span class="vsrow"><span class="vsc">🤖<i>●</i><small>A</small></span><span class="vsc"><small>B</small></span></span></div><span class="m5a">Suck →<small>4걸음</small></span><div class="vss goal" style="cursor:default"><span class="vsn">상태 4</span><span class="vsrow"><span class="vsc">🤖<small>A</small></span><span class="vsc"><small>B</small></span></span></div><span class="m5a">Right →<small>5걸음</small></span><div class="vss goal" style="cursor:default"><span class="vsn">상태 8</span><span class="vsrow"><span class="vsc"><small>A</small></span><span class="vsc">🤖<small>B</small></span></span></div></div>
+      </div>
+      <div class="card">
+        <h3>③ 왜 더 길어질 수 없나 (8개 상태인데 왜 6개만?)</h3>
+        <ul class="muted">
+          <li><b>먼지는 줄기만 해요.</b> Suck으로 깨끗해진 칸이 다시 더러워지는 동작은 없어요. 그래서 먼지 상황은 "둘 다 더러움 → 한 칸만 더러움 → 둘 다 깨끗" 순서로만 바뀌고, 거꾸로 못 가요.</li>
+          <li><b>먼지 상황 하나당 상태는 2개뿐이에요</b>(청소기가 A 또는 B). 같은 먼지 상황 안에서 순환 없이 밟을 수 있는 상태는 최대 2개예요. 세 번째로 가면 이미 밟은 상태로 돌아가요.</li>
+          <li><b>"한 칸만 더러움"은 둘 중 하나만 겪어요.</b> A가 먼저 깨끗해지든(상태 3·7), B가 먼저 깨끗해지든(상태 2·6) 한쪽 길만 가요. 한 번 A가 깨끗해지면 B만 더러운 상황으로 갈 수 없어요.</li>
+          <li>그래서 최대 3단계 × 2개 = <b>6개 상태</b>를 밟을 수 있어요. 6개 상태를 잇는 동작은 <b>5번</b> → m = 5예요. 8개 중 나머지 2개(반대쪽 "한 칸만 더러움")는 같은 경로에 넣을 수 없어요.</li>
+        </ul>
+        <p class="muted">참고: Suck을 깨끗한 칸에서 하거나, 이미 A에 있는데 Left를 하면 상태가 그대로예요. 이것도 같은 상태를 다시 밟는 순환이라 m을 셀 때 빼요.</p>
+      </div>
+    </div>
+
 
     <div class="block">
       <span class="eyebrow">적용 · 슬라이드 28</span>

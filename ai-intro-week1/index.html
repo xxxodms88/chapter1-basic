@@ -1834,6 +1834,16 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
         </ul>
       </div>
       <div class="card">
+        <h3>①-2 "사이클(순환)을 지운다"는 게 뭐야?</h3>
+        <ul class="muted">
+          <li><b>사이클</b> = 경로가 <b>이미 지나온 상태로 다시 돌아오는 부분</b>이에요. 예: 상태 1 → Right → 상태 5 → Left → <b>상태 1</b>. 두 걸음 걸었는데 제자리예요.</li>
+          <li>사이클이 있으면 경로를 얼마든지 길게 만들 수 있어요: 1 → 5 → 1 → 5 → 1 → 5 → … 끝이 없으니 "가장 긴 경로"가 무한대가 돼서 m을 정할 수 없어요.</li>
+          <li><b>사이클을 지운다</b> = 경로에서 "같은 상태로 돌아오는 구간"을 잘라 내는 거예요. 예를 들어 1 → 5 → <u>1 → 5</u> → 6에서 두 번째로 나온 1 → 5 구간은 아무 진전 없이 돌기만 한 부분이에요. 잘라 내면 1 → 5 → 6이 돼요. 같은 곳에 도착하는 더 짧은 경로예요.</li>
+          <li>그래서 "longest path with cycles removed" = <b>같은 상태를 두 번 밟지 않는 경로들 중 가장 긴 것</b>이에요. 상태 수가 유한하니 이런 경로의 길이도 유한해요. 진공청소기 세계에서는 그게 5예요.</li>
+          <li>실제 검색에서도 같은 일을 해요. DFS가 "현재 경로에 이미 있는 상태면 다시 안 감"(순환 검사)을 하는 것이 바로 사이클을 지우는 거예요. 그래야 무한 루프에 빠지지 않아요.</li>
+        </ul>
+      </div>
+      <div class="card">
         <h3>② 가장 긴 순환 없는 경로: 5걸음</h3>
         <p class="muted" style="font-size:14px">상태 1에서 시작해 일부러 가장 돌아가는 길이에요. 6개 상태를 한 번씩 밟고, 동작은 5번이에요.</p>
         <div class="m5chain"><div class="vss" style="cursor:default"><span class="vsn">상태 1</span><span class="vsrow"><span class="vsc">🤖<i>●</i><small>A</small></span><span class="vsc"><i>●</i><small>B</small></span></span></div><span class="m5a">Right →<small>1걸음</small></span><div class="vss" style="cursor:default"><span class="vsn">상태 5</span><span class="vsrow"><span class="vsc"><i>●</i><small>A</small></span><span class="vsc">🤖<i>●</i><small>B</small></span></span></div><span class="m5a">Suck →<small>2걸음</small></span><div class="vss" style="cursor:default"><span class="vsn">상태 6</span><span class="vsrow"><span class="vsc"><i>●</i><small>A</small></span><span class="vsc">🤖<small>B</small></span></span></div><span class="m5a">Left →<small>3걸음</small></span><div class="vss" style="cursor:default"><span class="vsn">상태 2</span><span class="vsrow"><span class="vsc">🤖<i>●</i><small>A</small></span><span class="vsc"><small>B</small></span></span></div><span class="m5a">Suck →<small>4걸음</small></span><div class="vss goal" style="cursor:default"><span class="vsn">상태 4</span><span class="vsrow"><span class="vsc">🤖<small>A</small></span><span class="vsc"><small>B</small></span></span></div><span class="m5a">Right →<small>5걸음</small></span><div class="vss goal" style="cursor:default"><span class="vsn">상태 8</span><span class="vsrow"><span class="vsc"><small>A</small></span><span class="vsc">🤖<small>B</small></span></span></div></div>

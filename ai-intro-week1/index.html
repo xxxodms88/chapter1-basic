@@ -323,6 +323,16 @@ textarea{font:inherit;font-size:14px;width:100%;min-height:64px;border:1px solid
 .hsb{height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden;margin:2px 0}
 .hsb i{display:block;height:100%;border-radius:5px}
 .hsb i.h{background:var(--bad)}.hsb i.hs{background:var(--good)}
+.vsgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.vsgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.vss{font:inherit;border:2px solid var(--line);background:var(--surface);border-radius:10px;padding:6px;cursor:pointer;display:grid;gap:4px;color:var(--ink)}
+.vss.goal{border-color:var(--good)}
+.vss.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.vsn{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:left}
+.vsrow{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.vsc{position:relative;height:42px;border:1px solid var(--line);border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:2px;font-size:18px}
+.vsc i{font-style:normal;color:var(--amber);font-size:16px}
+.vsc small{position:absolute;left:4px;bottom:1px;font-size:10px;color:var(--muted)}
 .ttree .lim{stroke:var(--amber);stroke-width:2;stroke-dasharray:8 6}
 .ttree .limt{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--amber)}
 .ttree .cnt{font-family:var(--mono);font-size:14px;font-weight:700;fill:var(--note)}
@@ -1735,12 +1745,40 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       <span class="eyebrow">전이 모형</span>
       <h2>상태 → 행동 → 다음 상태</h2>
       <p>진공청소기 세계의 상태 공간: 위치 2 × 먼지 분포 4 = <span class="k">8개</span> 상태.</p>
+      <p class="note-link">✎ 내 질문 노트: 왜 8개인지, 8개 상태 전부를 아래에 그림으로 정리</p>
       <div class="grid2">
         <div class="card"><h3>결정론적</h3><div class="formula">T : S × A → S,&nbsp; s' = T(s, a)</div><p class="muted">현재 상태 s에서 행동 a를 하면 다음 상태는 s' 하나.</p></div>
         <div class="card"><h3>확률적</h3><div class="formula">P(s' | s, a)</div><p class="muted">다음 상태를 확률 분포로. 행동 실패나 무작위 먼지 발생을 표현. 현재 상태에 미래 예측에 필요한 정보가 담겼다고 가정.</p></div>
       </div>
       <p class="muted">상태가 변하는 원인: 에이전트의 행동(Suck, Left, Right)과 외부 변화.</p>
     </div>
+    <div class="note">
+      <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+      <h2>"위치 2 × 먼지 분포 4 = 8개 상태" 풀어 보기</h2>
+      <p class="muted" style="font-size:14px">위 블록의 첫 줄을 풀어 쓴 메모예요.</p>
+      <div class="card">
+        <h3>① 상태 = 세상을 한 장의 사진으로 찍은 것</h3>
+        <p class="muted">진공청소기 세계에는 칸이 A, B 두 개 있어요. 이 세계의 한 순간을 완전히 설명하려면 세 가지만 알면 돼요.</p>
+        <ul class="muted">
+          <li><b>청소기가 어디 있나?</b> A 또는 B → <b>2가지</b></li>
+          <li><b>A칸에 먼지가 있나?</b> 있음 또는 없음 → 2가지</li>
+          <li><b>B칸에 먼지가 있나?</b> 있음 또는 없음 → 2가지</li>
+        </ul>
+        <p class="muted">먼지 분포는 A와 B를 합쳐 2 × 2 = <b>4가지</b>예요(둘 다 더러움, A만, B만, 둘 다 깨끗). 여기에 청소기 위치 2가지를 곱하면 2 × 4 = <b>8가지</b> 상태가 나와요. 세 질문의 답을 하나씩 고르는 모든 조합이 상태 하나예요.</p>
+      </div>
+      <div class="card">
+        <h3>② 8개 상태 전부 + 직접 움직여 보기</h3>
+        <p class="muted" style="font-size:14px">🤖 = 청소기, ● = 먼지. 상태를 누르거나 아래 동작 버튼을 눌러 보세요. 동작 하나가 상태 하나를 다음 상태 하나로 바꿔요. 이것이 결정론적 전이 모형 s' = T(s, a)예요. 초록 테두리는 목표 상태(두 칸 모두 깨끗)예요.</p>
+        <div class="vsgrid" id="vsGrid"></div>
+        <div class="row" style="justify-content:flex-start;margin-top:8px"><button class="btn" data-va="Left">Left</button><button class="btn" data-va="Right">Right</button><button class="btn primary" data-va="Suck">Suck</button></div>
+        <p class="verdict" id="vsLog" style="font-size:14px"></p>
+      </div>
+      <div class="card">
+        <h3>③ 칸이 늘어나면?</h3>
+        <p class="muted">칸이 n개면 위치 n가지 × 먼지 분포 2ⁿ가지(칸마다 있음/없음) = <b>n · 2ⁿ</b>개예요. n = 2 → 8, n = 3 → 24, n = 10 → 10,240개예요. 작은 세계도 상태 수가 금방 커져요. 그래서 3장에서 상태 공간 검색을 효율적으로 하는 방법을 배워요.</p>
+      </div>
+    </div>
+
   </section>
 
   <!-- ===== 2장: 실습 ===== -->
@@ -4412,6 +4450,27 @@ action ← rule.ACTION</pre>
   });
   renderPuz();
 
+  /* ---------- 2장: 진공청소기 8개 상태 ---------- */
+  (function(){
+    const grid=$('#vsGrid'); if(!grid) return;
+    const ALL=[];['A','B'].forEach(p=>[[1,1],[1,0],[0,1],[0,0]].forEach(([a,b])=>ALL.push({p,a,b})));
+    let cur=ALL[0];
+    const key=s=>s.p+s.a+s.b;
+    const nm=s=>`(${s.p}, A ${s.a?'더러움':'깨끗'}, B ${s.b?'더러움':'깨끗'})`;
+    const T=(s,a)=>a==='Left'?{...s,p:'A'}:a==='Right'?{...s,p:'B'}:(s.p==='A'?{...s,a:0}:{...s,b:0});
+    const cell=(s,c)=>`<span class="vsc">${s.p===c?'🤖':''}${(c==='A'?s.a:s.b)?'<i>●</i>':''}<small>${c}</small></span>`;
+    function render(){
+      grid.innerHTML=ALL.map((s,i)=>`<button class="vss${key(s)===key(cur)?' on':''}${!s.a&&!s.b?' goal':''}" data-i="${i}" aria-label="상태 ${i+1} ${nm(s)}"><span class="vsn">${i+1}</span><span class="vsrow">${cell(s,'A')}${cell(s,'B')}</span></button>`).join('');
+    }
+    grid.addEventListener('click',e=>{const b=e.target.closest('.vss');if(!b)return;cur=ALL[+b.dataset.i];$('#vsLog').textContent='현재 상태 '+(+b.dataset.i+1)+': '+nm(cur);render();});
+    document.querySelectorAll('[data-va]').forEach(btn=>btn.addEventListener('click',()=>{
+      const a=btn.dataset.va,n=T(cur,a),i=ALL.findIndex(s=>key(s)===key(cur))+1,j=ALL.findIndex(s=>key(s)===key(n))+1;
+      $('#vsLog').textContent=`상태 ${i} ${nm(cur)} → ${a} → 상태 ${j} ${nm(n)}`+(i===j?'  (바뀐 게 없어요)':'')+(!n.a&&!n.b?'  ✓ 목표 상태!':'');
+      cur=n;render();
+    }));
+    $('#vsLog').textContent='현재 상태 1: '+nm(cur);
+    render();
+  })();
   /* ---------- 3장: BFS/IDS 계산기 ---------- */
   const fmtN=n=>n>=1e15?n.toExponential(2).replace('e+',' × 10^'):Math.round(n).toLocaleString('ko-KR');
   const fmtT=s=>s<60?`${s.toFixed(1)}초`:s<3600?`${(s/60).toFixed(1)}분`:s<86400?`${(s/3600).toFixed(1)}시간`:s<86400*365?`${(s/86400).toFixed(1)}일`:`${(s/86400/365).toFixed(1)}년`;

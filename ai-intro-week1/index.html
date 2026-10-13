@@ -6364,12 +6364,16 @@ action ← rule.ACTION</pre>
 
     // 펜(Apple Pencil 등): 도구를 닫아도 언제나 필기. 펜으로 톡 누르면 평소처럼 클릭.
     const inPage=t=>t&&t.closest&&t.closest('section.panel')&&!t.closest('.inkbar');
-    let penTarget=null,penTouchBlocked=false,suppressClick=false;
+    let penTarget=null,penTouchBlocked=false,suppressClick=false,lastTap=null;
     document.addEventListener('pointerdown',e=>{if(!alwaysPen||e.pointerType!=='pen'||!inPage(e.target))return;
       penTarget=e.target;if(begin(e))e.preventDefault();},true);
     document.addEventListener('pointermove',e=>{if(e.pointerType==='pen'&&drawing){e.preventDefault();move(e);}},true);
     document.addEventListener('pointerup',e=>{if(e.pointerType!=='pen'||!drawing)return;const did=finish();
       if(did){suppressClick=true;setTimeout(()=>{suppressClick=false},400);}
+      else if(penTarget&&!penTarget.closest('a,button,summary,input,select,textarea,label,.k,.tile,.vss,.chip,[role="tab"],circle,[data-i]')){
+        const now=Date.now(),[x,y]=[e.clientX,e.clientY];
+        if(lastTap&&now-lastTap.t<400&&Math.hypot(x-lastTap.x,y-lastTap.y)<40){lastTap=null;tool=tool==='er'?lastPen:'er';syncBar();savePref();status(tool==='er'?'지우개 (빈 곳을 펜으로 두 번 톡 → 다시 펜)':'펜으로 돌아왔어요',1800);}
+        else lastTap={t:now,x,y};}
       else if(penTouchBlocked&&penTarget){const t=penTarget;setTimeout(()=>{if(t.click)t.click();},0);}
       penTarget=null;penTouchBlocked=false;},true);
     document.addEventListener('pointercancel',e=>{if(e.pointerType==='pen')finish();},true);

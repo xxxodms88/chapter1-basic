@@ -888,7 +888,7 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
   <!-- ===== 2장: 요약 노트 ===== -->
   <section class="panel" id="c2-summary" role="tabpanel" hidden>
     <div class="block">
-      <span class="eyebrow">2장 학습 목표</span>
+      <span class="eyebrow">슬라이드 2 · 2장 학습 목표</span>
       <h2>이번 장에서 할 수 있어야 하는 것</h2>
       <div class="grid2">
         <div class="card"><span class="num">1</span><p>에이전트를 정의하고, 네 가지 구조의 행동 선택 과정을 비교한다.</p></div>
@@ -899,13 +899,14 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
     </div>
 
     <div class="block">
-      <span class="eyebrow">정의</span>
+      <span class="eyebrow">슬라이드 3 · 정의</span>
       <h2>에이전트(Agent)란</h2>
       <p><span class="k">감지기(sensor)</span>로 환경을 지각하고, <span class="k">작동기(actuator)</span>로 환경에 동작을 수행하는 모든 것.</p>
-      <div class="grid3">
+      <div class="grid2">
         <div class="card"><h3>지각 (percept)</h3><p class="muted">특정 순간에 <span class="k">감지기</span>가 받아들이는 입력</p></div>
         <div class="card"><h3>지각열 (percept sequence)</h3><p class="muted">에이전트가 <span class="k">지금까지 지각한 모든 것</span>의 전체 이력</p></div>
-        <div class="card"><h3>동작 (action)</h3><p class="muted"><span class="k">작동기</span>를 통해 환경에 가하는 변화</p></div>
+        <div class="card"><h3>동작 (action)</h3><p class="muted">한 시점에 <span class="k">작동기</span>로 환경에 가하는 개별 변화. 예) Suck</p></div>
+        <div class="card"><h3>행동 (behavior)</h3><p class="muted">지각열에 따라 어떤 동작을 하는가의 양태 = <span class="k">에이전트 함수</span>. 동작(action)과 행동(behavior)을 구분한다.</p></div>
       </div>
       <div class="table-wrap">
         <table>
@@ -921,7 +922,7 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
     </div>
 
     <div class="block">
-      <span class="eyebrow">함수 vs 프로그램</span>
+      <span class="eyebrow">슬라이드 4 · 함수 vs 프로그램</span>
       <h2>에이전트 함수와 에이전트 프로그램</h2>
       <div class="grid2">
         <div class="card"><h3>에이전트 함수 (무엇을 하는가)</h3><p class="formula" style="justify-self:start">f : P* → A</p><p class="muted">가능한 모든 <span class="k">지각열</span>의 집합 P*에서 동작 집합 A로의 사상. 추상적·수학적 서술이고, 원리상 표로 나타낼 수 있다.</p><p class="note-link">✎ 내 질문 노트: P*가 무엇이고 표로 어떻게 나타내는지 아래에 정리</p></div>
@@ -1109,7 +1110,7 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       <ol class="ckpt-list"><li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>에이전트의 정의를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>감지기(sensor)로 환경을 지각하고 작동기(actuator)로 환경에 동작을 수행하는 모든 것.</p></details></li><li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>지각(percept)과 지각열(percept sequence)의 차이는?</p><details class="ans"><summary>답 보기</summary><p>지각: 특정 순간에 감지기가 받는 입력. 지각열: 에이전트가 지금까지 지각한 모든 것의 전체 이력.</p></details></li><li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag c">개념 확인</span></div><p>에이전트 함수와 에이전트 프로그램을 구별하시오.</p><details class="ans"><summary>답 보기</summary><p>에이전트 함수: f : P* → A, 지각열을 동작으로 보내는 추상적·수학적 사상(원리상 표). 에이전트 프로그램: 아키텍처 위에서 그 함수를 구현한 코드로, 매번 현재 지각을 입력받는다. 에이전트 = 아키텍처 + 프로그램.</p></details></li><li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>지각이 3종류일 때 길이 5인 지각열의 수와 길이 1~5 전체 표의 행 수를 구하고, 표 기반 에이전트의 문제를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>길이 5: 3⁵ = 243. 길이 1~5 합: 3 + 9 + 27 + 81 + 243 = 363. 길이가 늘수록 표가 지수적으로 커져 저장·작성·학습이 불가능하므로, 규칙성을 찾아 짧은 프로그램으로 같은 행동을 만들어야 한다.</p></details></li></ol>
     </div>
     <div class="block">
-      <span class="eyebrow">예제</span>
+      <span class="eyebrow">슬라이드 5 · 예제</span>
       <h2>진공청소기 세계</h2>
       <p>방 A, B 두 칸과 먼지. 지각은 <code>[위치, 상태]</code>, 동작은 <code>Left, Right, Suck, NoOp</code>.</p>
       <div class="grid2">
@@ -1187,8 +1188,8 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
     </div>
 
     <div class="block">
-      <span class="eyebrow">합리성</span>
-      <h2>무엇이 옳은 행동인가</h2>
+      <span class="eyebrow">슬라이드 6·7 · 합리성</span>
+      <h2>무엇이 옳은 동작인가</h2>
       <p>임의의 시점에서 무엇이 합리적인지는 네 가지에 달려 있습니다.</p>
       <div class="grid2">
         <div class="card"><span class="num">1</span><h3>성과 측도</h3><p class="muted">성공의 기준. 에이전트가 아니라 <span class="k">설계자</span>가 정하고, 환경 상태의 열(sequence)을 평가한다.</p></div>
@@ -1202,6 +1203,10 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
         <div class="formula">a* = argmax<sub>a∈A</sub> E[ M | h, K, a ]</div>
         <p class="muted" style="font-size:13.5px">h: <span class="k">지각열</span> · K: <span class="k">사전 지식</span> · M: 성과. <span class="k">기대치</span> 예) 성공 80%에 10점, 실패 20%에 0점이면 기대 성과는 8점.</p>
         <p class="note-link">✎ 내 질문 노트: 이 정의를 한 구절씩, 수식과 예시로 아래에 풀어 정리</p>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>성과측도 (performance measure)</h3><p class="muted">환경에서 달성한 결과를 <b>외부에서</b> 평가하는 기준. 내부 효용이나 학습 보상과 관련되지만, 세 개념이 항상 같은 것은 아니다.</p></div>
+        <div class="card"><h3>내장된 지식 (built-in knowledge)</h3><p class="muted">설계자가 미리 넣어 준 환경에 관한 <span class="k">사전 지식</span>. <span class="k">지각열</span>과 함께 판단의 두 근거가 된다.</p></div>
       </div>
       <p class="muted">왜 "<span class="k">기대치</span>"인가: 환경이 불확실하면 같은 행동도 결과가 달라집니다. 합리성은 실제 결과가 아니라 행동 시점에 알 수 있었던 정보로 계산한 <span class="k">기대 성과</span>로 판단합니다. 결과가 나빴다고 선택이 비합리적이었던 것은 아닙니다.</p>
     </div>
@@ -1292,9 +1297,37 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       </div>
     </div>
 
+
     <div class="block">
-      <span class="eyebrow">오해와 요구</span>
-      <h2>합리성은 무엇이 아닌가</h2>
+      <span class="eyebrow">슬라이드 8 · 기대치</span>
+      <h2>기대치(expectation)와 평균(mean)은 다르다</h2>
+      <p>합리적 에이전트 정의의 "<span class="k">성과측도</span>의 <span class="k">기대치</span>"는 관측값의 평균이 아니라 <b>확률로 가중한 값</b>이다.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>기대치 (expected value)</th><th>평균 (sample mean)</th></tr></thead>
+        <tbody>
+          <tr><td><b>재료</b></td><td>가능한 결과와 각 결과의 확률</td><td>실제로 관측된 데이터</td></tr>
+          <tr><td><b>계산</b></td><td>E[X] = Σ x · P(x)</td><td>x̄ = (x₁ + … + xₙ) / n</td></tr>
+          <tr><td><b>시점</b></td><td>동작하기 <b>전</b> — 예측</td><td>동작한 <b>후</b> — 집계</td></tr>
+          <tr><td><b>가중치</b></td><td>결과마다 다름 (확률)</td><td>모든 관측치가 1/n로 동일</td></tr>
+          <tr><td><b>성격</b></td><td>이론적, 모형에서 나옴</td><td>경험적, 데이터에서 나옴</td></tr>
+        </tbody>
+      </table></div>
+      <div class="grid2">
+        <div class="card"><h3>왜 정의에서 "평균"이 아니라 "기대치"인가</h3>
+          <ul class="clean muted">
+            <li>동작은 결과가 나오기 <b>전에</b> 골라야 한다. 평균을 내려면 결과가 여러 번 있어야 하지만 지금은 한 번의 동작을 고르는 중이다.</li>
+            <li>결과마다 확률이 다르다. 택시가 지름길을 택할 때 "10분 도착(0.7)"과 "사고 정체 30분(0.3)"을 단순 평균하면 20분, <span class="k">기대치</span>는 0.7×10 + 0.3×30 = <b>16분</b>.</li>
+            <li>조건부다: P(결과 | <span class="k">지각열</span>, 지식, 동작). 같은 동작도 비 오는 날과 맑은 날의 기대 도착 시간이 다르다.</li>
+          </ul>
+        </div>
+        <div class="card"><h3>주사위로 확인</h3><p class="muted">주사위 한 번의 기대값은 (1+2+3+4+5+6)/6 = <b>3.5</b> — 실제로 나올 수 없는 값이다. <span class="k">기대치</span>는 관측값의 요약이 아니라 <b>분포의 요약</b>이다. 100번 던진 평균은 3.4, 3.6처럼 흔들리며 3.5로 수렴한다(<span class="k">큰 수의 법칙</span>). 평균은 <span class="k">기대치</span>의 <b>추정치</b>이지 <span class="k">기대치</span> 그 자체가 아니다.</p></div>
+      </div>
+      <div class="card"><h3>그러면 평균은 어디에 쓰이는가</h3><p class="muted"><span class="k">기대치</span>를 계산하려면 확률 P(결과 | 증거, 동작)을 알아야 하는데 미리 아는 경우는 드물다. 그래서 실제 에이전트는 경험에서 평균을 내어 <span class="k">기대치</span>를 <b>추정</b>한다. 강화학습의 몬테카를로 방법이 그것이다. <b>설계 목표는 <span class="k">기대치</span>, 학습 수단이 평균.</b> 이 구분이 있어야 "탐험이 왜 필요한가"(평균이 아직 <span class="k">기대치</span>에 수렴하지 않았다)도 설명된다.</p></div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 9 · 오해와 요구</span>
+      <h2>합리성은 무엇이 아닌가, 그리고 무엇을 요구하는가</h2>
       <div class="grid2">
         <div class="card"><h3>합리성 ≠ 전지성 (omniscience)</h3><p class="muted">전지한 에이전트는 실제 결과를 미리 안다. 합리적 에이전트는 알 수 있는 정보 안에서 최선을 다할 뿐. 예) 길을 건너다 추락하는 비행기 문에 맞았다면 비합리적인 게 아니라 운이 없었던 것.</p></div>
         <div class="card"><h3>합리성 ≠ 완벽함 (perfection)</h3><p class="muted">합리성은 <span class="k">기대 성과</span>를, <span class="k">완벽함</span>은 <span class="k">실제 성과</span>를 최대화한다. 예) 승률 70%가 최고의 수였다면 져도 합리적 선택.</p></div>
@@ -1314,9 +1347,17 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       <ol class="ckpt-list"><li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>임의의 시점에서 합리성을 결정하는 네 가지는?</p><details class="ans"><summary>답 보기</summary><p>성과 측도, 환경에 대한 사전 지식, 가능한 동작, 현재까지의 지각열.</p></details></li><li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>합리성, 전지성, 완벽함을 구별하시오.</p><details class="ans"><summary>답 보기</summary><p>합리성: 알고 있는 정보로 기대 성과를 최대화. 전지성: 실제 결과를 미리 아는 것. 완벽함: 실제 성과를 최대화. 합리성은 전지성도 완벽함도 요구하지 않는다.</p></details></li><li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag d">심화</span></div><p>성공 10점. 행동 X(성공 0.6, 비용 1)와 Y(성공 0.9, 비용 3) 중 순기대점수가 큰 것은? 성공 점수가 5점이면 어떻게 되는가?</p><details class="ans"><summary>답 보기</summary><p>10점: X = 6 − 1 = 5, Y = 9 − 3 = 6 → Y. 5점: X = 3 − 1 = 2, Y = 4.5 − 3 = 1.5 → X. 성과 측도(점수 체계)가 바뀌면 합리적인 동작도 바뀐다.</p></details></li><li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>당장 점수에 도움이 안 되는 정보 수집이나 탐험이 합리적일 수 있는 이유는?</p><details class="ans"><summary>답 보기</summary><p>지각을 바꿔 이후의 결정을 더 좋게 만들기 때문이다. 정보의 장기적 기대 이득이 비용보다 크면, 지금 보상이 낮아도 기대 성과를 높이는 합리적 행동이다(예: 길을 건너기 전 좌우 살피기).</p></details></li></ol>
     </div>
     <div class="block">
-      <span class="eyebrow">예제</span>
+      <span class="eyebrow">슬라이드 10 · 예제</span>
       <h2>진공청소기 에이전트는 합리적인가?</h2>
       <p>"합리적인가"는 <span class="k">성과 측도</span>와 환경 가정을 정해야만 답할 수 있습니다.</p>
+      <div class="card">
+        <h3>성과측도를 무엇으로 정할까?</h3>
+        <ul class="clean muted">
+          <li>흡입한 먼지의 양?</li>
+          <li>일정 시간 동안 깨끗한 칸의 수 (매 시간 단계마다 깨끗한 칸당 1점)?</li>
+          <li>여기에 이동 횟수에 대한 벌점을 더한다면?</li>
+        </ul>
+      </div>
       <div class="card">
         <h3>가정</h3>
         <ul class="clean">
@@ -1334,8 +1375,8 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
     </div>
 
     <div class="block">
-      <span class="eyebrow">성과 측도 설계</span>
-      <h2>행동이 아니라 결과를 잰다</h2>
+      <span class="eyebrow">슬라이드 11 · 성과 측도 설계</span>
+      <h2>성과측도는 어떻게 설계해야 하는가: 행동이 아니라 결과를 잰다</h2>
       <p>일반 원칙: 에이전트가 어떻게 행동해야 한다고 생각하는지가 아니라, <span class="k">환경에서 실제로 무엇이 달성되기를 바라는지</span>를 기준으로 정합니다.</p>
       <div class="grid2">
         <div class="card" style="border-color:var(--bad)"><h3>나쁜 측도: 행동을 잰다</h3><p class="muted">"8시간 동안 빨아들인 먼지의 양" → 먼지를 다시 쏟을 수 있다면 같은 먼지를 반복 흡입해 점수를 올릴 수 있다.</p></div>
@@ -1394,8 +1435,35 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       <div class="ckpt-h"><span class="ckpt-badge">✏️ 중간 점검</span><b>성과 측도 설계</b><span class="muted" style="font-size:13px">개념 확인 2 · 심화 1 — 답을 먼저 떠올린 뒤 펼쳐 보세요</span></div>
       <ol class="ckpt-list"><li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>성과 측도는 누가 정하고, 무엇을 평가하는가?</p><details class="ans"><summary>답 보기</summary><p>설계자가 정하고(에이전트가 아님), 에이전트의 행동이 아니라 환경 상태의 열, 즉 결과를 평가한다.</p></details></li><li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>&quot;8시간 동안 빨아들인 먼지의 양&quot;이 나쁜 측도인 이유는?</p><details class="ans"><summary>답 보기</summary><p>행동(흡입)을 재기 때문에, 먼지를 쏟고 다시 빨아들이는 식으로 점수만 올리는 꼼수(보상 해킹)가 가능하다. &quot;매 시간 깨끗한 칸의 수&quot;처럼 결과를 재야 한다.</p></details></li><li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag d">심화</span></div><p>REFLEX-VACUUM-AGENT가 합리적인 가정을 쓰고, 이동마다 −1점이 붙으면 어떻게 고쳐야 하는지 설명하시오.</p><details class="ans"><summary>답 보기</summary><p>가정: 매 단계 깨끗한 칸마다 +1점, 지도(2칸)는 알지만 먼지 위치는 모름, 동작은 Left·Right·Suck, 지각은 정확. 이동 벌점이 있으면 다 치운 뒤에도 왕복해 감점되므로 비합리적. 기억(내부 상태)으로 두 칸이 깨끗함을 추적해 NoOp을 고르는 모형 기반 반사 에이전트로 고쳐야 한다.</p></details></li></ol>
     </div>
+
     <div class="block">
-      <span class="eyebrow">한 장 요약</span>
+      <span class="eyebrow">슬라이드 12 · 성과측도 vs 합리성</span>
+      <h2>성과측도는 결과를 재고, 합리성은 기대치로 고른다 — 모순인가?</h2>
+      <p>"<span class="k">성과측도</span>는 실제 결과로 평가하는데 합리성은 결과를 보지 않고 <span class="k">기대치</span>를 최대화한다" — 모순이 아니라 <b>같은 척도를 두 시점에, 두 대상에 적용</b>하는 것이다.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>성과측도</th><th>합리성</th></tr></thead>
+        <tbody>
+          <tr><td><b>적용 대상</b></td><td>실현된 환경 상태의 열</td><td>동작 선택</td></tr>
+          <tr><td><b>시점</b></td><td>사후 (결과가 나온 뒤)</td><td>사전 (동작하기 전)</td></tr>
+          <tr><td><b>운의 영향</b></td><td>받는다</td><td>받지 않는다 (기대값이므로)</td></tr>
+          <tr><td><b>역할</b></td><td>목적 함수: 무엇이 좋은가</td><td>결정 규칙: 그 목적 아래 무엇을 할 것인가</td></tr>
+          <tr><td><b>관계</b></td><td colspan="2">합리성이 최대화하는 것 = <span class="k">성과측도</span>의 기대값</td></tr>
+        </tbody>
+      </table></div>
+      <div class="card"><h3>"결과를 보지 않는다"는 부정확한 표현</h3><p class="muted">합리적 에이전트는 결과를 무시하는 것이 아니라 <b>관측하는 대신 예측</b>한다. <span class="k">전이 모형</span>으로 "이 동작을 하면 어떤 결과가 얼마의 확률로 생기는가"를 구하고, 각 결과에 <span class="k">성과측도</span>를 적용해 확률로 가중해 더한다. 결과는 계산의 한가운데에 있다 — 실현된 결과가 아니라 <b>결과의 분포</b>일 뿐.</p></div>
+      <div class="grid2">
+        <div class="card"><h3>두 시점이 어긋나도 괜찮은 이유 ①</h3><p class="muted"><b>반복하면 만난다.</b> 같은 상황이 여러 번 반복되면 실현 점수의 평균이 기대값으로 수렴한다. <span class="k">기대 성과</span>를 최대화하는 규칙이 장기적으로 실현 성과의 합도 최대로 만든다. 합리성은 "이번 판을 이기는 법"이 아니라 "많은 판을 두었을 때 가장 많이 이기는 법"이다.</p></div>
+        <div class="card"><h3>두 시점이 어긋나도 괜찮은 이유 ②</h3><p class="muted"><b>설계자의 평가도 결국 실현 성과의 평균이다.</b> 진공청소기 에이전트를 "합리적"이라 판정하는 근거는 "가능한 먼지 배치와 시작 위치 전체에 대해 평균했을 때 어떤 에이전트도 이보다 높은 점수를 얻지 못한다"는 것이고, 그 평균이 곧 기대값이다. 포커의 "이 판은 졌지만 그 콜은 옳았다"가 같은 구조.</p></div>
+      </div>
+    </div>
+
+    <div class="ckpt">
+      <div class="ckpt-h"><span class="ckpt-badge">✏️ 중간 점검</span><b>기대치 · 성과측도 vs 합리성</b><span class="muted" style="font-size:13px">개념 확인 3 · 심화 1 — 답을 먼저 떠올린 뒤 펼쳐 보세요</span></div>
+      <ol class="ckpt-list"><li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>기대치와 평균의 차이를 재료·시점·가중치 세 가지로 비교하시오.</p><details class="ans"><summary>답 보기</summary><p>기대치는 가능한 결과와 확률을 재료로 동작 전에 예측하며, 결과마다 확률로 가중한다(E[X] = Σ x·P(x)). 평균은 실제 관측 데이터를 재료로 동작 후에 집계하며, 모든 관측치를 1/n로 똑같이 가중한다.</p></details></li><li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>택시가 지름길에서 10분 도착(확률 0.7), 사고 정체 30분(0.3)일 때 단순 평균과 기대치를 각각 구하시오.</p><details class="ans"><summary>답 보기</summary><p>단순 평균 (10 + 30) / 2 = 20분, 기대치 0.7×10 + 0.3×30 = 16분. 결과마다 확률이 다르므로 기대치를 써야 한다.</p></details></li><li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag c">개념 확인</span></div><p>성과측도와 합리성을 적용 대상·시점·운의 영향으로 비교하시오.</p><details class="ans"><summary>답 보기</summary><p>성과측도: 실현된 환경 상태의 열, 사후, 운의 영향을 받음. 합리성: 동작 선택, 사전, 운의 영향을 받지 않음(기대값). 합리성이 최대화하는 것 = 성과측도의 기대값.</p></details></li><li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>&quot;성과측도는 결과로 평가하는데 합리성은 결과를 보지 않는다&quot;는 주장이 왜 모순이 아닌지 두 가지 이유로 설명하시오.</p><details class="ans"><summary>답 보기</summary><p>① 반복하면 실현 점수의 평균이 기대값으로 수렴하므로, 기대 성과를 최대화하는 규칙이 장기적으로 실현 성과의 합도 최대로 만든다. ② 설계자가 에이전트를 합리적이라 판정하는 근거도 가능한 모든 상황에 대한 실현 성과의 평균, 즉 기대값이다. 또한 합리적 에이전트는 결과를 무시하는 게 아니라 결과의 분포를 예측해 계산에 넣는다.</p></details></li></ol>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 41 · 한 장 요약</span>
       <h2>2장 요약</h2>
       <div class="table-wrap">
         <table>
@@ -1414,8 +1482,8 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
   <!-- ===== 2장: PEAS · 환경 ===== -->
   <section class="panel" id="c2-env" role="tabpanel" hidden>
     <div class="block">
-      <span class="eyebrow">과제 환경의 명세</span>
-      <h2>PEAS</h2>
+      <span class="eyebrow">슬라이드 13 · 과제 환경의 명세</span>
+      <h2>과제 환경의 명세: PEAS</h2>
       <p>에이전트 설계의 첫 단계는 과제 환경(task environment)을 최대한 완전하게 서술하는 것입니다. 과제 환경은 합리적 에이전트가 풀어야 할 "문제", 합리적 에이전트는 그 "해답"입니다.</p>
       <div class="peas">
         <div class="card"><span class="letter">P</span><h3>Performance measure · 성과 측도</h3><p class="muted">결과를 평가하는 기준. 예) 게임 승리, 주행 안전성, 도착 시간</p></div>
@@ -1423,15 +1491,44 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
         <div class="card"><span class="letter">A</span><h3>Actuators · 작동기</h3><p class="muted">환경에 영향을 주는 수단. 예) 로봇 팔, 바퀴, 화면 출력</p></div>
         <div class="card"><span class="letter">S</span><h3>Sensors · 감지기</h3><p class="muted">환경을 관찰하는 수단. 예) 카메라, 라이다, 마이크, 키보드</p></div>
       </div>
+      <div class="card"><h3>설계는 성공 기준의 명세에서 시작한다</h3><p class="muted">무엇을 성공으로 볼지 먼저 명확히 해야 한다. <span class="k">성과측도</span>와 환경의 제약을 함께 고려해 <span class="k">감지기</span>·작동기·프로그램을 설계한다.</p></div>
+    </div>
+
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 14 · 예제</span>
+      <h2>자율 택시 운전자 (Automated Taxi Driver)</h2>
+      <p class="muted">열린 과제(open-ended task) — 목록은 얼마든지 늘어날 수 있다.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Performance measure</th><th>Environment</th><th>Actuators</th><th>Sensors</th></tr></thead>
+        <tbody><tr>
+          <td>안전 (safe)<br>빠름 (fast)<br>법규 준수 (legal)<br>편안한 승차감 (comfortable)<br>수익 극대화 (maximize profits)<br>승객 만족도</td>
+          <td>도로 (roads)<br>다른 차량 (other traffic)<br>보행자 (pedestrians)<br>승객 (customers)<br>날씨, 신호등, 경찰</td>
+          <td>핸들 (steering wheel)<br>가속 페달 (accelerator)<br>브레이크 (brake)<br>방향지시등 (signal)<br>경적 (horn)<br>화면·음성 (승객과 소통)</td>
+          <td>카메라 (cameras)<br>라이다·소나 (lidar, sonar)<br>속도계 (speedometer)<br>GPS, 주행거리계 (odometer)<br>엔진 센서 (engine sensors)<br>키보드·터치스크린 (승객 입력)</td>
+        </tr></tbody>
+      </table></div>
+      <p class="card" style="background:var(--amber-soft);border-color:transparent"><span class="k">성과측도</span>는 <b>충돌할 수 있다</b>. 예: 도착 시간과 승차감. 효용으로 선호를 비교할 수 있으며, 안전·법규는 반드시 지켜야 하는 <b>제약</b>으로 둘 수도 있다.</p>
     </div>
 
     <div class="block">
-      <span class="eyebrow">예제 모음</span>
-      <h2>PEAS 예제</h2>
+      <span class="eyebrow">슬라이드 15 · 예제 모음</span>
+      <h2>에이전트 종류별 PEAS 예제 (AIMA Fig. 2.5)</h2>
       <p class="muted">에이전트를 골라 보세요. 빈칸 모드를 켜면 <span class="k">PEAS</span> 칸을 가리고 맞혀 볼 수 있습니다.</p>
       <div class="pick" id="peasPick"></div>
       <div class="peas" id="peasOut"></div>
       <p class="muted" id="peasNote" style="font-size:14px"></p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>AIMA Fig. 2.5의 에이전트</th><th>슬라이드의 한 줄 포인트</th></tr></thead>
+        <tbody>
+          <tr><td>의료 진단 시스템</td><td>환자, 병원, 직원이 환경 — 출력은 질문·검사·진단 화면</td></tr>
+          <tr><td>위성 영상 분석</td><td>경계가 위성·전송 경로·날씨까지 포함. 저장 영상만 분석한다면 입력은 영상 파일</td></tr>
+          <tr><td>부품 집기 로봇</td><td><span class="k">성과측도</span>가 "올바른 통에 넣은 부품 비율"로 명확</td></tr>
+          <tr><td>정제소 제어기</td><td><span class="k">감지기</span>가 온도·압력·화학 센서 — 제어이론의 제어기가 에이전트</td></tr>
+          <tr><td>영어 교습 프로그램</td><td>환경이 학생 — 소프트웨어 에이전트(소프트봇)의 예</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted">물리적 환경뿐 아니라 소프트웨어 환경(소프트봇)도 과제 환경이다. 연습: 스팸 필터, 배달 로봇, 챗봇의 <span class="k">PEAS</span>를 써 보자.</p>
     </div>
 
 
@@ -1440,13 +1537,14 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       <ol class="ckpt-list"><li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>PEAS를 풀어 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>Performance measure(성과 측도), Environment(환경), Actuators(작동기), Sensors(감지기).</p></details></li><li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>자율 택시에서 브레이크, GPS, 보행자, &quot;사고 0건&quot;은 각각 PEAS 중 어디인가?</p><details class="ans"><summary>답 보기</summary><p>브레이크 → A, GPS → S, 보행자 → E, 사고 0건 → P.</p></details></li><li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag d">심화</span></div><p>무인 주문 키오스크 에이전트(소프트웨어)의 PEAS를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>P: 주문 정확도, 대기 시간, 결제 오류 0건, 고객 재방문. E: 고객, 메뉴·재고 데이터, 결제 시스템, 주방. A: 화면 출력, 음성 안내, 주방에 주문 전송, 결제 요청. S: 터치 입력, 카드 리더, 재고 데이터, 주방 완료 신호.</p></details></li><li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>위 키오스크의 성과 측도를 &quot;처리한 주문 수&quot;로 두면 생길 문제와 대안은?</p><details class="ans"><summary>답 보기</summary><p>행동을 재는 측도라서 확인 단계를 빼고 서둘러 처리하거나 잘못된 주문도 처리 수로 세게 된다. &quot;정확히 완료된 주문 비율&quot;, &quot;주문 정정·환불 건수&quot;처럼 결과를 재야 한다.</p></details></li></ol>
     </div>
     <div class="block">
-      <span class="eyebrow">경계</span>
-      <h2>환경의 범위</h2>
+      <span class="eyebrow">슬라이드 16 · 경계</span>
+      <h2>환경(Environment)이란: 환경의 범위</h2>
       <ul class="clean">
         <li>분석 경계를 어디에 두느냐에 따라 환경의 범위가 달라진다. <span class="k">에이전트 함수</span>의 입출력 경계로 보면 <span class="k">감지기</span>·<span class="k">작동기</span>의 물리적 과정도 환경에 포함할 수 있다.</li>
         <li>로봇 전체가 에이전트라면 <span class="k">감지기</span>·<span class="k">작동기</span>는 구성 요소다. 어느 경계든 센서 노이즈와 동작 오차를 반영한다.</li>
         <li>같은 프로그램도 환경이 달라지면 합리성 여부가 달라진다. 체스판은 완전히 보이고 규칙이 확정적이지만, 도로는 일부만 보이고 예측 불가능하며 계속 변한다.</li>
       </ul>
+      <p class="muted"><b>예시:</b> 스마트 로봇 장난감 · 체스 컴퓨터 · 자율주행차 — 세 환경은 성질이 크게 다르다. 체스판은 완전히 보이고 규칙이 확정적이지만, 도로는 일부만 보이고 예측 불가능하며 계속 변한다. 다음 슬라이드에서 이 차이를 분류한다.</p>
       <p class="note-link">✎ 내 질문 노트: 세 줄을 경계 그림·예시로 아래에 풀어 정리</p>
     </div>
 
@@ -1534,7 +1632,7 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
     </div>
 
     <div class="block">
-      <span class="eyebrow">환경 종류</span>
+      <span class="eyebrow">슬라이드 17·18 · 환경 종류</span>
       <h2>과제 환경의 7가지 성질</h2>
       <div class="table-wrap">
         <table>
@@ -1551,6 +1649,16 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
         </table>
       </div>
       <p class="card" style="background:var(--amber-soft);border-color:transparent">가장 어려운 경우: <b><span class="k">부분 관측</span> · 다중 · <span class="k">확률적</span> · <span class="k">순차적</span> · 동적 · 연속적 · 미지</b>. 택시 주행이 거의 그렇습니다.</p>
+      <details class="ans"><summary>슬라이드 17·18의 덧붙임 (표에 다 못 담은 문장)</summary>
+        <ul class="clean muted">
+          <li><b>완전 관측</b>: 숨은 상태를 추정하기 위한 기억은 불필요. 예) 말 배치·차례·관련 이력이 주어지는 체스. 유용한 지각이 전혀 없으면 <b>관측 불가</b>.</li>
+          <li><b>다중 에이전트</b>: 택시들은 충돌 회피에는 <b>협력</b>하고 승객 확보에는 <b>경쟁</b>할 수 있다.</li>
+          <li><b>결정론</b>: 체스는 실제 선택된 수의 효과는 결정론적이지만, 상대의 수는 전략적으로 불확실하다. 확률 모형은 각 결과의 확률을, 비결정론적 모형은 가능한 결과 집합을 준다.</li>
+          <li><b>동적</b>: 숙고 중에도 환경이 변한다 — 결정을 미루면 "아무것도 안 함"을 택한 것.</li>
+          <li><b>이산</b>: 유한 또는 가산 무한일 수 있다. 예) 체스 말 위치, 정수 카운터.</li>
+          <li><b>기지/미지</b>: 환경 자체가 아니라 <b>에이전트의 지식 상태</b>에 관한 구분. 카드 게임은 규칙을 알지만 부분 관측, 새 게임은 화면이 다 보이지만 미지.</li>
+        </ul>
+      </details>
       <p class="note-link">✎ 내 질문 노트: "쉬운 쪽/어려운 쪽"의 뜻과 일화적 vs 순차적, 결정론 vs 관측 가능성을 아래에 정리</p>
     </div>
 
@@ -1659,9 +1767,68 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       </div>
     </div>
 
+
     <div class="block">
-      <span class="eyebrow">AIMA Figure 2.6</span>
-      <h2>과제 환경 분류 표</h2>
+      <span class="eyebrow">슬라이드 19 · 자세히</span>
+      <h2>일화적 vs 순차적 — 자세히</h2>
+      <p>구분 질문은 하나: <b>"지금 이 동작이 나중에 내가 마주할 상황을 바꾸는가?"</b> 바꾸지 않으면 <span class="k">일화적</span>, 바꾸면 <span class="k">순차적</span>.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>환경</th><th>분류</th><th>이유</th></tr></thead>
+        <tbody>
+          <tr><td>조립 라인 결함 검출</td><td><span class="k">일화적</span></td><td>현재 부품 판정은 이전 판정과 무관. 다음 부품은 새 문제</td></tr>
+          <tr><td>이미지 분류, 스팸 필터</td><td><span class="k">일화적</span></td><td>이 메일을 스팸으로 분류해도 다음 메일의 내용은 바뀌지 않는다</td></tr>
+          <tr><td>체스</td><td><span class="k">순차적</span></td><td>지금 둔 수가 이후 판 전체를 결정. 단기 이득이 장기 손실이 될 수 있다</td></tr>
+          <tr><td>택시 주행, 진공청소기</td><td><span class="k">순차적</span></td><td>차선을 바꾸면 다음 교차로의 선택지가 달라진다. Suck은 이후 상태를 바꾼다</td></tr>
+        </tbody>
+      </table></div>
+      <div class="card"><h3>설계에 미치는 영향</h3>
+        <ul class="clean muted">
+          <li><b><span class="k">일화적</span></b>: 앞을 내다볼 필요가 없다. 반사 에이전트나 분류기로 충분하고, (입력, 정답) 쌍이 독립이라 <b><span class="k">지도학습</span></b>으로 환원된다.</li>
+          <li><b><span class="k">순차적</span></b>: "지금 좋은 것"과 "결국 좋은 것"이 다르다. 탐색·계획·강화학습이 필요하고, 나쁜 결과의 원인이 어느 시점의 결정인지 모르는 <b><span class="k">신용 할당</span> 문제</b>가 생긴다.</li>
+        </ul>
+      </div>
+      <div class="grid3">
+        <div class="card"><h3>혼동 ① 강화학습의 "에피소드"와 다르다</h3><p class="muted">RL의 에피소드는 시작부터 종료까지 한 판(체스 한 게임). 그 안은 <span class="k">순차적</span>이다. 2장의 "<span class="k">일화적</span> 환경"은 각 에피소드가 동작 하나로 끝나고 서로 독립인 경우. RL의 episodic task는 대부분 2장 기준으로 순차적 환경.</p></div>
+        <div class="card"><h3>혼동 ② 정적/동적과 다르다</h3><p class="muted"><span class="k">정적</span>/<span class="k">동적</span>은 "생각하는 동안 환경이 변하는가", 일화/순차는 "내 동작이 미래 상황을 바꾸는가". 부품 집기 로봇은 벨트가 계속 움직여 동적이지만 판단이 독립이라 일화적. 십자말풀이는 정적이지만 순차적.</p></div>
+        <div class="card"><h3>경계 사례: 성과측도와 가정에 달려 있다</h3><p class="muted">의료 진단을 "증상 보고 병명 맞히기"로 좁히면 <span class="k">일화적</span>이지만, 검사→결과→치료→반응의 과정으로 보면 <span class="k">순차적</span>(Fig 2.6). 추천 시스템은 오늘의 추천이 내일의 취향과 데이터를 바꾸므로 겉보기와 달리 순차적 — 이를 무시한 설계가 필터 버블의 한 원인.</p></div>
+      </div>
+    </div>
+
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 20 · 자세히</span>
+      <h2>이산적 vs 연속적 — 자세히</h2>
+      <p><b>이산</b> = 상태를 하나, 둘, 셋 하고 셀 수 있다. <b>연속</b> = 어느 두 상태 사이에도 또 다른 상태가 있다.</p>
+      <div class="card"><h3>정의의 정확한 표현</h3>
+        <ul class="clean muted">
+          <li>핵심은 <b>"구별되는(distinct)"</b>이다: 값들이 서로 명확히 구분되고 두 값 사이에 중간값이 없다. 나이트가 g1에서 f3로 가는 동안 "중간 배치"는 없다.</li>
+          <li>"유한"은 부차적이다. 정수 전체는 <span class="k">이산적</span>이지만 무한하다(둔 수의 횟수). 정확히는 "셀 수 있는(countable) 개수". 실제 AI 문제에서는 대개 유한하기도 하다.</li>
+          <li>3장의 검색이 종료를 보장하려면 유한성이 따로 필요하다 — 그때 "이산이지만 무한한 상태 공간"이 다시 문제가 된다.</li>
+        </ul>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>대상 (하나라도 연속이면 그 축은 연속)</th><th>이산</th><th>연속</th></tr></thead>
+        <tbody>
+          <tr><td><b>상태</b></td><td>체스판 배치, 청소기 8상태</td><td>차의 위치·속도·연료량</td></tr>
+          <tr><td><b>시간</b></td><td>턴제 게임 (내 차례, 상대 차례)</td><td>실시간으로 흐르는 주행</td></tr>
+          <tr><td><b>지각</b></td><td>"A칸 Dirty", 상대의 수</td><td>카메라 픽셀 밝기, 속도계</td></tr>
+          <tr><td><b>동작</b></td><td>Left / Right / Suck, 말을 옮기는 수</td><td>핸들 각도 12.7°, 브레이크 압력</td></tr>
+        </tbody>
+      </table></div>
+      <div class="grid2">
+        <div class="card"><h3>왜 중요한가</h3><p class="muted">이산 환경에서는 상태를 <b>열거</b>할 수 있다. 3장의 탐색, 7장의 명제논리, 17장의 MDP 표는 모두 "상태를 하나씩 나열할 수 있다"는 전제 위에 있다. 연속 환경에서는 열거가 불가능하므로 연속 최적화, 미분방정식, 함수 근사(신경망)가 필요하다. <span class="k">표 기반</span> Q-학습이 이산 상태·동작을, DDPG·SAC 같은 액터-크리틱이 연속 동작을 다루는 이유가 이 구분이다.</p></div>
+        <div class="card"><h3>두 세계를 잇는 것: 이산화 (discretization)</h3><p class="muted">연속 환경을 이산으로 바꿔 다루는 것. 3장 미로에 격자를 씌워 칸마다 번호를 붙이는 것, 도로를 차선 단위로 나누는 것, 온도를 1도 단위로 반올림하는 것이 예다. 격자를 너무 굵게 하면 해가 부정확하고 너무 잘게 하면 상태 수가 폭발한다. 이 균형이 실제 문제 형식화에서 늘 마주치는 결정이다.</p></div>
+      </div>
+    </div>
+
+    <div class="ckpt">
+      <div class="ckpt-h"><span class="ckpt-badge">✏️ 중간 점검</span><b>일화적/순차적 · 이산/연속 자세히</b><span class="muted" style="font-size:13px">개념 확인 3 · 심화 1 — 답을 먼저 떠올린 뒤 펼쳐 보세요</span></div>
+      <ol class="ckpt-list"><li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>일화적과 순차적을 가르는 질문 하나를 쓰고, 스팸 필터와 체스를 분류하시오.</p><details class="ans"><summary>답 보기</summary><p>&quot;지금 이 동작이 나중에 내가 마주할 상황을 바꾸는가?&quot; 스팸 필터는 이 메일 분류가 다음 메일을 바꾸지 않으므로 일화적, 체스는 지금 둔 수가 이후 판 전체를 결정하므로 순차적.</p></details></li><li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>부품 집기 로봇이 &quot;동적&quot;이면서 &quot;일화적&quot;일 수 있는 이유는?</p><details class="ans"><summary>답 보기</summary><p>동적/정적은 생각하는 동안 환경이 변하는가(벨트가 계속 움직임 → 동적), 일화/순차는 내 동작이 미래 상황을 바꾸는가(부품 판단이 서로 독립 → 일화적)를 묻는 서로 다른 축이기 때문.</p></details></li><li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag c">개념 확인</span></div><p>이산의 정의에서 핵심 단어와 부차적인 조건은 각각 무엇인가?</p><details class="ans"><summary>답 보기</summary><p>핵심은 &quot;구별되는(distinct)&quot;(두 값 사이에 중간값이 없음)이고, &quot;유한&quot;은 부차적이다. 정수 전체처럼 무한해도 셀 수 있으면 이산이다.</p></details></li><li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>추천 시스템이 겉보기와 달리 순차적인 이유와, 이를 무시하면 생기는 문제를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>오늘의 추천이 사용자의 내일 취향과 수집되는 데이터를 바꾸므로 지금 동작이 미래 상황을 바꾼다 → 순차적. 이를 일화적으로 보고 매번 당장의 클릭만 최적화하면 필터 버블이 생긴다.</p></details></li></ol>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 21 · AIMA Figure 2.6</span>
+      <h2>생각해 볼까요? 과제 환경의 분류</h2>
       <p class="muted">빈칸 모드를 켜면 칸이 가려집니다. 직접 분류해 본 뒤 눌러서 확인하세요. 분류는 절대적이지 않고 가정에 따라 달라질 수 있습니다.</p>
       <div class="table-wrap">
         <table class="envtable">
@@ -1670,11 +1837,34 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
         </table>
       </div>
       <p class="muted" style="font-size:13.5px">정제소(refinery): 원유를 정제하는 공장. 정제소 제어기는 온도·압력·유량을 조절하는 에이전트입니다.</p>
-      <h3>토론 질문</h3>
-      <details class="ans"><summary>백개먼은 주사위를 쓰는데 왜 "완전 관측 가능"인가? 포커는 왜 아닌가?</summary><p>예시 답안: 관측 가능성은 현재 상태가 보이는지의 문제이고, 주사위는 전이의 확률성(확률적) 문제입니다. 백개먼은 판 위의 모든 말이 보이므로 완전 관측이지만, 포커는 상대 패가 숨겨져 있어 부분 관측입니다.</p></details>
-      <details class="ans"><summary>시계를 쓰는 체스가 "준동적"인 이유는?</summary><p>예시 답안: 숙고하는 동안 판(환경)은 변하지 않지만, 시간이 흐르면서 남은 시간과 성과가 달라지기 때문입니다.</p></details>
-      <details class="ans"><summary>영상 분석이 "일화적"이라면, 의료 진단은 왜 "순차적"인가?</summary><p>예시 답안: 영상 한 장의 분류는 다음 영상 분류에 영향을 주지 않지만, 의료 진단에서는 어떤 검사·처치를 하느냐가 이후 환자 상태와 다음 선택에 영향을 줍니다.</p></details>
-      <details class="ans"><summary>택시 주행에서 감지기를 추가하면 어느 열이 바뀔 수 있는가?</summary><p>예시 답안: 관측 가능성 열입니다. 감지기가 늘면 보이는 상태가 늘어 부분 관측에서 완전 관측 쪽으로 가까워질 수 있습니다. 다른 차량의 의도 같은 숨은 상태가 남으므로 완전 관측이 되기는 어렵습니다.</p></details>
+      <h3>토론 질문 (모범 답안 ⑤)</h3>
+      <details class="ans"><summary>백개먼은 주사위를 쓰는데 왜 "완전 관측"인가? 포커는 왜 아닌가?</summary><p><b>완전 관측 + 확률적.</b> 주사위 결과가 나온 뒤에는 판 전체가 보이므로 상태를 완전히 안다. 주사위는 "다음 상태가 확률적"이라는 <b>결정론 축</b>의 문제이지 관측 축의 문제가 아니다. 포커는 상대 패가 보이지 않으므로 현재 상태 자체를 모른다 → <b>부분 관측</b>.</p></details>
+      <details class="ans"><summary>시계를 쓰는 체스가 "준동적"인 이유는?</summary><p><b>환경은 정적, 점수는 동적.</b> 내가 생각하는 동안 판은 변하지 않지만(정적), 시간을 쓸수록 남은 시간이 줄어 성과가 나빠진다. "환경은 그대로인데 성과 점수가 시간에 따라 변한다"가 준동적의 정의.</p></details>
+      <details class="ans"><summary>영상 분석이 "일화적"이라면, 의료 진단은 왜 "순차적"인가?</summary><p><b>지금의 결정이 다음 상태를 바꾸는가.</b> 사진 한 장의 분류는 다음 사진에 영향을 주지 않는다. 진단은 검사를 하고 → 결과를 보고 → 치료하고 → 반응을 보고 다음 결정을 내리는 과정이며, 지금 처방한 약이 다음 검사 결과를 바꾼다.</p></details>
+      <details class="ans"><summary>택시 주행에서 감지기를 추가하면 어느 열이 바뀔 수 있는가?</summary><p><b>Observable 열만, 그것도 Partially에 머문다.</b> 감지기는 에이전트가 세계에 대해 무엇을 아는가를 바꾸고, 세계가 어떻게 돌아가는가는 바꾸지 못한다. 다중·확률적·순차적·동적·연속은 환경의 성질이라 그대로다. 다른 운전자의 의도·모퉁이 너머는 어떤 감지기로도 못 보므로 Partially. 단, 부분 관측에서 오던 "겉보기 확률성"은 줄어든다 — 진짜 확률성(노면, 타인의 선택)은 남는다.</p></details>
+      <p class="card" style="background:var(--amber-soft);border-color:transparent"><b>공통 교훈:</b> 일곱 축 중 관측 가능성만 에이전트 쪽(감지기)에 달려 있고 나머지는 환경 자체의 성질이다. 자율주행이 어려운 이유는 센서 부족보다 환경의 본질 때문.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">심화 ⑥ · 슬라이드 50</span>
+      <h2>Figure 2.6 읽기 — 부품 집기 로봇과 영상 분석</h2>
+      <p>같은 "인식" 문제도 손을 뻗는 순간 어려운 축이 세 개 바뀐다.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>축</th><th>부품 집기 로봇</th><th>근거</th></tr></thead>
+        <tbody>
+          <tr><td>Observable</td><td>Partially</td><td>겹치거나 뒤집힌 부품의 자세, 무게·마찰·내부 결함은 카메라로 알 수 없다</td></tr>
+          <tr><td>Agents</td><td>Single</td><td>부품은 스스로 목표를 갖고 움직이는 존재가 아니라 물체</td></tr>
+          <tr><td>Deterministic</td><td>Stochastic</td><td>집게가 미끄러지고, 부품이 벨트 위에서 튕기며, 다음 부품이 무엇일지 정해져 있지 않다</td></tr>
+          <tr><td>Episodic</td><td>Episodic</td><td>지금 부품을 어느 통에 넣었는지가 다음 부품의 판단에 영향을 주지 않는다 → 계획 불필요, <span class="k">지도학습</span>으로 환원</td></tr>
+          <tr><td>Static</td><td>Dynamic</td><td>벨트는 로봇이 생각하는 동안에도 움직인다. 미루면 부품이 지나가 버린다 (= 집지 않기로 한 것)</td></tr>
+          <tr><td>Discrete</td><td>Continuous</td><td>부품 위치·자세, 관절 각도, 집게 힘이 모두 연속값</td></tr>
+        </tbody>
+      </table></div>
+      <div class="grid3">
+        <div class="card"><h3>영상 분석은 왜 "Semi"인가</h3><p class="muted">사진은 생각하는 동안 변하지 않지만(<span class="k">정적</span>), 교재가 가정한 위성·생산 라인 분석에서는 영상이 계속 들어오므로 늦은 정답은 덜 좋은 정답이다(점수가 시간에 따라 감소) → <span class="k">준동적</span>. 마감 없는 단일 사진이면 Static, 실시간 스트림 인식이면 Dynamic.</p></div>
+        <div class="card"><h3>영상 분석과 한 묶음인 이유</h3><p class="muted">둘 다 <span class="k">일화적</span>이라 같은 묶음. 차이는 세계와의 접촉에서 생긴다. 영상 분석은 이미 찍힌 사진을 다루므로 <span class="k">완전 관측</span>·결정론적·준정적이지만, 로봇은 물체를 실제로 움직이므로 부분 관측·확률적·동적이 된다. <b>판단은 쉽지만(<span class="k">일화적</span>) 세계는 어렵다</b> — 산업용 로봇이 인식보다 조작에서 애를 먹는 이유.</p></div>
+        <div class="card"><h3>분류가 바뀌는 경우</h3><ul class="clean muted"><li>통이 가득 차면 바꿔야 하거나 잘못 넣은 부품을 나중에 골라내야 하면 → <span class="k">순차적</span></li><li>지그가 부품을 같은 자세로 정렬해 주고 카메라가 완벽하면 → <span class="k">완전 관측</span>·결정론에 가까워진다 (환경을 단순화하는 흔한 전략)</li><li>로봇 여러 대가 같은 벨트를 나눠 맡으면 → <span class="k">다중 에이전트</span>(<span class="k">협력적</span>)</li></ul></div>
+      </div>
     </div>
 
     <div class="ckpt">
@@ -1686,8 +1876,8 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
   <!-- ===== 2장: 에이전트 구조 ===== -->
   <section class="panel" id="c2-agents" role="tabpanel" hidden>
     <div class="block">
-      <span class="eyebrow">에이전트 프로그램의 종류</span>
-      <h2>네 가지 기본 구조 + 학습</h2>
+      <span class="eyebrow">슬라이드 22 · 에이전트 프로그램의 종류</span>
+      <h2>에이전트 프로그램의 종류: 네 가지 기본 구조 + 학습</h2>
       <p>공통 골격은 모두 <b>지각 → (내부 처리) → 행동</b>. 아래로 갈수록 더 많은 정보를 쓰고 더 유연하게 행동하지만, <b>성능 순위는 아닙니다</b>. 행을 눌러 자세히 보세요.</p>
       <div class="table-wrap">
         <table class="checks">
@@ -1744,9 +1934,72 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       <div class="ckpt-h"><span class="ckpt-badge">✏️ 중간 점검</span><b>에이전트 구조</b><span class="muted" style="font-size:13px">개념 확인 3 · 심화 1 — 답을 먼저 떠올린 뒤 펼쳐 보세요</span></div>
       <ol class="ckpt-list"><li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>에이전트 프로그램의 네 가지 기본 구조를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>단순 반사, 모형 기반 반사, 목표 기반, 효용 기반 (+ 어느 구조에든 붙는 학습).</p></details></li><li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>모형 기반 반사 에이전트가 내부 상태를 갱신할 때 쓰는 두 모형은?</p><details class="ans"><summary>답 보기</summary><p>전이 모형(세계가 어떻게 변하고 내 동작이 무엇을 바꾸나), 감지기 모형(세계 상태가 지각에 어떻게 나타나나).</p></details></li><li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag c">개념 확인</span></div><p>학습 에이전트의 네 구성 요소와 각 역할은?</p><details class="ans"><summary>답 보기</summary><p>성능 요소(행동 선택), 학습 요소(성능 요소 개선), 비평자(고정된 외부 기준으로 피드백), 문제 생성기(탐험적 행동 제안).</p></details></li><li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>목표 기반 대신 효용 기반이 필요한 두 상황을 예와 함께 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>① 목표가 상충할 때: 택시의 &quot;빠르게&quot;와 &quot;안전하게&quot;를 한 수치로 절충. ② 목표 달성이 불확실할 때: 성공 확률과 중요도를 함께 저울질(기대 효용). 목표는 달성/미달성 이분법이라 둘 다 못 한다.</p></details></li></ol>
     </div>
+
     <div class="block">
-      <span class="eyebrow">상태 표현</span>
-      <h2>무엇을 어떻게 적을 것인가</h2>
+      <span class="eyebrow">슬라이드 23</span>
+      <h2>단순 반사 에이전트 (Simple Reflex Agent)</h2>
+      <p><b>현재 지각에만</b> 근거하여 동작을 선택한다 — 지각의 이력은 무시한다.</p>
+      <div class="grid2">
+        <div class="card"><h3>조건-동작 규칙 (condition-action rule)</h3><div class="formula">if 조건 then 동작</div><p class="muted">예) 앞차가 브레이크를 밟으면 → 나도 브레이크를 밟는다. 진공청소기 반사 에이전트(슬라이드 5)가 대표 예.</p></div>
+        <div class="card"><h3>수식으로</h3><p class="muted">상호작용: p₀, a₀, p₁, a₁, … · <span class="k">단순 반사</span>: <b>aₜ = g(pₜ)</b> — 지금 지각 pₜ 하나만 보고 동작 aₜ를 정한다.</p></div>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>장점</h3><p class="muted">빠르고 단순하며 지각 이력을 저장하지 않는다. 규칙과 실행 코드를 위한 메모리는 필요하다.</p></div>
+        <div class="card"><h3>조건</h3><p class="muted">현재 지각만으로 적절한 동작을 고를 수 있어야 한다. <span class="k">부분 관측</span>에서도 가능하지만, 구별해야 할 상황이 같은 지각으로 보이면 기억 등이 필요하다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 24</span>
+      <h2>모형 기반 반사 에이전트 (Model-based Reflex Agent)</h2>
+      <p>지금 보이지 않는 세계의 측면을 추적하기 위해 <span class="k">내부 상태</span>(internal state)를 유지한다 — 즉, <b>기억</b>을 가진다.</p>
+      <div class="grid2">
+        <div class="card"><h3>전이 모형 (transition model)</h3><p class="muted">세계가 어떻게 변하는가.<br>① 에이전트의 동작이 세계에 미치는 영향 — 핸들을 돌리면 차가 회전한다<br>② 에이전트와 무관하게 세계가 변하는 방식 — 비가 오면 도로가 미끄러워진다</p></div>
+        <div class="card"><h3>감지기 모형 (sensor model)</h3><p class="muted">세계의 상태가 지각에 어떻게 반영되는가 — 앞차의 브레이크 등이 켜지면 카메라에 붉은 빛이 보인다.</p></div>
+      </div>
+<pre class="code">state  ← UPDATE-STATE(state, most_recent_action,
+                      percept, transition_model, sensor_model)
+rule   ← RULE-MATCH(state, rules)
+action ← rule.ACTION</pre>
+      <p class="muted">예) 이미 청소한 위치를 기억하는 진공청소기, 옆 차선의 차가 사각지대에 들어간 것을 기억하는 택시. <span class="k">내부 상태</span>는 가능한 상태들의 집합이나 확률분포일 수도 있다. 정확한 상태를 알 수 있는 경우도 있다.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 25</span>
+      <h2>상태(state)란 무엇이고, 어떻게 정의하는가</h2>
+      <p>상태 = 지금 세계가 어떤 상황인지를 <b>동작을 고르는 데 필요한 만큼</b> 적어 놓은 기술(description). 두 가지를 먼저 구분한다.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>환경 상태 (world state)</th><th>내부 상태 (internal / belief state)</th></tr></thead>
+        <tbody>
+          <tr><td><b>무엇인가</b></td><td>환경이 실제로 처한 상황 전체</td><td>에이전트가 <span class="k">지각열</span>로부터 추정한 세계에 대한 최선의 추측</td></tr>
+          <tr><td><b>누가 아는가</b></td><td><span class="k">완전 관측</span> 가능하면 에이전트도 안다</td><td><span class="k">부분 관측</span> 환경에서는 이것밖에 없다</td></tr>
+          <tr><td><b>진공청소기 예</b></td><td>내 위치 + 두 칸의 먼지 여부 (8가지 중 하나)</td><td>내 위치 + 현재 칸 상태 + "B칸은 아까 청소했음"이라는 기억</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted"><span class="k">모형 기반</span> 에이전트가 유지하는 것은 오른쪽(<span class="k">내부 상태</span>). 완전 관측 환경에서는 둘이 같아진다.</p>
+      <div class="card"><h3>좋은 상태 정의의 조건: 마르코프 성질</h3><p class="muted">현재 상태와 다음 동작만 알면, 미래를 예측하는 데 과거 이력이 더 이상 필요 없어야 한다. 뒤집어 말하면 "과거의 무엇을 더 알아야 다음이 예측되는가?"의 답은 모두 상태에 들어가야 한다. 이것이 <span class="k">전이 모형</span> T(s, a) → s'가 성립하기 위한 조건이다.</p></div>
+      <div class="grid2">
+        <div class="card"><h3>정의하는 절차</h3>
+          <ol class="muted" style="padding-left:18px;margin:0;line-height:1.7">
+            <li>결정에 영향을 주는 것만 넣는다 — 옆 차의 색깔은 빼고 상대 속도는 넣는다. 상태가 커질수록 상태 공간이 지수로 는다 (청소기 2칸 8상태 → 10칸 10×2¹⁰)</li>
+            <li>관측되지 않지만 예측에 필요한 것을 추가한다 — 사각지대에 들어간 차, 체스의 캐슬링 가능 여부·3회 동형 반복 이력</li>
+            <li>표현 수준을 고른다 — <span class="k">원자적</span> / <span class="k">분해된</span> / 구조적 (다음 슬라이드)</li>
+            <li>에이전트 자신의 조건(배터리, 들고 있는 물건)이 동작 가능성에 영향을 주면 넣는다</li>
+            <li>초기 상태와 목표 상태를 정의할 수 있는지 확인한다 (3장 문제 형식화에서 검증됨)</li>
+          </ol>
+        </div>
+        <div class="card"><h3>흔한 실수 두 가지</h3>
+          <ul class="clean muted">
+            <li><b>지각을 그대로 상태로 쓰는 것.</b> 카메라 프레임 한 장은 지각이지 상태가 아니다 — 속도(두 프레임의 차)와 가려진 물체(과거 프레임)를 담지 못한다. 아타리 DQN이 프레임 4장을 묶은 이유.</li>
+            <li><b>상태 정의가 불완전해 <span class="k">확률적</span>으로 보이는 것을 진짜 확률성으로 오해하는 것.</b> 상태를 더 잘 정의하면 <span class="k">결정론적</span>으로 바뀌기도 하고, 정의할 수 없는 부분은 P(s'|s,a)로 확률화한다.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 26 · 상태 표현</span>
+      <h2>상태 표현 (State Representation): 무엇을 어떻게 적을 것인가</h2>
       <div class="grid3">
         <div class="card"><span class="tag">원자적 atomic</span><p>상태는 내부 구조가 없는 하나의 이름표. 예) 도시 이름 A, B. 같거나 다를 뿐.</p><p class="muted">→ 탐색·게임</p></div>
         <div class="card"><span class="tag">분해된 factored</span><p>변수(속성)와 값의 집합. 예) [location=A, status=Clean, temp=75°F]. 상태 변수를 <span class="k">플루언트(fluent)</span>라 한다.</p><p class="muted">→ CSP · 명제 논리 · 계획</p></div>
@@ -1755,14 +2008,45 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       <p class="muted">표현력 vs 추론의 어려움: 풍부한 표현은 객체·속성·관계를 간결하게 나타냅니다. 추론 난도는 표현뿐 아니라 문제와 알고리즘에도 달려 있습니다.</p>
     </div>
 
+    <div class="block">
+      <span class="eyebrow">슬라이드 27</span>
+      <h2>구조적 표현 읽기: 객체는 노드, 관계는 화살표</h2>
+      <p>"트럭이 소를 향해 후진한다" — <span class="k">분해된</span> 표현으로는 TruckReversingTowardCow 같은 변수를 미리 만들어야 하지만, <span class="k">구조적</span> 표현은 <b>객체와 관계를 조합</b>한다.</p>
+      <div class="card" style="overflow-x:auto">
+        <svg viewBox="0 0 560 170" role="img" aria-label="트럭, 소, 하역장 관계 그래프" style="width:100%;min-width:420px;max-height:190px;height:auto">
+          <defs><marker id="ar27" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker></defs>
+          <rect x="20" y="50" width="110" height="44" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="75" y="77" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">트럭₁</text>
+          <rect x="230" y="50" width="100" height="44" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="280" y="77" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">소₁</text>
+          <rect x="430" y="50" width="110" height="44" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="485" y="77" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">하역장</text>
+          <line x1="130" y1="72" x2="228" y2="72" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar27)"/><text x="180" y="62" text-anchor="middle" font-size="13" fill="var(--ink)">향함</text>
+          <line x1="330" y1="72" x2="428" y2="72" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar27)"/><text x="380" y="62" text-anchor="middle" font-size="13" fill="var(--ink)">위치: 앞</text>
+          <rect x="25" y="125" width="100" height="32" rx="8" fill="var(--amber-soft)" stroke="var(--amber)"/><text x="75" y="146" text-anchor="middle" font-size="13" fill="var(--ink)">후진중</text>
+          <line x1="75" y1="94" x2="75" y2="123" stroke="var(--amber)" stroke-width="2" stroke-dasharray="4 3"/>
+        </svg>
+        <p class="muted" style="font-size:13.5px">노드 = 객체 · 화살표 = 관계(술어) · 색 상자 = 속성(단항 관계). 1차 논리로: 후진중(트럭₁), 향함(트럭₁, 소₁), 위치(소₁, 하역장, 앞)</p>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>객체와 속성은 어떻게 구분하나</h3><p class="muted">객체는 가리킬 수 있는 것(술어의 인수), 속성은 객체에 대해 참·거짓을 말하는 것(술어). 그러나 경계는 설계 선택이다. 빨갛다(트럭₁)을 색(트럭₁, 빨강)으로 바꾸면 빨강이 객체가 된다 — 이를 <b><span class="k">구체화</span>(reification)</b>라 한다.</p></div>
+        <div class="card"><h3>객체로 만드는 세 기준</h3><ul class="clean muted"><li>그것에 대해 무언가를 더 말해야 하는가 ("빨강의 파장은 700nm")</li><li>여러 관계에 참여하는가 (하역장은 트럭·소·건물과 관계를 맺는다)</li><li>셀 수 있거나 "어떤 ~"이라고 말해야 하는가 (소가 두 마리, ∃소)</li></ul></div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>정보</th><th>속성으로</th><th>객체로 (구체화)</th><th>어느 쪽이 나은가</th></tr></thead>
+        <tbody>
+          <tr><td>트럭이 후진 중</td><td>후진중(트럭₁)</td><td>동작(트럭₁, 후진₁), 속도(후진₁, 5km/h)</td><td>후진의 속도·시각을 말해야 하면 객체</td></tr>
+          <tr><td>트럭이 빨갛다</td><td>빨갛다(트럭₁)</td><td>색(트럭₁, 빨강)</td><td>색끼리 비교하면 객체</td></tr>
+          <tr><td>소가 하역장 앞</td><td>하역장앞(소₁)</td><td>위치(소₁, 하역장, 앞)</td><td>하역장이 다른 관계에도 나오므로 객체</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
 
     <div class="ckpt">
       <div class="ckpt-h"><span class="ckpt-badge">✏️ 중간 점검</span><b>상태 표현</b><span class="muted" style="font-size:13px">개념 확인 3 · 심화 1 — 답을 먼저 떠올린 뒤 펼쳐 보세요</span></div>
       <ol class="ckpt-list"><li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>원자적, 분해된, 구조적 표현을 각각 정의하시오.</p><details class="ans"><summary>답 보기</summary><p>원자적: 상태를 내부 구조가 없는 이름표 하나로(같거나 다를 뿐). 분해된: 변수(속성)와 값의 집합. 구조적: 객체들과 그 관계로 된 그래프.</p></details></li><li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>다음을 분류하시오: (가) &quot;도시 Arad&quot; (나) [location=A, status=Clean] (다) &quot;트럭이 소를 향해 후진한다&quot;</p><details class="ans"><summary>답 보기</summary><p>(가) 원자적 (나) 분해된 (다) 구조적.</p></details></li><li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag c">개념 확인</span></div><p>플루언트(fluent)란?</p><details class="ans"><summary>답 보기</summary><p>분해된 표현에서 상태를 이루는 변수. 시간에 따라 값이 바뀌는 속성(예: location, status).</p></details></li><li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>표현력이 클수록 항상 좋은가? 3장 검색이 원자적 표현을 쓰는 이유와 함께 설명하시오.</p><details class="ans"><summary>답 보기</summary><p>항상 그렇지 않다. 표현력이 크면 객체·속성·관계를 간결하게 나타낼 수 있지만 추론·학습이 어려워질 수 있다. 3장 검색은 상태 내부를 들여다보지 않고 이름표로만 다뤄서 같은 알고리즘을 미로·지도·퍼즐 등 어떤 문제에도 그대로 쓸 수 있다. 문제 특유의 지식은 휴리스틱 함수 같은 바깥 함수로 넣는다.</p></details></li></ol>
     </div>
     <div class="block">
-      <span class="eyebrow">전이 모형</span>
-      <h2>상태 → 행동 → 다음 상태</h2>
+      <span class="eyebrow">슬라이드 28 · 전이 모형</span>
+      <h2>전이 모형: 상태 → 동작 → 다음 상태</h2>
       <p>진공청소기 세계의 상태 공간: 위치 2 × 먼지 분포 4 = <span class="k">8개</span> 상태.</p>
       <p class="note-link">✎ 내 질문 노트: 왜 8개인지, 8개 상태 전부를 아래에 그림으로 정리</p>
       <div class="grid2">
@@ -1798,13 +2082,157 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       </div>
     </div>
 
+  
+    <div class="block">
+      <span class="eyebrow">슬라이드 29</span>
+      <h2>목표 기반 에이전트 (Goal-based Agent)</h2>
+      <p>현재 상태를 아는 것만으로는 부족하다 — <b>무엇을 원하는지(goal)</b>도 알아야 동작을 고를 수 있다.</p>
+      <ul class="clean">
+        <li><b>목표(goal)</b>: 달성하거나 유지하려는 상태의 조건. 목표 달성이 항상 과제 종료를 뜻하지는 않는다.</li>
+        <li><span class="k">전이 모형</span>으로 동작의 결과를 예측하고("What it will be like if I do action A"), 목표에 도달할 수 있는 동작을 선택한다.</li>
+        <li>여러 단계가 필요하면 탐색과 계획을 사용한다. 일시적으로 목표에서 멀어지는 동작이 필요할 수도 있다.</li>
+      </ul>
+      <div class="grid2">
+        <div class="card" style="border-color:var(--good)"><h3>장점</h3><ul class="clean muted"><li>유연하다: 목적지가 바뀌면 규칙을 다시 쓰지 않고 목표만 바꾸면 된다</li><li>지식이 명시적이다: 제동 거리 모형 하나를 고치면 모든 결정에 자동 반영된다</li><li>규칙에 없는 새로운 상황에도 대응할 수 있다</li><li>탐색·계획으로 여러 단계 앞을 내다본다</li></ul></div>
+        <div class="card" style="border-color:var(--bad)"><h3>한계</h3><ul class="clean muted"><li>느리다: 동작마다 결과를 예측하고 비교해야 한다</li><li>목표는 달성/미달성의 이분법 — 여러 경로 중 어느 것이 더 좋은지 말할 수 없다</li><li>"빠르게"와 "안전하게"처럼 목표가 충돌하면 절충할 기준이 없다</li><li>목표 달성이 불확실할 때 확률과 중요도를 저울질할 수 없다 → <b><span class="k">효용 기반</span> 에이전트</b></li></ul></div>
+      </div>
+      <p class="muted">예) 갈림길에서 택시는 승객의 목적지를 알아야 방향을 정할 수 있다. 퍼즐을 풀 때 "어떤 동작이 나를 해답에 더 가깝게 만드는가?"</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 30</span>
+      <h2>목표 달성이 항상 과제 종료를 뜻하지는 않는다</h2>
+      <p>목표에는 성격이 다른 두 종류가 있고, 그중 한 종류만 "도달하면 끝"이다.</p>
+      <div class="grid2">
+        <div class="card"><h3><span class="k">달성 목표</span> (achievement goal) — "어떤 상태에 이르러라"</h3><p class="muted">택시가 승객을 시청에 내려준다, 8-퍼즐을 맞춘다, 청소기가 두 칸을 모두 깨끗하게 만든다. 목표 조건이 참이 되는 순간 그 과제는 끝난다. 3장 탐색 문제의 목표 검사(goal test)가 이 유형이다.</p></div>
+        <div class="card"><h3><span class="k">유지 목표</span> (maintenance goal) — "조건이 계속 참이도록 지켜라"</h3><p class="muted">앞차와 안전 거리를 유지한다, 실내 온도를 22도로 유지한다, 로버가 배터리를 20% 이상으로 유지한다. 지금 참이라고 끝난 것이 아니다. 세계가 계속 변하므로 조건은 언제든 깨질 수 있고 그때마다 다시 동작해야 한다. <b>종료 시점 자체가 없다.</b></p></div>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>달성 목표라도 종료가 아닌 경우</h3><p class="muted"><span class="k">달성 목표</span>는 대개 더 큰 과제의 부분 목표(subgoal)다. 승객을 내려주는 것은 한 승객에 대한 목표 달성일 뿐, 택시의 과제는 계속된다 — 다음 승객, 연료 보충, 교대 시간까지 운행. 목표 하나가 달성되면 에이전트는 종료하지 않고 다음 목표를 세우거나 <span class="k">유지 목표</span>로 돌아간다.</p></div>
+        <div class="card"><h3>설계상 함의</h3><ul class="clean muted"><li><span class="k">달성 목표</span>만 있으면 "계획 → 실행 → 목표 검사 → 끝"의 일회성 구조로 충분 (3장 탐색 에이전트)</li><li><span class="k">유지 목표</span>가 있으면 계속 세계를 감시하고 조건이 깨지면 다시 계획하는 순환 구조여야 한다 — 점선 되먹임(상태 추적)이 계속 돌아야 하는 이유</li><li>강화학습의 episodic task(종료 있음) vs continuing task(종료 없음, 할인율 도입)가 같은 구분의 연장</li></ul></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 31</span>
+      <h2>효용 기반 에이전트 (Utility-based Agent)</h2>
+      <p>목표만으로는 부족하다 — 여러 경로 중 어느 것이 "더 좋은가", 목표 달성이 불확실할 때 무엇을 택할 것인가.</p>
+      <div class="card"><h3><span class="k">효용 함수</span> (utility function) U(s)</h3><p class="muted">각 상태의 바람직함(desirability)을 실수로 나타낸다. <b><span class="k">성과측도</span>를 에이전트 내부에 옮겨 놓은 것</b>(internalization). 외부 <span class="k">성과측도</span>와 일치할수록 좋다.</p></div>
+      <div class="grid2">
+        <div class="card"><h3>효용이 목표보다 나은 두 상황</h3><p class="muted">① 여러 목표가 <b>상충</b>할 때 — 속도 vs 안전의 절충을 하나의 수치로 비교<br>② 목표 달성이 <b>불확실</b>할 때 — 성공 확률과 목표의 중요도를 함께 저울질</p></div>
+        <div class="card"><h3>효용(utility) vs 보상(reward)</h3><p class="muted">효용 U는 결과에 대한 선호를 수치화한다. 보상 r은 단계별 피드백이다. 기대 누적 할인보상은 MDP·강화학습에서 쓰는 가치의 한 형태이며, 효용의 일반 정의는 아니다.</p></div>
+      </div>
+      <div class="formula">a* = argmax<sub>a∈A</sub> Σ<sub>s'∈S</sub> P(s' | s, a) · U(s')</div>
+      <p class="muted">한 단계 선택 예 — <span class="k">기대 효용</span>을 최대화하는 동작. 예) 자율 화성 로버는 배터리가 위험할 정도로 낮지 않은 상태를 선호한다. 택시는 빠르지만 위험한 길과 느리지만 안전한 길을 저울질한다.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 32 · 33</span>
+      <h2>왜 효용인가: 목표 검사가 멈추는 곳, 기대 효용으로 저울질하기</h2>
+      <div class="card"><h3>문제의 핵심</h3><p class="muted"><span class="k">목표 기반</span> 에이전트의 판단 도구는 목표 검사 하나뿐이다: "이 동작의 예상 결과가 목표를 만족하는가?" → 예 / 아니오. 환경이 <span class="k">확률적</span>이거나 부분 관측 가능하면 "예상 결과"가 하나가 아니라 여러 결과의 확률 분포가 된다. 그러면 목표 검사가 할 수 있는 말은 "달성할 수도 있고 못 할 수도 있다"뿐이다. <b>목표 검사: 상태 → {참, 거짓}. 입력이 "분포"가 되는 순간 정의역을 벗어난다.</b></p></div>
+      <div class="grid2">
+        <div class="card"><h3>예 ① 확률만 다른 경우</h3><div class="table-wrap"><table style="min-width:0"><thead><tr><th>경로</th><th>제시간 도착</th><th>목표 기반의 평가</th></tr></thead><tbody><tr><td>고속도로</td><td>90%</td><td>달성할 수도 있음</td></tr><tr><td>국도</td><td>60%</td><td>달성할 수도 있음</td></tr></tbody></table></div><p class="muted" style="font-size:13.5px"><span class="k">목표 기반</span>에게 둘은 같다. "90%가 60%보다 낫다"고 말하는 순간, 이미 목표 검사가 아닌 다른 기준을 쓰고 있다.</p></div>
+        <div class="card"><h3>예 ② 확률과 중요도가 함께 얽힌 경우</h3><div class="table-wrap"><table style="min-width:0"><thead><tr><th>경로</th><th>제시간</th><th>실패했을 때</th></tr></thead><tbody><tr><td>고속도로</td><td>90%</td><td>10%: 사고 정체로 비행기를 놓침</td></tr><tr><td>국도</td><td>60%</td><td>40%: 10분 늦지만 비행기는 탐</td></tr></tbody></table></div><p class="muted" style="font-size:13.5px">"비행기를 놓침"과 "10분 지각"은 둘 다 미달성이지만 심각성이 전혀 다르다. <span class="k">목표 기반</span>은 두 실패를 구분하지 못한다.</p></div>
+      </div>
+      <div class="card sim">
+        <h3>기대 효용 계산기 — 기대 효용(동작) = Σ P(결과 | 동작) × U(결과)</h3>
+        <p class="muted" style="font-size:13.5px">확률 P는 세계에 대한 지식(<span class="k">전이 모형</span>)에서, 중요도 U는 <span class="k">성과측도</span>에서 온다. 슬라이드 기본값: U(제시간) = 100, U(10분 지각) = 80, U(놓침) = 0. 승객 사정에 따라 U(놓침)을 바꿔 보세요.</p>
+        <div class="calc">
+          <label for="euLate">U(10분 지각) <input type="range" id="euLate" min="0" max="100" step="5" value="80"><output id="euLateO"></output></label>
+          <label for="euMiss">U(비행기 놓침) <input type="range" id="euMiss" min="0" max="100" step="5" value="0"><output id="euMissO"></output></label>
+        </div>
+        <div class="table-wrap"><table style="min-width:0"><thead><tr><th>경로</th><th>계산</th><th>기대 효용</th></tr></thead><tbody id="euBody"></tbody></table></div>
+        <p class="verdict" id="euVerdict"></p>
+        <div class="row" style="justify-content:flex-start"><button class="btn" id="euDef">슬라이드 기본 (놓침 = 0)</button><button class="btn" id="euRelax">여유 있는 승객 (놓침 = 60)</button></div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>정리</th><th>목표 기반</th><th>효용 기반</th></tr></thead>
+        <tbody>
+          <tr><td>결과 평가</td><td>목표 만족 여부 (예 / 아니오)</td><td>효용 (실수 값)</td></tr>
+          <tr><td>불확실성 처리</td><td>불가 — "달성할 수도 있음"까지만</td><td>확률 가중 <span class="k">기대 효용</span></td></tr>
+          <tr><td>실패의 종류 구분</td><td>불가 — 모두 "미달성"</td><td>가능 — 실패마다 다른 효용</td></tr>
+          <tr><td>상충하는 목표</td><td>절충 기준 없음</td><td>하나의 수치로 비교</td></tr>
+          <tr><td>이론적 배경</td><td>논리, 탐색 (3~11장)</td><td>확률론 + 효용이론 = 결정이론 (16장)</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted"><b>한 줄로:</b> 목표는 "되느냐 안 되느냐"만 묻고, 효용은 "될 확률이 얼마이고, 되면 얼마나 좋고, 안 되면 얼마나 나쁜가"를 한꺼번에 계산한다. 슬라이드 7의 정의 "<span class="k">성과측도</span>의 <span class="k">기대치</span>를 최대화"가 에이전트 내부에서 구현된 형태이기도 하다.</p>
+    </div>
+
+    <div class="ckpt">
+      <div class="ckpt-h"><span class="ckpt-badge">✏️ 중간 점검</span><b>목표 기반 · 효용 기반</b><span class="muted" style="font-size:13px">개념 확인 3 · 심화 1 — 답을 먼저 떠올린 뒤 펼쳐 보세요</span></div>
+      <ol class="ckpt-list"><li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>달성 목표와 유지 목표의 차이를 예와 함께 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>달성 목표는 &quot;어떤 상태에 이르러라&quot;로 조건이 참이 되면 그 과제가 끝난다(8-퍼즐 맞추기). 유지 목표는 &quot;조건이 계속 참이도록 지켜라&quot;로 종료 시점이 없다(실내 온도 22도 유지, 안전 거리 유지).</p></details></li><li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>목표 기반 에이전트의 한계 네 가지를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>느리다(결과 예측·비교), 달성/미달성 이분법이라 더 좋은 경로를 말할 수 없다, 목표가 충돌하면 절충 기준이 없다, 목표 달성이 불확실할 때 확률과 중요도를 저울질할 수 없다.</p></details></li><li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag c">개념 확인</span></div><p>효용 함수를 &quot;성과측도의 내부화&quot;라고 하는 이유는?</p><details class="ans"><summary>답 보기</summary><p>성과측도는 설계자가 밖에서 결과를 채점하는 기준이고, 효용 함수 U(s)는 그 선호를 에이전트 안으로 옮겨 각 상태의 바람직함을 실수로 매겨 동작 선택에 쓰기 때문. 외부 성과측도와 일치할수록 좋다.</p></details></li><li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>U(제시간) = 100, U(10분 지각) = 80, U(놓침) = 0일 때 고속도로(90% 제시간, 10% 놓침)와 국도(60% 제시간, 40% 10분 지각)의 기대 효용을 계산하고, U(놓침) = 60이면 어떻게 바뀌는지 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>고속도로 0.9×100 + 0.1×0 = 90, 국도 0.6×100 + 0.4×80 = 92 → 국도. U(놓침) = 60이면 고속도로 0.9×100 + 0.1×60 = 96, 국도 92 → 고속도로로 역전. 같은 확률·도로여도 효용(승객 사정)에 따라 결정이 바뀐다.</p></details></li></ol>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 34</span>
+      <h2>네 그림을 나란히: 무엇이 추가되었나</h2>
+      <p>공통 골격은 같다 — 지각 → (내부 처리) → 동작. 각 단계에서 상자 하나가 더해질 뿐이다.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>에이전트</th><th>판단 질문</th><th>답의 형태</th><th>새로 추가된 상자</th><th>다룰 수 있는 것</th><th>한계</th></tr></thead>
+        <tbody>
+          <tr><td><b><span class="k">단순 반사</span></b></td><td>지금 지각이 이러면 무엇을 하는가</td><td>규칙</td><td><span class="k">조건-동작 규칙</span></td><td><span class="k">완전 관측</span> 환경</td><td><span class="k">부분 관측</span>에서 무한 루프</td></tr>
+          <tr><td><b><span class="k">모형 기반</span> 반사</b></td><td>지금 상태가 이러면 무엇을 하는가</td><td>규칙</td><td>State + <span class="k">전이 모형</span> + 점선 되먹임(기억)</td><td><span class="k">부분 관측</span></td><td>여전히 규칙이 동작을 정함</td></tr>
+          <tr><td><b><span class="k">목표 기반</span></b></td><td>이 동작이 목표를 만족시키는가</td><td>예 / 아니오</td><td>"if I do action A" + Goals</td><td>여러 단계 계획, 목표 교체</td><td>이분법 — 우열·상충·불확실성 불가</td></tr>
+          <tr><td><b><span class="k">효용 기반</span></b></td><td>이 동작의 결과가 얼마나 좋은가</td><td>실수 (<span class="k">기대 효용</span>)</td><td>"How happy I will be" + Utility</td><td>상충하는 목표, 불확실성</td><td><span class="k">효용 함수</span> 지정과 계산의 어려움</td></tr>
+        </tbody>
+      </table></div>
+      <div class="grid2">
+        <div class="card"><h3>전이 모형은 두 번 쓰인다</h3><p class="muted"><span class="k">모형 기반</span> 반사에서는 <b>과거를 정리</b>하는 데(상태 갱신), <span class="k">목표 기반</span>부터는 <b>미래를 시뮬레이션</b>하는 데("A를 하면 어떻게 될까") 한 번 더 쓰인다. 같은 지식이 "지금 어디 있나"와 "저기로 가면 어디에 도착하나" 둘 다에 쓰이는 것.</p></div>
+        <div class="card"><h3>왜 이 순서가 책의 순서인가</h3><p class="muted"><span class="k">목표 기반</span>의 "if I do action A" 상자를 구현하는 것이 3~5장 탐색과 11장 계획 수립. <span class="k">모형 기반</span>의 State와 전이 모형이 7~9장 논리와 12~14장 확률 추론. 효용 기반의 Utility가 16~17장 결정이론과 MDP. 학습 에이전트의 학습 요소가 19~22장. <b>2장은 책 전체의 지도다.</b></p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 35</span>
+      <h2>학습하는 에이전트 (Learning Agent)</h2>
+      <p>튜링(1950)의 제안: 지능적 기계를 손으로 짜는 대신, <b>학습하는 기계를 만들고 가르치자</b>.</p>
+      <div class="grid2">
+        <div class="card"><h3><span class="k">성능 요소</span> (performance element)</h3><p class="muted">지각을 받아 동작을 선택한다. 지금까지 다룬 <span class="k">에이전트 프로그램</span> 전체가 여기에 해당.</p></div>
+        <div class="card"><h3><span class="k">비평자</span> (critic)</h3><p class="muted">고정된 외부 성과 기준에 비추어 에이전트가 얼마나 잘하고 있는지 <span class="k">학습 요소</span>에 피드백한다. 지각 자체는 성공 여부를 말해 주지 않기 때문에 필요.</p></div>
+        <div class="card"><h3><span class="k">학습 요소</span> (learning element)</h3><p class="muted"><span class="k">비평자</span>의 피드백으로 <span class="k">성능 요소</span>가 동작을 선택하는 방식을 개선한다.</p></div>
+        <div class="card"><h3><span class="k">문제 생성기</span> (problem generator)</h3><p class="muted">새롭고 유익한 경험을 얻기 위한 탐험적 동작을 제안한다. 당장은 최적이 아니어도 장기적으로 더 나은 동작을 발견하게 한다.</p></div>
+      </div>
+      <p class="muted"><span class="k">학습 요소</span>는 <span class="k">성능 요소</span>의 어느 부분(모형, 규칙, 효용 함수 등)이든 바꿀 수 있다 — 반사·목표·효용 기반 어느 구조에도 적용된다. 외부 성과 기준은 임의로 바꾸지 않는다. <span class="k">보상 해킹</span>은 별도 문제다.</p>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">슬라이드 36</span>
+      <h2>학습 에이전트 한 바퀴 따라가기, 그리고 강화학습과의 대응</h2>
+      <div class="grid2">
+        <div class="card"><h3>택시 예로 화살표를 순서대로</h3>
+          <ol class="muted" style="padding-left:18px;margin:0;line-height:1.7">
+            <li><b><span class="k">성능 요소</span></b>: 좌회전하며 급하게 차선을 가로지른다 (Sensors → Performance element → Actuators)</li>
+            <li><b><span class="k">비평자</span></b>: 경적과 승객의 불평을 지각하고, 성과 기준("승객 만족, 안전")에 비추어 나쁜 결과로 판정</li>
+            <li><b><span class="k">학습 요소</span></b>: feedback을 받아 <span class="k">성능 요소</span>의 knowledge를 보고 "급차선 변경은 나쁘다"는 규칙을 changes로 적용</li>
+            <li><b><span class="k">문제 생성기</span></b>: 아직 모르는 것("젖은 노면의 제동 거리")을 learning goal로 받아 "빈 도로에서 브레이크를 세기별로 밟아 보라"는 실험을 제안</li>
+            <li><b>다시 1로</b>: 실험 결과가 Sensors로 들어와 순환. 학습 = 각 부분을 피드백과 일치하도록 수정해 성과를 개선하는 과정</li>
+          </ol>
+        </div>
+        <div class="card"><h3>강화학습에서의 대응</h3><div class="table-wrap"><table style="min-width:0"><thead><tr><th>2장 구성 요소</th><th>강화학습 용어</th></tr></thead><tbody>
+          <tr><td><span class="k">성능 요소</span></td><td>정책 π (actor)</td></tr>
+          <tr><td><span class="k">비평자</span></td><td>보상 → 가치 추정 (critic)</td></tr>
+          <tr><td><span class="k">학습 요소</span></td><td>정책·가치 갱신 규칙 (TD 오차, 경사)</td></tr>
+          <tr><td><span class="k">문제 생성기</span></td><td>탐험 전략 (ε-greedy, 엔트로피 보너스)</td></tr>
+          <tr><td>성과 기준</td><td>보상 함수 (에이전트 밖에서 고정)</td></tr>
+        </tbody></table></div></div>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>왜 성과 기준은 에이전트 밖에 있는가</h3><p class="muted">① 지각 자체는 성공 여부를 말해 주지 않는다 — 체크메이트 지각이 "좋은 일"이려면 기준이 있어야 한다. ② 기준이 안에 있으면 에이전트가 기준을 고쳐 점수를 올릴 수 있다. 그래서 기준은 고정되고 손댈 수 없어야 한다. 다만 외부에 둔다고 <span class="k">보상 해킹</span>이 자동으로 막히지는 않는다 — 기준 자체가 잘못 지정될 수 있기 때문.</p></div>
+        <div class="card"><h3>두 가지 한계</h3><p class="muted">성과 기준이 잘못되면 학습은 잘못된 방향으로 유능해진다(추천 시스템의 "클릭" 최적화). <span class="k">문제 생성기</span>의 실험에는 비용이 따른다 — 자율주행차가 배우기 위해 위험한 기동을 시험할 수는 없다. 안전한 탐험은 열린 문제.</p></div>
+      </div>
+    </div>
+
+    <div class="ckpt">
+      <div class="ckpt-h"><span class="ckpt-badge">✏️ 중간 점검</span><b>네 구조 비교 · 학습 에이전트</b><span class="muted" style="font-size:13px">개념 확인 3 · 심화 1 — 답을 먼저 떠올린 뒤 펼쳐 보세요</span></div>
+      <ol class="ckpt-list"><li><div class="ckpt-q"><span class="num">Q1</span><span class="ckpt-tag c">개념 확인</span></div><p>네 구조가 각각 던지는 판단 질문을 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>단순 반사: 지금 지각이 이러면 무엇을 하는가. 모형 기반 반사: 지금 상태가 이러면 무엇을 하는가. 목표 기반: 이 동작이 목표를 만족시키는가. 효용 기반: 이 동작의 결과가 얼마나 좋은가.</p></details></li><li><div class="ckpt-q"><span class="num">Q2</span><span class="ckpt-tag c">개념 확인</span></div><p>&quot;전이 모형은 두 번 쓰인다&quot;는 말의 뜻은?</p><details class="ans"><summary>답 보기</summary><p>모형 기반 반사에서는 과거를 정리하는 상태 갱신에, 목표 기반부터는 &quot;A를 하면 어떻게 될까&quot;라는 미래 시뮬레이션에 같은 전이 모형이 다시 쓰인다.</p></details></li><li><div class="ckpt-q"><span class="num">Q3</span><span class="ckpt-tag c">개념 확인</span></div><p>학습 에이전트의 네 구성 요소와 강화학습 용어를 짝지으시오.</p><details class="ans"><summary>답 보기</summary><p>성능 요소 ↔ 정책 π(actor), 비평자 ↔ 보상 → 가치 추정(critic), 학습 요소 ↔ 정책·가치 갱신 규칙(TD 오차, 경사), 문제 생성기 ↔ 탐험 전략(ε-greedy 등). 성과 기준 ↔ 에이전트 밖에서 고정된 보상 함수.</p></details></li><li><div class="ckpt-q"><span class="num">Q4</span><span class="ckpt-tag d">심화</span></div><p>성과 기준을 에이전트 밖에 두는 두 가지 이유와, 그래도 남는 한계를 쓰시오.</p><details class="ans"><summary>답 보기</summary><p>① 지각 자체는 성공 여부를 말해 주지 않으므로 외부 기준이 있어야 한다. ② 기준이 안에 있으면 에이전트가 기준을 고쳐 점수를 올릴 수 있다. 한계: 기준 자체가 잘못 지정되면(클릭 최적화) 학습이 잘못된 방향으로 유능해진다 — 외부에 둔다고 보상 해킹이 자동으로 막히지는 않는다.</p></details></li></ol>
+    </div>
   </section>
 
   <!-- ===== 2장: 실습 ===== -->
   <section class="panel" id="c2-practice" role="tabpanel" hidden>
     <div class="block">
-      <span class="eyebrow">연습 · 슬라이드 26</span>
-      <h2>기대 성과로 행동 고르기</h2>
+      <span class="eyebrow">슬라이드 37 · 연습</span>
+      <h2>연습: 기대성과로 동작 고르기</h2>
       <p class="muted">성공하면 10점, 실패하면 0점. 슬라이더로 조건을 바꿔 보세요.</p>
       <div class="card calc">
         <label for="pA">행동 A 성공률 <input type="range" id="pA" min="0" max="100" step="5" value="70"><output id="pAo"></output></label>
@@ -1814,13 +2242,28 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
         <p class="verdict" id="evVerdict"></p>
         <div class="row" style="justify-content:flex-start"><button class="btn" id="evReset">기본 문제 (70% / 90%)</button><button class="btn" id="evCost">B에만 비용 3점</button></div>
       </div>
-      <details class="ans"><summary>행동 B가 실패했다. 그 선택은 비합리적이었을까?</summary><p>아닙니다. 선택 시점의 정보로 B의 기대 성과(9점)가 A(7점)보다 컸으므로 합리적인 선택이었습니다. 합리성은 실제 결과가 아니라 선택 시점의 정보와 평가 기준으로 판단합니다.</p></details>
-      <details class="ans"><summary>B에만 비용 3점이 붙으면?</summary><p>B의 순 기대 성과는 9 − 3 = 6점으로 A의 7점보다 작아서 A를 선택합니다.</p></details>
+      <details class="ans"><summary>모범 답안 ① 보기 (채점 기준: 답 → 근거(기대성과 계산) → 가정 또는 반례 한 문장)</summary>
+        <div class="table-wrap"><table style="min-width:0">
+          <thead><tr><th>문항</th><th>답</th><th>근거</th></tr></thead>
+          <tbody>
+            <tr><td>1. 비용이 같을 때 어느 동작?</td><td><b>동작 B</b></td><td>기대성과 A = 0.7 × 10 = 7점, B = 0.9 × 10 = 9점. 비용이 같으므로 기대성과만 비교하면 된다.</td></tr>
+            <tr><td>2. B가 실패했다. 비합리적이었나?</td><td><b>아니다</b></td><td>합리성은 선택 시점의 정보(70%, 90%)와 평가 기준(10점/0점)으로 계산한 기대성과로 판단한다. 그 시점에 B(9) &gt; A(7)였으므로 합리적이다. 실패는 10%로 예견된 결과이지 판단 착오가 아니다.</td></tr>
+            <tr><td>3. B에만 비용 3점이 붙는다면?</td><td><b>동작 A</b></td><td>순기대점수 A = 7 − 0 = 7, B = 9 − 3 = 6. 같은 확률이라도 성과측도(비용 포함)가 바뀌면 합리적 선택이 바뀐다 — 성공률만 비교하면 안 된다.</td></tr>
+          </tbody>
+        </table></div>
+        <p><b>가정·반례 (가산점 항목)</b></p>
+        <ul class="clean muted">
+          <li>문항 2: 확률 추정이 옳았다는 가정. "90%"가 근거 없는 수치였다면 비합리성은 실패가 아니라 잘못된 사전 지식에 있다.</li>
+          <li>문항 3: 비용 3점이 성공·실패와 무관하게 항상 든다고 가정. 실패할 때만 든다면 B = 9 − 0.1 × 3 = 8.7로 여전히 B.</li>
+          <li>비유: 비행기 문 예제(슬라이드 9) — 결과가 나쁘다고 결정이 나빴던 것은 아니다.</li>
+        </ul>
+        <p class="muted">연결: 슬라이드 7(합리적 에이전트 정의 — 기대치 = 확률 가중 평균), 9(합리성 ≠ 완벽함), 33(U(놓침)을 바꾸자 답이 역전된 것과 같은 구조).</p>
+      </details>
     </div>
 
     <div class="block">
-      <span class="eyebrow">실습 · 슬라이드 27</span>
-      <h2>기억이 행동을 바꾸는 순간</h2>
+      <span class="eyebrow">슬라이드 38 · 실습</span>
+      <h2>실습: 기억이 동작을 바꾸는 순간</h2>
       <p class="muted">A에서 시작, 두 칸 모두 Dirty. 6단계 동안 행동 직후 깨끗한 칸마다 +1점, 이동마다 −1점. 청소와 NoOp은 비용 없음.</p>
       <div class="card sim">
         <div class="row" style="justify-content:flex-start">
@@ -1834,6 +2277,23 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       </div>
       <details class="ans"><summary>기억 사용 에이전트는 어떤 정보를 기억해야 할까?</summary><p>각 칸을 마지막으로 확인했을 때 깨끗했는지. 두 칸이 모두 깨끗하다는 사실을 알면 이동하지 않고 NoOp을 선택해 이동 벌점을 피합니다.</p></details>
       <details class="ans"><summary>먼지가 다시 생긴다면 계속 NoOp 해도 될까?</summary><p>안 됩니다. "4단계 뒤 A칸 재오염"을 켜고 실행해 보세요. 기억 에이전트는 A가 깨끗하다고 믿고 있어서 다시 치우지 않습니다. 점검 간격을 정하려면 먼지 발생률, 이동 비용, 남은 시간, 마지막으로 확인한 시점 같은 정보가 필요합니다.</p></details>
+      <details class="ans"><summary>모범 답안 ② 보기 (채점 규칙: 매 단계 동작 직후 깨끗한 칸 수(0~2)를 더하고, 이동이면 1점 감점)</summary>
+        <div class="grid2">
+          <div class="table-wrap"><table style="min-width:0"><thead><tr><th colspan="5">단순 반사: Suck → Right → Suck → Left → Right → Left</th></tr><tr><th>단계</th><th>동작</th><th>깨끗한 칸</th><th>이동</th><th>점수</th></tr></thead><tbody>
+            <tr><td>1</td><td>Suck</td><td>1</td><td>0</td><td>1</td></tr><tr><td>2</td><td>Right</td><td>1</td><td>−1</td><td>0</td></tr><tr><td>3</td><td>Suck</td><td>2</td><td>0</td><td>2</td></tr><tr><td>4</td><td>Left</td><td>2</td><td>−1</td><td>1</td></tr><tr><td>5</td><td>Right</td><td>2</td><td>−1</td><td>1</td></tr><tr><td>6</td><td>Left</td><td>2</td><td>−1</td><td>1</td></tr><tr><td colspan="4"><b>합계</b></td><td><b>6점</b></td></tr></tbody></table></div>
+          <div class="table-wrap"><table style="min-width:0"><thead><tr><th colspan="5">기억 사용: Suck → Right → Suck → NoOp × 3</th></tr><tr><th>단계</th><th>동작</th><th>깨끗한 칸</th><th>이동</th><th>점수</th></tr></thead><tbody>
+            <tr><td>1</td><td>Suck</td><td>1</td><td>0</td><td>1</td></tr><tr><td>2</td><td>Right</td><td>1</td><td>−1</td><td>0</td></tr><tr><td>3</td><td>Suck</td><td>2</td><td>0</td><td>2</td></tr><tr><td>4~6</td><td>NoOp × 3</td><td>2</td><td>0</td><td>2+2+2</td></tr><tr><td colspan="4"><b>합계</b></td><td><b>9점</b></td></tr></tbody></table></div>
+        </div>
+        <p class="muted">9점이 상한: 두 칸을 다 청소하려면 이동이 최소 한 번 필요하고, 그 뒤에는 NoOp가 최선.</p>
+        <p><b>무엇을 기억해야 하는가</b>: 각 칸의 마지막 확인 청결 상태 memory[A], memory[B] ∈ {Clean, Dirty, Unknown}. 지각이 오면 그 칸을 갱신하고, Suck을 하면 현재 칸을 Clean으로 갱신한다(Suck이 항상 성공한다는 가정). 규칙 추가: memory[A] = Clean and memory[B] = Clean → NoOp. → 이것이 <b>모형 기반 반사 에이전트</b>다.</p>
+        <p><b>확장: 먼지가 다시 생긴다면?</b></p>
+        <ul class="clean muted">
+          <li>계속 NoOp 하면 안 된다. 보이지 않는 칸의 기억은 시간이 갈수록 믿을 수 없다.</li>
+          <li>점검 간격에 필요한 정보: 재오염률 λ(세계가 변하는 방식), 마지막 관측 시각(기억에 시간 도장), 이동 비용 vs 방치 손실(성과측도).</li>
+          <li>간단한 기준: 기대 손실 λ × 경과 시간 × 1점이 이동 비용 1점을 넘는 순간 점검하러 간다.</li>
+          <li>채점 유의: 위 결과는 "6단계, 재오염 없음"이라는 조건에서의 비교이지 일반적 최적성 증명이 아님을 밝히면 가산점.</li>
+        </ul>
+      </details>
     </div>
 
     <div class="note">
@@ -1877,8 +2337,8 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
 
 
     <div class="block">
-      <span class="eyebrow">적용 · 슬라이드 28</span>
-      <h2>교내 배달 로봇의 PEAS</h2>
+      <span class="eyebrow">슬라이드 39 · 적용</span>
+      <h2>적용: 교내 배달 로봇의 PEAS</h2>
       <div class="peas">
         <div class="card"><span class="letter">P</span><p class="muted">안전한 배송 완료율, 배송 시간, 에너지 사용량. 안전 조건은 별도 제약으로 둘 수 있다.</p></div>
         <div class="card"><span class="letter">E</span><p class="muted">교내 보행로, 건물 출입구, 보행자, 수령인, 날씨 (실외 배송 가정)</p></div>
@@ -1887,6 +2347,37 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
       </div>
       <p><b>환경 분류:</b> <span class="k">부분 관측</span> · 다중 · 순차 · <span class="k">동적</span>. 위치는 연속, 주문 상태는 이산.</p>
       <p class="muted">분류할 때 먼저 경계와 가정을 적고, 그 근거를 <span class="k">감지기</span>·행동·성과와 연결하세요.</p>
+      <details class="ans"><summary>모범 답안 ③-1 보기: PEAS와 환경 분류 (채점 포인트: 성과측도가 행동이 아닌 결과를 재는가, 분류 근거를 감지기·동작·성과와 연결했는가)</summary>
+        <div class="table-wrap"><table>
+          <thead><tr><th></th><th>예시 답</th><th>채점 포인트</th></tr></thead>
+          <tbody>
+            <tr><td><b>P</b></td><td>안전한 배송 완료율(최우선), 배송 시간, 에너지, 물품 손상 없음. 안전(충돌 0)은 최적화 대상이 아니라 제약 조건</td><td>"빨리"와 "안전"의 상충을 인식하고 우선순위를 두었는가. "이동 거리" 같은 행동이 아니라 결과를 재는가</td></tr>
+            <tr><td><b>E</b></td><td>교내 보행로·경사로·출입구, 보행자·자전거, 수령인, 날씨·조명, (실내 포함 시) 엘리베이터</td><td>다른 에이전트(보행자)와 물체(문)를 구분했는가</td></tr>
+            <tr><td><b>A</b></td><td>구동 모터, 조향, 브레이크, 물품함 잠금, 화면·스피커(경고·안내), 통신 모듈</td><td>소통 수단도 작동기임을 알았는가</td></tr>
+            <tr><td><b>S</b></td><td>카메라, 라이다, GPS·IMU, 바퀴 엔코더, 범퍼·초음파, 물품함 개폐 센서, 앱의 주문·수령 입력</td><td>배터리·적재 여부 등 자기 상태를 재는 감지기를 포함했는가</td></tr>
+          </tbody>
+        </table></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>축</th><th>분류</th><th>근거 (감지기·동작·성과와 연결)</th></tr></thead>
+          <tbody>
+            <tr><td>관측 가능성</td><td>부분 관측</td><td>모퉁이 너머의 보행자, 문 뒤, 수령인의 유무는 감지기로 알 수 없다</td></tr>
+            <tr><td>에이전트 수</td><td>다중</td><td>보행자의 움직임이 안전·시간 성과에 영향. 보행자와는 협력적, 같은 길의 다른 로봇과는 경쟁적일 수 있다</td></tr>
+            <tr><td>결정론</td><td>확률적</td><td>바퀴 미끄러짐, 보행자의 다음 움직임, 문이 열릴지 여부</td></tr>
+            <tr><td>시간 구조 · 변화</td><td>순차적 · 동적</td><td>지금의 경로 선택이 이후 위치·배터리·시간을 바꾼다. 판단하는 동안 보행자가 움직인다</td></tr>
+            <tr><td>이산/연속 · 기지/미지</td><td>혼합 · 대체로 기지</td><td>위치·속도는 연속, 주문·물품함 상태는 이산. 지도와 구동 모형은 주어지나 공사 구간 등은 미지 → 학습</td></tr>
+          </tbody>
+        </table></div>
+      </details>
+      <details class="ans"><summary>모범 답안 ③-2 보기: 필요한 내부 상태 · 목표 · 구조</summary>
+        <p class="muted">"어떤 내부 상태와 목표가 필요할까?"에 대한 답 — 하나의 유형으로 단정하기보다 층위를 나눈 답안이 우수.</p>
+        <div class="grid3">
+          <div class="card"><h3>내부 상태 (기억해야 할 것)</h3><ul class="clean muted"><li>자기 위치·자세의 추정 (부분 관측 → 확률적 추정)</li><li>주변 장애물 지도, 마지막으로 본 보행자 위치</li><li>물품 적재 여부, 물품함 잠금 상태</li><li>배터리 잔량</li><li>배송 진행 단계: 수령 → 이동 → 도착 → 인계 → 복귀</li></ul></div>
+          <div class="card"><h3>목표 (달성 + 유지)</h3><ul class="clean muted"><li>달성 목표: 지정 수령인에게 물품 인계 완료</li><li>유지 목표: 보행자와 안전 거리 유지, 배터리 20% 이상, 물품함 잠금 유지</li><li>달성 목표가 끝나도 유지 목표와 "복귀"라는 다음 과제가 이어진다 → 목표 달성 ≠ 과제 종료 (슬라이드 29·30)</li><li>시간·전력 선호는 목표가 아니라 비용/효용으로 표현</li></ul></div>
+          <div class="card"><h3>에이전트 구조</h3><ul class="clean muted"><li>경로 계획 → 목표 기반</li><li>빠른 길 vs 안전한 길의 절충, 배터리 위험 회피 → 효용 기반</li><li>갑작스런 보행자 회피 → 반사 규칙 (빠름)</li><li>새 장애물·공사 구간 → 학습 요소</li><li>→ 효용 기반을 골격으로, 반사 규칙을 하위 층에, 학습 요소를 붙인 <b>계층 구조</b></li></ul></div>
+        </div>
+        <p><b>채점 기준 요약</b></p>
+        <ul class="clean muted"><li>경계와 가정을 먼저 적었는가 (실외/실내, 로봇 한 대/여러 대, 수령인이 항상 있는가)</li><li>환경 분류의 각 항목에 "왜"가 붙어 있는가 — 분류 자체보다 근거가 배점의 중심</li><li>성과측도의 상충(빨리 vs 안전)을 인식하고 제약 또는 가중치로 처리했는가</li><li>내부 상태 목록이 부분 관측을 보완하는 것들로 구성되었는가 (보이지 않는 것을 기억)</li></ul>
+      </details>
     </div>
 
     <div class="block">
@@ -1899,15 +2390,23 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
     </div>
 
     <div class="block">
-      <span class="eyebrow">개념 점검 · 슬라이드 29</span>
-      <h2>이유까지 설명하기</h2>
+      <span class="eyebrow">슬라이드 40 · 개념 점검</span>
+      <h2>개념 점검: 이유까지 설명하기</h2>
       <p class="muted">먼저 스스로 답과 근거(가정 또는 반례 한 문장)를 말해 본 뒤 여세요.</p>
-      <details class="ans"><summary>1. 일부 상태가 보이지 않으면 합리적 에이전트가 될 수 없는가?</summary><p>아닙니다. 합리성은 지각열과 사전 지식으로 알 수 있는 범위에서 기대 성과를 최대화하는 것입니다. 부분 관측 환경에서도 과거 지각으로 상태를 추정하며 합리적으로 행동할 수 있습니다 (합리성 ≠ 전지성).</p></details>
-      <details class="ans"><summary>2. 같은 지각에 항상 같은 행동을 하는 에이전트는 학습할 수 없는가?</summary><p>아닙니다. 에이전트 함수는 현재 지각이 아니라 지각열 전체를 입력으로 받습니다. 학습 요소가 경험으로 규칙을 고치면, 같은 지각이라도 그 이전 이력에 따라 다른 행동이 나올 수 있습니다.</p></details>
-      <details class="ans"><summary>3. 게임 규칙은 알지만 상대 패는 모른다. 기지/미지와 관측 가능성을 구분하자.</summary><p>규칙(행동의 결과)을 알므로 <b>기지</b>, 상대 패라는 상태 일부가 보이지 않으므로 <b>부분 관측</b>입니다. 두 구분은 서로 독립입니다.</p></details>
-      <details class="ans"><summary>4. 과거 상태를 기억하는 로봇은 반드시 목표 기반 에이전트인가?</summary><p>아닙니다. 모형 기반 반사 에이전트도 내부 상태로 과거를 기억하지만, 목표 없이 조건-행동 규칙으로 행동을 고릅니다.</p></details>
-      <details class="ans"><summary>5. 성과 측도, 효용, 보상은 누가 무엇을 평가하기 위해 쓰는가?</summary><p><b>성과 측도</b>: 설계자가 외부에서 환경 상태의 열(결과)을 평가. <b>효용</b>: 에이전트가 내부에서 상태의 바람직함을 평가 (성과 측도의 내재화). <b>보상</b>: 학습 설정에서 단계마다 주어지는 피드백 신호 (MDP·강화학습).</p></details>
-      <details class="ans"><summary>생각해 볼 문제: 스마트폰 음성 비서는 어떤 에이전트인가? PEAS로 서술해 보자.</summary><p>예시 답안: P 요청 처리 정확도, 응답 속도, 사용자 만족 · E 사용자, 앱과 서비스, 인터넷, 주변 소음 · A 음성 출력, 화면 표시, 앱 실행·알람 설정 · S 마이크, 터치 입력, 위치, 캘린더 등 앱 데이터. 대화 맥락을 기억하고(모형 기반) 요청을 목표로 삼아 행동하므로 목표 기반에 가깝고, 사용 기록으로 개선된다면 학습 에이전트로 볼 수 있습니다.</p></details>
+      <p class="muted">형식: 답 → 이유 → 가정 또는 반례 한 문장. 아래는 강의자료의 모범 답안 ④예요.</p>
+      <details class="ans"><summary>1. 일부 상태가 보이지 않으면 합리적 에이전트가 될 수 없는가?</summary><p><b>아니다.</b> 합리성은 "지각열과 내장 지식이 제공하는 증거를 바탕으로" 기대성과를 최대화하는 것이다. 보이지 않는 부분은 증거에 없으므로 판단 재료가 아니며, 그것을 몰랐다고 비합리적이 되지 않는다. 합리적 에이전트는 정보 수집 동작(좌우 살피기)과 내부 상태 유지(모형 기반)로 부분 관측에 대응한다.</p><p class="muted">반례: 쉽게 얻을 수 있는 정보를 얻지 않았다면(안 보고 건넘) 비합리적이다. 요구되는 것은 전지성이 아니라 가용 정보의 최선 활용.</p></details>
+      <details class="ans"><summary>2. 같은 지각에 항상 같은 동작을 하는 에이전트는 학습할 수 없는가?</summary><p><b>학습할 수 있다.</b> "같은 지각 → 같은 동작"은 한 시점의 정책(에이전트 함수)이 결정론적이라는 뜻이고, 학습은 그 정책을 시간에 걸쳐 바꾸는 것이다. 학습 요소가 조건-동작 규칙을 고치면 학습 전후에 같은 지각에 다른 동작을 하게 된다. 평가 시점의 정책과 학습 과정을 구분해야 한다.</p><p class="muted">가정: 탐험이 필요하면(문제 생성기) 일시적으로 무작위 동작을 섞을 수 있다. 그것은 학습의 수단이지 결정론적 정책이 학습 불가능하다는 뜻이 아니다.</p></details>
+      <details class="ans"><summary>3. 규칙은 알지만 상대 패는 모른다 — 기지/미지와 관측 가능성을 구분하라.</summary><p><b>기지 + 부분 관측.</b> 규칙을 안다 = 기지(known): 동작의 결과나 그 확률 분포를 안다. 상대 패를 모른다 = 부분 관측: 환경의 현재 상태 일부가 감지기에 잡히지 않는다. 기지/미지는 환경의 법칙에 대한 지식, 관측 가능성은 현재 상태에 대한 접근이며 서로 독립이다.</p><p class="muted">반례로 확인: 처음 보는 비디오 게임은 화면이 다 보여 완전 관측이지만 규칙을 몰라 미지. 포커는 그 반대.</p></details>
+      <details class="ans"><summary>4. 과거 상태를 기억하는 로봇은 반드시 목표 기반 에이전트인가?</summary><p><b>아니다.</b> 기억(내부 상태)은 모형 기반 반사 에이전트부터 갖는 것이다. 기억을 갱신한 뒤 조건-동작 규칙으로 바로 반응하면 목표 기반이 아니다. 목표 기반이 되려면 "이 동작을 하면 어떻게 될까"를 예측하고 그 결과가 목표를 만족하는지 검사하는 단계가 있어야 한다. 모범 답안 ②의 청소기가 정확히 "기억은 있지만 목표 기반은 아닌" 예다.</p><p class="muted">포함 관계는 한 방향: 목표 기반 에이전트는 반드시 기억을 갖지만(모형 기반 위에 얹히므로), 기억이 있다고 목표 기반은 아니다.</p></details>
+      <details class="ans"><summary>5. 성과측도, 효용, 보상은 누가 무엇을 평가하기 위해 사용하는가?</summary>
+        <div class="table-wrap"><table style="min-width:0"><thead><tr><th></th><th>누가</th><th>무엇을</th><th>언제 · 왜</th></tr></thead><tbody>
+          <tr><td><b>성과측도</b></td><td>설계자 (에이전트 밖)</td><td>환경에서 실현된 상태의 열</td><td>사후 — 에이전트의 성공을 객관적으로 채점</td></tr>
+          <tr><td><b>효용</b></td><td>에이전트 (안)</td><td>결과 상태의 바람직함</td><td>사전 — 동작을 고르기 위해. 성과측도를 내부에 옮겨 놓은 것</td></tr>
+          <tr><td><b>보상</b></td><td>환경/설계자 → 에이전트</td><td>각 단계의 즉시 피드백</td><td>매 단계 — 학습 신호. 효용 ≈ 미래 보상의 기대 할인 합</td></tr>
+        </tbody></table></div>
+        <p class="muted">셋은 반드시 같지 않다 (가산점 예시): 추천 시스템이 "클릭"(보상)을 최대화하도록 학습해 사용자 만족(성과측도)과 멀어지는 경우. 효용이 성과측도와 어긋나게 지정되면 유능한 에이전트일수록 더 크게 어긋난다 — 1장의 표준 모형 문제, 슬라이드 11의 성과측도 설계 원칙과 연결.</p>
+      </details>
+      <details class="ans"><summary>Q&amp;A (슬라이드 42) · 생각해 볼 문제: 스마트폰 음성 비서는 어떤 에이전트인가? PEAS로 서술해 보자.</summary><p>예시 답안: P 요청 처리 정확도, 응답 속도, 사용자 만족 · E 사용자, 앱과 서비스, 인터넷, 주변 소음 · A 음성 출력, 화면 표시, 앱 실행·알람 설정 · S 마이크, 터치 입력, 위치, 캘린더 등 앱 데이터. 대화 맥락을 기억하고(모형 기반) 요청을 목표로 삼아 행동하므로 목표 기반에 가깝고, 사용 기록으로 개선된다면 학습 에이전트로 볼 수 있습니다.</p></details>
     </div>
   </section>
 
@@ -4152,7 +4651,16 @@ return (Left if target이 왼쪽 else Right)</pre>
     ['구조','문제 생성기','새롭고 유익한 경험을 얻기 위한 탐험적 행동을 제안'],
     ['상태','원자적 표현','내부 구조가 없는 이름표 상태. 탐색·게임에서 사용'],
     ['상태','분해된 표현','변수와 값의 집합으로 된 상태. 변수는 플루언트(fluent). CSP·명제 논리·계획'],
-    ['상태','구조적 표현','객체와 관계의 그래프. 가장 표현력이 크다. 1차 논리·지식 표현']
+    ['상태','구조적 표현','객체와 관계의 그래프. 가장 표현력이 크다. 1차 논리·지식 표현'],
+    ["합리성", "기대치 vs 평균", "기대치 = 확률로 가중한 값(동작 전, 예측), 평균 = 관측값의 단순 평균(동작 후, 집계). 평균은 기대치의 추정치"],
+    ["합리성", "성과측도 vs 합리성", "성과측도: 사후·실현된 결과 채점(목적 함수). 합리성: 사전·기대값 최대화(결정 규칙). 합리성이 최대화하는 것 = 성과측도의 기대값"],
+    ["환경", "일화적 vs 순차적 판별 질문", "\"지금 이 동작이 나중에 내가 마주할 상황을 바꾸는가?\" 바꾸지 않으면 일화적, 바꾸면 순차적"],
+    ["환경", "이산화 (discretization)", "연속 환경을 격자·단위로 나눠 이산으로 다루는 것. 너무 굵으면 부정확, 너무 잘면 상태 폭발"],
+    ["상태", "마르코프 성질", "현재 상태와 다음 동작만 알면 미래 예측에 과거 이력이 필요 없음. 전이 모형 T(s,a)→s'의 성립 조건"],
+    ["상태", "구체화 (reification)", "속성을 객체로 바꾸는 것. 빨갛다(트럭₁) → 색(트럭₁, 빨강)"],
+    ["에이전트 구조", "달성 목표 vs 유지 목표", "달성: 어떤 상태에 이르면 끝(8-퍼즐). 유지: 조건을 계속 지킴, 종료 없음(온도 22도 유지)"],
+    ["에이전트 구조", "기대 효용", "기대 효용(동작) = Σ P(결과 | 동작) × U(결과). 확률은 전이 모형, 중요도는 성과측도에서 온다"],
+    ["에이전트 구조", "학습 에이전트 ↔ 강화학습", "성능 요소 = 정책(actor), 비평자 = critic, 학습 요소 = 갱신 규칙, 문제 생성기 = 탐험 전략, 성과 기준 = 보상 함수"]
   ];
   const Q2=[
     ['에이전트의 정의로 가장 알맞은 것은?',['사람처럼 생각하는 프로그램','감지기로 환경을 지각하고 작동기로 동작을 수행하는 모든 것','학습 능력이 있는 로봇','목표를 가진 소프트웨어'],1,'인간, 로봇, 소프트봇, 온도조절기 같은 제어기까지 모두 에이전트입니다.'],
@@ -4184,7 +4692,17 @@ return (Left if target이 왼쪽 else Right)</pre>
     ['[location=A, status=Clean, temp=75°F] 같은 상태 표현은?',['원자적','분해된','구조적','확률적'],1,'변수와 값의 집합입니다. 상태 변수를 플루언트(fluent)라 합니다.'],
     ['진공청소기 세계(2칸)의 상태 수는?',['2','4','8','16'],2,'위치 2 × 먼지 분포 4 = 8.'],
     ['행동 A(성공 70%)와 B(성공 90%, 비용 3점) 중 순 기대 성과가 큰 것은? (성공 10점)',['A (7점)','B (6점)','같다','알 수 없다'],0,'A = 7, B = 9 − 3 = 6.'],
-    ['학습 에이전트 아이디어를 처음 제안한 사람은?',['매카시','튜링 (1950)','민스키','힌튼'],1,'튜링은 지능적 기계를 손으로 짜는 대신 학습하는 기계를 만들어 가르치자고 제안했습니다.']
+    ['학습 에이전트 아이디어를 처음 제안한 사람은?',['매카시','튜링 (1950)','민스키','힌튼'],1,'튜링은 지능적 기계를 손으로 짜는 대신 학습하는 기계를 만들어 가르치자고 제안했습니다.'],
+    ["주사위 한 번의 기대값 3.5에 대한 설명으로 옳은 것은?", ["100번 던진 평균과 항상 같다", "실제로 나올 수 있는 값이다", "분포의 요약이며, 표본 평균은 이것의 추정치다", "관측값을 모아야 계산할 수 있다"], 2, "기대치는 관측값의 요약이 아니라 분포의 요약입니다. 평균은 시행을 늘리면 3.5로 수렴합니다."],
+    ["택시가 10분 도착(0.7), 30분 정체(0.3)일 때 기대 도착 시간은?", ["16분", "20분", "21분", "30분"], 0, "0.7×10 + 0.3×30 = 7 + 9 = 16분. 단순 평균 20분과 다릅니다."],
+    ["성과측도와 합리성의 관계로 옳은 것은?", ["합리성은 실현된 결과로 동작을 평가한다", "합리성이 최대화하는 것은 성과측도의 기대값이다", "성과측도는 동작하기 전에 적용된다", "둘은 서로 모순이다"], 1, "성과측도는 사후에 실현된 결과를, 합리성은 사전에 기대값으로 동작을 고릅니다."],
+    ["부품 집기 로봇의 환경으로 옳은 것은?", ["완전 관측, 결정론적", "일화적이면서 동적", "순차적이면서 정적", "다중 에이전트, 이산적"], 1, "부품 판단은 서로 독립(일화적)이지만 벨트가 계속 움직여 동적입니다."],
+    ["택시 주행에 감지기를 더 달면 바뀔 수 있는 환경 성질은?", ["에이전트 수", "결정론", "관측 가능성", "순차성"], 2, "감지기는 에이전트가 무엇을 아는가만 바꿉니다. 나머지는 환경 자체의 성질입니다."],
+    ["좋은 상태 정의의 조건인 마르코프 성질의 뜻은?", ["상태 수가 유한하다", "현재 상태와 동작만으로 미래 예측에 충분하다", "상태가 완전히 관측된다", "상태 전이가 결정론적이다"], 1, "과거의 무엇을 더 알아야 다음이 예측된다면, 그것도 상태에 넣어야 합니다."],
+    ["빨갛다(트럭₁)을 색(트럭₁, 빨강)으로 바꾸는 것을 무엇이라 하는가?", ["이산화", "구체화(reification)", "추상화", "분해"], 1, "속성을 객체로 바꾸는 것이 구체화입니다. 빨강에 대해 더 말해야 하거나 비교해야 할 때 씁니다."],
+    ["다음 중 유지 목표(maintenance goal)는?", ["승객을 시청에 내려준다", "8-퍼즐을 맞춘다", "배터리를 20% 이상으로 유지한다", "두 칸을 모두 깨끗하게 만든다"], 2, "유지 목표는 종료 시점이 없고, 조건이 깨질 때마다 다시 동작해야 합니다."],
+    ["U(제시간)=100, U(10분 지각)=80, U(놓침)=0일 때 고속도로(0.9 제시간/0.1 놓침)와 국도(0.6 제시간/0.4 지각)의 선택은?", ["고속도로 (90)", "국도 (92)", "같다", "목표 기반으로 정한다"], 1, "고속도로 0.9×100 + 0.1×0 = 90, 국도 0.6×100 + 0.4×80 = 92."],
+    ["학습 에이전트의 '비평자'에 대응하는 강화학습 용어는?", ["정책 π", "보상 → 가치 추정 (critic)", "ε-greedy", "TD 오차"], 1, "성능 요소 = 정책(actor), 비평자 = 보상과 가치 추정(critic), 문제 생성기 = 탐험 전략."]
   ];
 
   /* ---------- 2장: PEAS 예제 ---------- */
@@ -4643,6 +5161,22 @@ action ← rule.ACTION</pre>
     $('#vsLog').textContent='현재 상태 1: '+nm(cur);
     render();
   })();
+
+  /* ---------- 2장: 기대 효용 계산기 (슬라이드 33) ---------- */
+  (function(){
+    const L=$('#euLate'),M=$('#euMiss');if(!L)return;
+    function draw(){
+      const ul=+L.value,um=+M.value;$('#euLateO').textContent=ul;$('#euMissO').textContent=um;
+      const hw=0.9*100+0.1*um,lr=0.6*100+0.4*ul;
+      const f=x=>Math.round(x*10)/10;
+      $('#euBody').innerHTML=`<tr><td>고속도로</td><td>0.9 × 100 + 0.1 × ${um}</td><td class="num-r"><b>${f(hw)}</b>${hw>lr?' ← 선택':''}</td></tr><tr><td>국도</td><td>0.6 × 100 + 0.4 × ${ul}</td><td class="num-r"><b>${f(lr)}</b>${lr>hw?' ← 선택':''}</td></tr>`;
+      $('#euVerdict').textContent=hw===lr?'두 경로의 기대 효용이 같아요.':`${hw>lr?'고속도로':'국도'}를 선택 (${f(Math.max(hw,lr))} > ${f(Math.min(hw,lr))}). 같은 확률, 같은 도로인데 U가 바뀌면 결정이 바뀌어요.`;
+    }
+    L.addEventListener('input',draw);M.addEventListener('input',draw);
+    $('#euDef').addEventListener('click',()=>{L.value=80;M.value=0;draw();});
+    $('#euRelax').addEventListener('click',()=>{L.value=80;M.value=60;draw();});
+    draw();
+  })();
   /* ---------- 3장: BFS/IDS 계산기 ---------- */
   const fmtN=n=>n>=1e15?n.toExponential(2).replace('e+',' × 10^'):Math.round(n).toLocaleString('ko-KR');
   const fmtT=s=>s<60?`${s.toFixed(1)}초`:s<3600?`${(s/60).toFixed(1)}분`:s<86400?`${(s/3600).toFixed(1)}시간`:s<86400*365?`${(s/86400).toFixed(1)}일`:`${(s/86400/365).toFixed(1)}년`;
@@ -4741,7 +5275,7 @@ action ← rule.ACTION</pre>
   const CH={
     1:{short:'1장',eyebrow:'인공지능입문 · Week 01 · AIMA 1장',title:'오리엔테이션: 인공지능이란 무엇인가',meta:'1장 강의자료 내용을 요약 노트, 개념도, 타임라인, 플래시카드, 퀴즈로 정리했습니다.',footer:'다음: 2장 지능형 에이전트 (에이전트와 환경, PEAS 모델, 합리성). 위의 "2장" 버튼을 누르세요.',home:'summary',
       deck:deck1.map((c,i)=>({id:'1-'+i,cat:c[0],term:c[1],def:c[2]})),quiz:Q1},
-    2:{short:'2장',eyebrow:'인공지능입문 · Week 02 · AIMA 2장',title:'지능형 에이전트 (Intelligent Agents)',meta:'2장 강의자료 내용을 요약 노트, PEAS·환경 분류, 에이전트 구조, 실습, 플래시카드, 퀴즈로 정리했습니다.',footer:'다음: 3장 검색을 통한 문제 해결. 목표 기반 에이전트가 계획을 어떻게 찾는가. 위의 "3장" 버튼을 누르세요. 연습문제: aimacode.github.io/aima-exercises (Chapter 2)',home:'c2-summary',
+    2:{short:'2장',eyebrow:'인공지능입문 · Week 02 · AIMA 2장',title:'지능형 에이전트 (Intelligent Agents)',meta:'2장 강의자료(최신판 50쪽, 모범 답안 포함) 내용을 슬라이드 순서대로 요약 노트, PEAS·환경 분류, 에이전트 구조, 실습, 플래시카드, 퀴즈로 정리했습니다.',footer:'다음: 3장 검색을 통한 문제 해결. 목표 기반 에이전트가 계획을 어떻게 찾는가. 위의 "3장" 버튼을 누르세요. 연습문제: aimacode.github.io/aima-exercises (Chapter 2)',home:'c2-summary',
       deck:deck2.map((c,i)=>({id:'2-'+i,cat:c[0],term:c[1],def:c[2]})),quiz:Q2},
     3:{short:'3장',eyebrow:'인공지능입문 · Week 03 · AIMA 3장',title:'검색을 통한 문제 해결 (Solving Problems by Searching)',meta:'3장 강의자료 내용을 요약 노트, 정보 없는 검색, 정보 있는 검색, 실습(검색 시뮬레이터·8-퍼즐), 플래시카드, 퀴즈로 정리했습니다.',footer:'다음 주: 복잡한 환경에서의 검색 (4장). 국소 검색, 비결정론적·부분 관측 환경, 온라인 검색. 연습문제: aimacode.github.io/aima-exercises (Chapter 3)',home:'c3-summary',
       deck:deck3.map((c,i)=>({id:'3-'+i,cat:c[0],term:c[1],def:c[2]})),quiz:Q3},
@@ -4889,7 +5423,16 @@ action ← rule.ACTION</pre>
     '"이번엔 이걸 한번 해 보자"고 새로운 시도를 제안하는 부분이에요. 당장은 최선이 아니어도 새 경험을 통해 더 좋은 방법을 찾게 해 줘요. 앞의 "탐험"을 담당하는 부품이에요.',
     '상태를 속을 들여다볼 수 없는 이름표 하나로 다루는 방식이에요. 예) "서울", "부산"처럼 도시 이름만 있고, 그 안의 인구나 날씨는 모름. 같은지 다른지만 알 수 있어요. 3장 검색에서 쓰는 방식이에요.',
     '상태를 여러 항목(변수)과 그 값으로 나누어 적는 방식이에요. 예) [위치=A, 청소상태=깨끗, 온도=24도]. 이름표보다 자세해서 "위치만 바뀌었다"처럼 부분을 비교할 수 있어요. 이 변수들을 플루언트라고 불러요.',
-    '상태를 "무엇이 있고(객체), 서로 어떤 관계인지"로 표현하는 방식이에요. 예) "트럭이 소를 향해 후진하고 있다"처럼 물체들과 관계를 그래프로 나타내요. 셋 중 가장 많은 것을 표현할 수 있어요.'
+    '상태를 "무엇이 있고(객체), 서로 어떤 관계인지"로 표현하는 방식이에요. 예) "트럭이 소를 향해 후진하고 있다"처럼 물체들과 관계를 그래프로 나타내요. 셋 중 가장 많은 것을 표현할 수 있어요.',
+    "기대치는 \"가능한 결과 × 확률\"을 더한 예측값이에요. 동작을 고르기 전에 계산해요. 평균은 실제로 해 본 결과를 모아 나눈 값이라 동작 뒤에야 알 수 있어요. 예) 택시: 기대치 0.7×10+0.3×30 = 16분, 단순 평균 20분.",
+    "같은 척도를 두 시점에 쓰는 거예요. 성과측도는 결과가 나온 뒤 채점, 합리성은 결과 전에 \"채점 점수의 기대값\"이 가장 큰 동작을 골라요. 그래서 \"이 판은 졌지만 그 콜은 옳았다\"가 말이 돼요.",
+    "이 질문 하나로 구분해요. 스팸 필터·결함 검출은 다음 문제가 바뀌지 않아 일화적, 체스·택시·청소기는 지금 동작이 이후 상황을 바꿔서 순차적이에요.",
+    "연속인 세상을 칸으로 잘라 셀 수 있게 만드는 거예요. 미로에 격자, 도로를 차선 단위로, 온도를 1도 단위로. 3장 탐색 도구를 쓰려면 필요하지만 칸 크기의 균형이 중요해요.",
+    "\"지금 상태만 알면 다음을 예측할 수 있다\"는 성질이에요. 과거 정보가 더 필요하면(체스 캐슬링 여부) 그것까지 상태에 넣어야 해요.",
+    "속성(빨갛다)을 하나의 대상(빨강)으로 끌어올리는 거예요. 빨강에 대해 더 말하거나 다른 색과 비교해야 할 때 써요.",
+    "달성 목표는 도착하면 끝, 유지 목표는 계속 지켜야 하는 조건이에요. 택시는 승객을 내려주는 달성 목표를 이루고도 안전 거리 같은 유지 목표 때문에 계속 동작해요.",
+    "확률과 중요도를 한 식으로 합친 점수예요. 고속도로 0.9×100+0.1×0 = 90, 국도 0.6×100+0.4×80 = 92 → 국도. U(놓침)이 60이면 고속도로 96으로 역전.",
+    "2장 학습 에이전트 그림이 강화학습 구조와 1:1로 대응해요. 특히 성과 기준(보상 함수)은 에이전트 밖에 고정돼 있어야 해요."
   ],
   3:[
     '목표까지 가려면 "어떤 순서로 무엇을 해야 하나"를 찾는 문제예요. 웹 검색과 달리 정보를 찾는 게 아니라 행동 순서를 찾아요. 예) 길 찾기 앱이 출발지에서 목적지까지의 경로를 찾는 것.',
@@ -5051,7 +5594,17 @@ action ← rule.ACTION</pre>
     ['[location=A, status=Clean','상태를 변수와 값의 쌍들로 나타내는 것을 분해된(factored) 표현이라 해요. 상태 변수를 플루언트(fluent)라고도 해요. 원자적 표현은 상태를 내부 구조 없는 이름 하나로, 구조적 표현은 객체와 그 관계로 나타내요. 표현력은 원자적 < 분해된 < 구조적 순이에요.',['원자적 표현은 "상태 3"처럼 안을 들여다볼 수 없는 이름표예요.','정답. 변수=값의 집합이에요.','구조적 표현은 "트럭 앞에 소가 있다"처럼 객체와 관계를 담아요.','확률적은 환경의 성질이지 상태 표현 방식이 아니에요.']],
     ['진공청소기 세계(2칸)의 상태 수','상태는 로봇 위치(A 또는 B, 2가지)와 두 칸의 먼지 여부(각 칸 깨끗/더러움, 2 × 2 = 4가지)의 조합이에요. 2 × 4 = 8개예요. 칸이 n개면 n × 2ⁿ개로 일반화돼요(3장).',['위치만 센 값이에요.','먼지 분포만 센 값이에요.','정답. 위치 2 × 먼지 분포 4.','2⁴처럼 변수를 더 많게 셌을 때의 값이에요.']],
     ['행동 A(성공 70%)와 B','순 기대 성과 = 성공 확률 × 성공 점수 − 비용이에요. A = 0.7 × 10 = 7, B = 0.9 × 10 − 3 = 6이라 A가 더 커요. 성공 확률이 높다고 늘 좋은 게 아니라 비용까지 같이 따져야 해요. 점수나 비용이 바뀌면 최선의 행동이 바뀔 수 있어요.',['정답. 7 > 6.','B는 비용 3을 빼면 6이라 A보다 작아요.','7과 6으로 달라요.','숫자가 모두 주어져 계산할 수 있어요.']],
-    ['학습 에이전트 아이디어를 처음','튜링은 1950년 논문에서 지능적 기계를 사람이 일일이 프로그래밍하기는 너무 어려우니, 학습하는 기계를 만들고 아이를 가르치듯 가르치자고 제안했어요. 오늘날 학습 에이전트와 기계학습의 출발점이 된 생각이에요.',['매카시는 AI라는 이름과 Lisp로 유명해요.','정답. 1950년 논문에서 제안했어요.','민스키는 신경망과 프레임 이론, 『퍼셉트론즈』로 유명해요.','힌튼은 1980년대 이후 역전파와 딥러닝으로 유명해요.']]
+    ['학습 에이전트 아이디어를 처음','튜링은 1950년 논문에서 지능적 기계를 사람이 일일이 프로그래밍하기는 너무 어려우니, 학습하는 기계를 만들고 아이를 가르치듯 가르치자고 제안했어요. 오늘날 학습 에이전트와 기계학습의 출발점이 된 생각이에요.',['매카시는 AI라는 이름과 Lisp로 유명해요.','정답. 1950년 논문에서 제안했어요.','민스키는 신경망과 프레임 이론, 『퍼셉트론즈』로 유명해요.','힌튼은 1980년대 이후 역전파와 딥러닝으로 유명해요.']],
+    ["", "기대치는 확률 분포를 요약한 값이에요. 주사위 3.5는 한 번 던져서는 절대 안 나오는 값이지만, 던지는 횟수를 늘리면 표본 평균이 3.5로 다가가요(큰 수의 법칙). 그래서 평균은 기대치를 경험으로 추정하는 수단이고, 강화학습의 몬테카를로 방법이 이 원리를 써요.", ["평균은 시행마다 흔들려요. 수렴할 뿐 항상 같지 않아요.", "3.5는 주사위 눈으로 나올 수 없어요.", "정답. 기대치 = 분포의 요약, 평균 = 그 추정치.", "기대치는 확률만 알면 관측 없이 계산돼요."]],
+    ["", "기대치는 결과마다 확률로 가중해서 더해요: 0.7×10 + 0.3×30 = 7 + 9 = 16분. 단순 평균 (10+30)/2 = 20분은 두 결과를 똑같이 취급해 확률 차이를 무시해요. 동작은 결과가 나오기 전에 골라야 하므로 기대치를 써요.", ["정답. 확률 가중 합.", "단순 평균이에요. 확률을 무시했어요.", "계산 실수예요.", "나쁜 경우 하나만 본 값이에요."]],
+    ["", "성과측도는 사후에 실현된 환경 상태의 열을 채점하는 목적 함수이고, 합리성은 사전에 그 성과측도의 기대값을 최대화하는 동작을 고르는 결정 규칙이에요. 같은 척도를 두 시점에 적용할 뿐 모순이 아니에요.", ["합리성은 결과가 나오기 전에 기대값으로 골라요.", "정답.", "성과측도는 사후에 결과를 채점해요.", "같은 척도를 다른 시점에 쓰는 것이라 모순이 아니에요."]],
+    ["", "부품마다 판단이 독립이라 지금 결정이 다음 부품 판단에 영향이 없어요(일화적). 하지만 벨트는 로봇이 생각하는 동안에도 움직여요(동적). 또 부품 자세·마찰을 다 볼 수 없어 부분 관측, 집게가 미끄러져 확률적, 위치·각도가 연속이에요.", ["겹친 부품, 미끄러짐 때문에 부분 관측·확률적이에요.", "정답. 판단은 독립, 벨트는 계속 움직임.", "판단이 독립이라 일화적이고, 벨트 때문에 동적이에요.", "부품은 스스로 목표가 없는 물체라 단일, 값은 연속이에요."]],
+    ["", "감지기는 에이전트가 세계에 대해 무엇을 아는가를 바꾸지, 세계가 어떻게 돌아가는가는 바꾸지 못해요. 그래서 관측 가능성 열만 바뀔 수 있고, 그것도 다른 운전자의 의도나 모퉁이 너머는 못 보니 여전히 부분 관측에 머물러요.", ["다른 운전자는 감지기와 상관없이 존재해요.", "노면, 타인의 선택 같은 진짜 확률성은 남아요.", "정답.", "지금 동작이 미래를 바꾸는 성질은 그대로예요."]],
+    ["", "상태는 동작을 고르는 데 필요한 만큼의 기술이에요. 현재 상태와 다음 동작만 알면 미래 예측에 과거 이력이 필요 없어야 하고, 이것이 전이 모형 T(s, a) → s'가 성립하는 조건이에요. 체스의 캐슬링 가능 여부처럼 과거 정보가 필요하면 상태에 넣어야 해요.", ["유한성은 별도 조건이에요.", "정답.", "관측 가능성과는 별개예요.", "확률적 전이에서도 마르코프 성질은 성립할 수 있어요."]],
+    ["", "속성(빨갛다)을 객체(빨강)로 바꾸는 것을 구체화라고 해요. 그것에 대해 더 말해야 하거나(파장 700nm), 여러 관계에 참여하거나, 셀 수 있어야 할 때 객체로 만들어요.", ["연속값을 격자로 나누는 것이에요.", "정답.", "세부를 지우는 것이에요.", "분해된 표현과 다른 개념이에요."]],
+    ["", "유지 목표는 \"조건이 계속 참이도록 지켜라\"예요. 세계가 계속 변해서 조건은 언제든 깨질 수 있고, 종료 시점이 없어요. 나머지는 조건이 참이 되면 끝나는 달성 목표예요.", ["도착하면 끝나는 달성 목표예요.", "맞추면 끝나는 달성 목표예요.", "정답.", "깨끗해지면 끝나는 달성 목표예요(먼지가 다시 생기지 않는다면)."]],
+    ["", "기대 효용 = Σ P(결과) × U(결과). 고속도로 0.9×100 + 0.1×0 = 90, 국도 0.6×100 + 0.4×80 = 92라서 국도를 골라요. U(놓침)을 60으로 바꾸면 고속도로가 96으로 역전돼요. 목표 기반은 두 경로를 모두 \"달성할 수도 있음\"으로만 봐서 고를 수 없어요.", ["고속도로는 90으로 더 작아요.", "정답.", "92와 90으로 달라요.", "목표 기반은 확률과 실패의 심각성을 구별하지 못해요."]],
+    ["", "비평자는 고정된 외부 성과 기준(보상)에 비추어 얼마나 잘하는지 평가해 학습 요소에 피드백해요. 강화학습의 critic(보상으로 가치를 추정)이 같은 역할이에요.", ["정책은 성능 요소(actor)예요.", "정답.", "탐험 전략은 문제 생성기예요.", "TD 오차는 학습 요소의 갱신 규칙이에요."]]
   ],
   3:[
     ['3장에서 가정하는 환경이 아닌','3장의 검색은 가장 쉬운 환경을 가정해요: 기지(규칙을 앎), 완전 관측, 결정론적, 이산적, 정적, 단일 에이전트. 이 조건이면 실행 전에 완벽한 계획을 세울 수 있어요. 다중 에이전트(상대가 있는 게임)는 5장, 확률적·부분 관측은 4장에서 다뤄요.',['기지는 3장의 가정이에요.','완전 관측은 3장의 가정이에요.','결정론적은 3장의 가정이에요.','정답. 3장은 단일 에이전트를 가정해요.']],
@@ -5145,7 +5698,10 @@ action ← rule.ACTION</pre>
     {s:'환경 7축',q:'과제 환경의 일곱 가지 성질을 각각 정의하고 예를 하나씩 드시오. 가장 어려운 조합도 쓰시오.',p:['관측: 필요한 상태가 감지기로 다 보이나(체스 vs 택시)','에이전트 수: 다른 의사결정자가 내 성과에 영향(십자말풀이 vs 체스)','결정론: 상태+동작이 다음 상태를 하나로(확률적: 주사위)','일화/순차: 지금 동작이 이후에 영향(부품 검출 vs 체스)','정적/동적/준동적(시계 체스)','이산/연속, 기지/미지','가장 어려운: 부분·다중·확률·순차·동적·연속·미지 (택시)'],a:'관측 가능성은 행동 선택에 필요한 상태가 매 순간 보이는지(체스: 완전, 택시: 부분), 에이전트 수는 다른 의사결정자의 행동이 내 성과에 영향을 주는지(십자말풀이: 단일, 체스: 경쟁적 다중), 결정론은 상태와 동작이 다음 상태를 하나로 정하는지(주사위: 확률적), 시간 구조는 현재 행동이 이후에 영향을 주는지(부품 검출: 일화적, 체스: 순차적), 변화는 숙고 중 환경이 변하는지(택시: 동적, 시계 체스: 준동적), 이산/연속은 상태·시간·행동이 셀 수 있는 값인지, 기지/미지는 환경의 법칙을 아는지다. 가장 어려운 조합은 부분 관측·다중·확률적·순차적·동적·연속적·미지이며 택시 주행이 거의 그렇다.'},
     {s:'독립된 축',q:'관측 가능성과 결정론, 관측 가능성과 기지/미지가 서로 독립임을 예를 들어 설명하시오.',p:['관측 = 지금 상태가 보이나(감지기), 결정론 = 다음 상태가 정해지나(법칙)','결정론적·부분 관측: 솔리테어 뒷면 카드, 2장 진공청소기','확률적·완전 관측: 백개먼','기지/미지 = 규칙을 아나, 관측 = 상태가 보이나','기지·부분 관측: 카드 게임 / 미지·완전 관측: 처음 하는 게임'],a:'관측 가능성은 감지기가 현재 상태를 다 알려 주는지, 결정론은 상태와 동작이 다음 상태를 하나로 정하는지의 문제라 서로 다르다. 솔리테어의 뒷면 카드나 현재 칸만 보이는 진공청소기는 결정론적이지만 부분 관측이고, 백개먼은 완전 관측이지만 주사위 때문에 확률적이다. 기지/미지는 규칙(동작의 결과)을 아는지의 문제라, 카드 게임은 기지지만 부분 관측이고 처음 하는 게임은 화면이 다 보여도 미지다.'},
     {s:'에이전트 구조',q:'네 가지 에이전트 구조를 각각 설명하고(쓰는 정보, 행동 선택 방식, 장단점), 학습 에이전트의 구성 요소를 쓰시오.',p:['단순 반사: 현재 지각 + 조건-행동 규칙, aₜ = g(pₜ), 완전 관측에서만 잘 동작','모형 기반 반사: 내부 상태 + 전이·감지기 모형, 부분 관측 대응','목표 기반: 결과를 예측해 목표 도달 동작, 탐색·계획, 유연하지만 느림','효용 기반: U(s)로 절충·불확실성, 기대 효용 최대화','학습: 성능 요소, 학습 요소, 비평자(고정 외부 기준), 문제 생성기','네 구조는 성능 순위가 아님'],a:'단순 반사 에이전트는 현재 지각만 보고 조건-행동 규칙으로 동작을 고르며(aₜ = g(pₜ)) 완전 관측일 때만 잘 동작한다. 모형 기반 반사 에이전트는 전이 모형과 감지기 모형으로 내부 상태를 갱신해 부분 관측에 대응한다. 목표 기반 에이전트는 동작의 결과를 예측해 목표에 도달하는 동작을 고르며 탐색·계획을 쓰고, 유연하지만 느리고 이분법이다. 효용 기반 에이전트는 효용 함수로 상충하는 목표를 절충하고 기대 효용을 최대화한다. 학습 에이전트는 성능 요소, 학습 요소, 고정된 외부 기준으로 피드백하는 비평자, 탐험을 제안하는 문제 생성기로 이뤄진다. 네 구조는 성능 순위가 아니라 환경에 맞게 고른다.'},
-    {s:'상태 표현',q:'상태 표현의 세 가지 방식을 예와 함께 설명하고, 각각 어떤 분야(장)로 이어지는지 쓰시오.',p:['원자적: 내부 구조 없는 이름표(도시 이름) → 탐색·게임','분해된: 변수=값 집합, 플루언트 → CSP·명제 논리·계획','구조적: 객체와 관계 → 1차 논리·지식 표현','표현력 커지면 간결하지만 추론이 어려워질 수 있음'],a:'원자적 표현은 상태를 내부 구조가 없는 이름표로 본다(도시 A, B). 탐색과 게임에 쓰인다. 분해된 표현은 변수와 값의 집합으로([location=A, status=Clean]), 상태 변수를 플루언트라 하며 CSP·명제 논리·계획에 쓰인다. 구조적 표현은 객체와 관계로 된 그래프("트럭이 소를 향해 후진한다")로 1차 논리와 지식 표현에 쓰인다. 표현력이 클수록 간결하게 나타낼 수 있지만 추론 난도는 표현·문제·알고리즘에 따라 달라진다.'}
+    {s:'상태 표현',q:'상태 표현의 세 가지 방식을 예와 함께 설명하고, 각각 어떤 분야(장)로 이어지는지 쓰시오.',p:['원자적: 내부 구조 없는 이름표(도시 이름) → 탐색·게임','분해된: 변수=값 집합, 플루언트 → CSP·명제 논리·계획','구조적: 객체와 관계 → 1차 논리·지식 표현','표현력 커지면 간결하지만 추론이 어려워질 수 있음'],a:'원자적 표현은 상태를 내부 구조가 없는 이름표로 본다(도시 A, B). 탐색과 게임에 쓰인다. 분해된 표현은 변수와 값의 집합으로([location=A, status=Clean]), 상태 변수를 플루언트라 하며 CSP·명제 논리·계획에 쓰인다. 구조적 표현은 객체와 관계로 된 그래프("트럭이 소를 향해 후진한다")로 1차 논리와 지식 표현에 쓰인다. 표현력이 클수록 간결하게 나타낼 수 있지만 추론 난도는 표현·문제·알고리즘에 따라 달라진다.'},
+    {s:'기대치·성과측도',q:'기대치와 평균의 차이를 설명하고, "성과측도는 결과를 재고 합리성은 기대치로 고른다"가 모순이 아닌 이유를 쓰시오.',p:['기대치: 확률 가중, 동작 전 예측, E[X]=Σx·P(x)','평균: 관측값, 동작 후 집계, 기대치의 추정치','택시 예: 기대치 16분 vs 평균 20분','성과측도: 사후·실현 결과 / 합리성: 사전·기대값','반복하면 평균이 기대값으로 수렴','합리성이 최대화하는 것 = 성과측도의 기대값'],a:'기대치는 가능한 결과에 확률을 곱해 더한 예측값이고 동작 전에 계산한다. 평균은 실제 관측을 모은 집계값으로 기대치의 추정치일 뿐이다. 성과측도는 결과가 나온 뒤 실현된 상태의 열을 채점하고, 합리성은 동작 전에 그 성과측도의 기대값을 최대화하는 동작을 고른다. 같은 척도를 두 시점에 적용하는 것이며, 반복하면 실현 성과의 평균이 기대값으로 수렴하므로 모순이 아니다.'},
+    {s:'상태 정의',q:'환경 상태와 내부 상태를 구분하고, 좋은 상태 정의의 조건(마르코프 성질)과 정의 절차, 흔한 실수를 쓰시오.',p:['환경 상태: 실제 상황 전체 / 내부 상태: 지각열로 추정한 최선의 추측','마르코프: 현재 상태+동작만으로 미래 예측 충분','절차: 결정에 영향 주는 것만, 관측 안 되지만 필요한 것 추가, 표현 수준 선택, 자기 조건, 초기·목표 상태 확인','실수: 지각을 그대로 상태로 씀(프레임 1장)','실수: 불완전한 상태 정의를 진짜 확률성으로 오해'],a:'환경 상태는 세계의 실제 상황 전체이고 내부 상태는 에이전트가 지각열로 추정한 믿음이다. 좋은 상태는 현재 상태와 동작만 알면 과거 없이 미래를 예측할 수 있어야 한다(마르코프 성질). 결정에 필요한 것만 넣되 관측되지 않아도 예측에 필요한 것(사각지대 차)은 추가하고, 표현 수준과 자기 조건을 정하며 초기·목표 상태를 정의할 수 있는지 확인한다. 카메라 프레임 한 장을 상태로 쓰거나, 상태가 불완전해서 생긴 겉보기 확률성을 진짜 확률성으로 오해하는 것이 흔한 실수다.'},
+    {s:'목표 vs 효용',q:'달성 목표와 유지 목표를 구분하고, 목표 기반의 한계를 효용 기반이 어떻게 해결하는지 기대 효용 계산 예와 함께 설명하시오.',p:['달성 목표: 도달하면 끝 / 유지 목표: 종료 없음','목표 검사는 상태 → {참, 거짓}, 분포를 다루지 못함','실패의 심각성 구분 불가','기대 효용 = Σ P × U','고속도로 90 vs 국도 92 → 국도','U(놓침)=60이면 96 vs 92 → 고속도로'],a:'달성 목표는 조건이 참이 되면 끝나고 유지 목표는 계속 지켜야 해 종료가 없다. 목표 기반은 결과를 예/아니오로만 평가하므로, 결과가 확률 분포가 되면 "달성할 수도 있음"까지만 말하고 실패의 심각성도 구분하지 못한다. 효용 기반은 결과마다 U를 매겨 확률과 곱해 더한 기대 효용으로 비교한다. 예) 고속도로 0.9×100+0.1×0 = 90, 국도 0.6×100+0.4×80 = 92로 국도를 고르지만, U(놓침)이 60이면 고속도로가 96으로 역전된다.'}
   ],
   3:[
     {s:'문제 정의',q:'문제 해결 에이전트의 네 단계와 3장의 환경 가정을 쓰고, 검색 문제의 5요소를 루마니아 예로 설명하시오.',p:['목표 형식화 → 문제 형식화 → 검색 → 실행','가정: 기지·완전 관측·결정론적·이산·정적·단일','초기 상태: In(Arad)','동작: ACTIONS(Arad) = {ToSibiu, ToTimisoara, ToZerind}','전이 모형: RESULT(In(Arad), ToZerind) = In(Zerind)','목표: In(Bucharest), 동작 비용: 도로 거리'],a:'문제 해결 에이전트는 목표 형식화 → 문제 형식화 → 검색 → 실행의 순서로 동작한다. 3장은 기지·완전 관측·결정론적·이산·정적·단일 에이전트 환경을 가정하므로 개루프 실행이 가능하다. 루마니아 예: 초기 상태 In(Arad), 동작 ACTIONS(Arad) = {ToSibiu, ToTimisoara, ToZerind}, 전이 모형 RESULT(In(Arad), ToZerind) = In(Zerind), 목표 상태 In(Bucharest), 동작 비용은 도로 거리.'},

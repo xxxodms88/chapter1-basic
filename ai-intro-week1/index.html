@@ -370,6 +370,25 @@ svg.inklayer.live{pointer-events:auto;touch-action:none;cursor:crosshair}
 .inktools[hidden]{display:none}
 .inkmsg{margin:0;max-width:300px;font-size:12.5px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 9px;color:var(--muted)}
 @media print{.inkbar{display:none}}
+.rmap{display:block;width:100%;min-width:560px;height:auto}
+.rmap .rd{stroke:var(--line);stroke-width:2.5}
+.rmap .rd.pa{stroke:var(--good);stroke-width:6}
+.rmap .rdw{font-family:var(--mono);font-size:10px;fill:var(--muted);text-anchor:middle}
+.rmap .ct{fill:var(--surface);stroke:var(--muted);stroke-width:1.5}
+.rmap .ct.goal{stroke:var(--ink);stroke-width:2.5}
+.rmap .ct.fr{fill:var(--amber-soft);stroke:var(--amber);stroke-width:3}
+.rmap .ct.ex{fill:var(--accent);stroke:var(--accent)}
+.rmap .ct.cur{fill:var(--bad);stroke:var(--bad)}
+.rmap .ct.pa{fill:var(--good);stroke:var(--good)}
+.rmap .ctl{font-size:11px;fill:var(--ink)}
+.rmap .fl{font-family:var(--mono);font-size:11px;font-weight:700;fill:var(--amber);paint-order:stroke;stroke:var(--surface);stroke-width:3}
+.asbar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--surface-2);min-width:100px}
+.asbar i{display:block;height:100%}.asbar i.g{background:var(--accent)}.asbar i.h{background:var(--bad);opacity:.75}
+.mlk{display:grid;gap:2px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;background:var(--surface)}
+.mlk span{font-size:12.5px;color:var(--muted)}.mlk b{font-family:var(--mono);font-size:15px}
+.mlmem{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}.mlmem i{font-style:normal;font-size:11px;color:var(--amber)}
+.mllog{max-height:240px;overflow:auto;margin:0;padding-left:22px;font-size:13.5px;line-height:1.7;color:var(--muted)}
+.mllog li.now{color:var(--ink);font-weight:600;background:var(--amber-soft)}
 .ttree .lim{stroke:var(--amber);stroke-width:2;stroke-dasharray:8 6}
 .ttree .limt{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--amber)}
 .ttree .cnt{font-family:var(--mono);font-size:14px;font-weight:700;fill:var(--note)}
@@ -3123,6 +3142,80 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
     </div>
 
     <div class="block">
+      <span class="eyebrow">실습 · A* 따라가기</span>
+      <h2>A* 실습: f = g + h를 한 단계씩 계산해 보기</h2>
+      <p class="muted">출발 도시를 고르고 "한 단계"를 누르세요. 목표는 Bucharest, h는 바로 위 표의 직선 거리 h<sub>SLD</sub>예요. 매 단계 A*는 전선에서 <b>f = g + h</b>가 가장 작은 노드를 꺼내고, 목표가 아니면 이웃 도시마다 자식을 생성해 g, h, f를 계산해요. 지도 위 숫자는 전선에 있는 도시의 <b>g+h=f</b>예요.</p>
+      <div class="card sim">
+        <div class="row" style="justify-content:flex-start;gap:10px 16px">
+          <div><div class="tiny muted">알고리즘 (비교용)</div><div class="pick" id="asPick"></div></div>
+          <label class="switch" for="asStart" style="font-size:14px">출발 <select id="asStart" class="sel"></select></label>
+        </div>
+        <div class="row" style="justify-content:flex-start">
+          <button class="btn primary" id="asStep">한 단계</button><button class="btn" id="asBack">한 단계 뒤로</button><button class="btn" id="asRun">끝까지</button><button class="btn" id="asReset">처음으로</button>
+        </div>
+        <p class="verdict" id="asStatus"></p>
+        <div class="mapwrap"><svg id="asMap" class="rmap" viewBox="0 0 640 420" role="img" aria-label="A* 진행 지도"></svg></div>
+        <div class="legend"><span><i class="lg lg-fr"></i>전선 (f 표시)</span><span><i class="lg lg-cur"></i>방금 꺼냄</span><span><i class="lg lg-exp"></i>확장함</span><span><i class="lg lg-path"></i>찾은 경로</span></div>
+        <div class="grid2">
+          <div style="min-width:0"><h3 style="font-size:15px;margin-bottom:4px">전선 (f가 작은 순 = 꺼낼 순서)</h3>
+            <div class="table-wrap"><table class="cxt"><thead><tr><th>도시</th><th>g (온 거리)</th><th>h (남은 추정)</th><th>f</th><th style="min-width:110px"><span style="color:var(--accent)">■</span> g + <span style="color:var(--bad)">■</span> h</th></tr></thead><tbody id="asFr"></tbody></table></div></div>
+          <div style="min-width:0"><h3 style="font-size:15px;margin-bottom:4px">세 알고리즘 결과 비교 (같은 출발)</h3>
+            <div class="table-wrap"><table class="cxt"><thead><tr><th>알고리즘</th><th>비용</th><th>확장 수</th><th>경로</th></tr></thead><tbody id="asCmp"></tbody></table></div>
+            <p class="tiny muted">A*와 UCS는 같은 최적 비용, 탐욕적은 더 비싼 경로. A*가 UCS보다 적게 확장하는 이유가 h예요.</p></div>
+        </div>
+        <div style="min-width:0"><h3 style="font-size:15px;margin-bottom:4px">단계별 기록: ① 꺼냄 → ② 목표 검사 → ③ 자식 생성 (g+h=f)</h3>
+          <div class="table-wrap" style="max-height:260px;overflow:auto"><table class="slog"><thead><tr><th>단계</th><th>① 꺼냄 (g+h=f)</th><th>② 목표 검사</th><th>③ 생성한 자식 → 처리</th></tr></thead><tbody id="asLog"></tbody></table></div></div>
+      </div>
+      <div class="note">
+        <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+        <h3>Arad에서 출발할 때 꼭 볼 장면 세 개</h3>
+        <ul class="muted">
+          <li><b>2→3단계 (RV vs Fagaras)</b>: 2단계에서 Sibiu를 확장하면 Fagaras는 g+h = 239+176 = <b>415</b>, Rimnicu Vilcea는 220+193 = <b>413</b>. 탐욕적은 h만 봐서 Fagaras(176)로 가지만, A*는 3단계에서 f가 작은 RV(413)를 꺼내요. "남은 거리"만이 아니라 "온 거리"까지 따지는 게 A*예요.</li>
+          <li><b>4단계 (450이 생성되지만 꺼내지 않음)</b>: Fagaras를 확장하면 Bucharest가 g=450, f=450으로 생성돼요. 목표지만 바로 끝내지 않아요. 전선에 f=417인 Pitesti가 더 작기 때문이에요. A*가 <b>꺼낼 때 목표 검사(late goal test)</b>를 하는 이유예요.</li>
+          <li><b>5~6단계 (418로 갱신 후 종료)</b>: 5단계에서 Pitesti를 확장하면 Bucharest를 g=418로 다시 찾아 reached를 450 → 418로 고쳐요. 6단계에서 f=418이 가장 작아 꺼내지고, 이때 목표 검사로 끝나요. 옛 기록 450은 전선에 남아 있다가 꺼낼 일이 없어요.</li>
+          <li><b>왜 최적인가</b>: h가 실제 남은 거리보다 크지 않으니(허용 가능), 어떤 노드의 f는 그 노드를 지나는 최선 경로 비용을 넘지 않아요. 그래서 최적해보다 비싼 f(450)를 가진 목표는 f=418 이하인 노드들이 다 처리되기 전에 꺼내질 수 없어요.</li>
+        </ul>
+        <p class="muted" style="font-size:13.5px">알고리즘을 UCS로 바꾸면 h를 0으로 보는 것과 같아서 같은 418을 찾지만 확장이 늘고, 탐욕적으로 바꾸면 450 경로를 반환해요. 출발 도시를 바꿔 가며 비교해 보세요.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="eyebrow">실습 · 메모리 제한 검색</span>
+      <h2>IDA* · RBFS · SMA* 실습: A*의 메모리를 줄이는 세 가지 방법</h2>
+      <p class="muted">A*는 전선과 reached를 다 들고 있어서 메모리를 많이 써요. 아래 세 방법은 <b>기억하는 양을 줄이는 대신 다시 계산</b>해요. 알고리즘을 고르고 한 단계씩 진행하며 오른쪽 상자(한계값·경로·메모리)가 어떻게 바뀌는지 보세요.</p>
+      <div class="card sim">
+        <div class="row" style="justify-content:flex-start;gap:10px 16px">
+          <div><div class="tiny muted">알고리즘</div><div class="pick" id="mlPick"></div></div>
+          <label class="switch" for="mlStart" style="font-size:14px">출발 <select id="mlStart" class="sel"></select></label>
+          <div id="mlMemRow" class="calc" style="min-width:220px"><label for="mlMem">메모리 칸 <input type="range" id="mlMem" min="4" max="12" step="1" value="5"><output id="mlMemO"></output></label></div>
+        </div>
+        <p class="muted" id="mlInfo" style="font-size:14px"></p>
+        <div class="row" style="justify-content:flex-start">
+          <button class="btn primary" id="mlStep">한 단계</button><button class="btn" id="mlBack">한 단계 뒤로</button><button class="btn" id="mlRun">끝까지</button><button class="btn" id="mlReset">처음으로</button>
+        </div>
+        <p class="verdict" id="mlStatus"></p>
+        <div class="grid2">
+          <div style="min-width:0"><div class="mapwrap"><svg id="mlMap" class="rmap" viewBox="0 0 640 420" role="img" aria-label="메모리 제한 검색 진행 지도"></svg></div><p class="tiny muted">초록 = 지금 메모리에 있는 현재 경로, 빨강 = 지금 보고 있는 도시</p></div>
+          <div style="min-width:0" id="mlSide"></div>
+        </div>
+        <div><h3 style="font-size:15px;margin-bottom:4px">진행 기록</h3><ol class="mllog" id="mlLog"></ol></div>
+      </div>
+      <div class="note">
+        <span class="badge">✎ 내 질문 노트 · 강의안에 없는 내용</span>
+        <h3>세 방법 한 줄 비교 (Arad 출발로 확인)</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th></th><th>무엇을 기억하나</th><th>무엇을 다시 하나</th><th>실습에서 볼 것</th></tr></thead>
+          <tbody>
+            <tr><td><b>IDA*</b></td><td>현재 경로 하나 (O(bd))</td><td>한계가 오를 때마다 뿌리부터 전부</td><td>한계 366 → 393 → 413 → 415 → 417 → 418. 각 반복에서 잘린 노드의 최소 f가 다음 한계가 돼요.</td></tr>
+            <tr><td><b>RBFS</b></td><td>현재 경로 + 경로 위 형제들의 f</td><td>되돌아갔던 부분 트리를 다시 내려갈 때</td><td>RV(413)로 갔다가 자식 최선 417 &gt; f-limit 415 → 되돌아가 RV=417 기록, Fagaras로 갔다가 450 &gt; 417 → 되돌아가 Fagaras=450 기록, 다시 RV로 내려가 418 도착.</td></tr>
+            <tr><td><b>SMA*</b></td><td>메모리 칸만큼의 노드 (넘치면 f가 가장 큰 잎을 잊음)</td><td>잊었던 자식이 다시 최선이 될 때</td><td>메모리 칸을 줄이면 "잊음" 기록이 늘고 생성 수가 늘어요. 너무 줄이면(최적 경로 길이보다 작게) 최적해를 못 찾을 수 있어요.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="muted" style="font-size:13.5px">공통점: 셋 다 h가 허용 가능하면 (메모리가 충분할 때) A*와 같은 최적 비용 418을 찾아요. 대가는 같은 노드를 여러 번 생성하는 시간이에요. "지금까지 생성한 노드 수"를 A*와 비교해 보세요.</p>
+      </div>
+    </div>
+
+    <div class="block">
       <span class="eyebrow">탐욕적 최선 우선</span>
       <h2>Greedy Best-First Search: f(n) = h(n)</h2>
       <div class="table-wrap">
@@ -3229,6 +3322,7 @@ EXPAND(problem, node): for a in ACTIONS(s): s' ← RESULT(s, a)
       <span class="eyebrow">메모리 제한</span>
       <h2>IDA*, RBFS, SMA*</h2>
       <p>A*의 공간 문제를 IDS의 아이디어로 풉니다. 상태를 기억하지 않는 대신 다시 계산합니다.</p>
+      <p class="note-link">✎ 직접 돌려 보는 실습은 이 탭 위쪽 "A* 실습" 바로 아래 "IDA* · RBFS · SMA* 실습"에 있어요.</p>
       <div class="grid3">
         <div class="card"><h3>IDA*</h3><p class="muted">컷오프를 깊이가 아니라 <b>f = g + h</b>로. 각 반복에서 컷오프를 넘은 노드들의 최소 f가 다음 컷오프. 메모리 <span class="k">O(bd)</span>. 8-퍼즐처럼 정수 비용에 잘 맞음. 비용이 실수면 반복 횟수 폭발.</p></div>
         <div class="card"><h3>RBFS</h3><p class="muted">재귀 DFS처럼 진행하되 대안 중 가장 좋은 f(<b>f-limit</b>)를 기억. 넘으면 되돌아가며 부분 트리의 최선 f를 부모에 기록. 선형 공간이지만 잊고 다시 생성해 시간이 늘어남.</p></div>
@@ -5025,6 +5119,175 @@ action ← rule.ACTION</pre>
     draw();
   })();
 
+
+  /* ---------- 3장: A* 실습 + 메모리 제한 실습 (IDA*, RBFS, SMA*) ---------- */
+  (function(){
+    if(!$('#asMap'))return;
+    const G='Bucharest',H=c=>CITY[c][2],SH=c=>c==='Rimnicu Vilcea'?'RV':c;
+    // 지도 그리기 (공통)
+    function drawMap(svg,st){
+      const pathSet=new Set(),onRoad=new Set();
+      (st.path||[]).forEach((c,i,a)=>{pathSet.add(c);if(i)onRoad.add(roadIdx(a[i-1],c));});
+      let h='';
+      ROADS.forEach(([a,b,w],i)=>{const [x1,y1]=px(a),[x2,y2]=px(b);h+=`<line class="rd${onRoad.has(i)?' pa':''}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/><text class="rdw" x="${(x1+x2)/2}" y="${(y1+y2)/2-3}">${w}</text>`;});
+      Object.keys(CITY).forEach(k=>{const [x,y]=px(k);
+        const cls=k===st.cur?'cur':pathSet.has(k)?'pa':(st.exp&&st.exp.has(k))?'ex':(st.fr&&st.fr.has(k))?'fr':(st.gone&&st.gone.has(k))?'gone':'';
+        h+=`<circle class="ct ${cls}${k===G?' goal':''}" cx="${x}" cy="${y}" r="${k===st.cur?9:7}"><title>${k}: h=${H(k)}</title></circle><text class="ctl" x="${x+10}" y="${y+4}">${k==='Rimnicu Vilcea'?'Rimnicu V.':k}</text>`;
+        if(st.lab&&st.lab[k]!=null)h+=`<text class="fl" x="${x}" y="${y-11}" text-anchor="middle">${st.lab[k]}</text>`;});
+      svg.innerHTML=h;
+    }
+    const names=Object.keys(CITY).sort();
+    const optSel=(el,def)=>{el.innerHTML=names.filter(c=>c!==G).map(c=>`<option ${c===def?'selected':''}>${c}</option>`).join('');};
+
+    /* ===== A* / 탐욕적 / UCS 추적 ===== */
+    function bestFirst(start,mode){
+      const fOf=n=>mode==='ucs'?n.g:mode==='greedy'?H(n.s):n.g+H(n.s);
+      let k=0;const mk=(s,g,p)=>({s,g,p,k:k++});
+      const root=mk(start,0,null),reached={[start]:root};let fr=[root];const exp=new Set(),steps=[];let gen=1;
+      const snapFr=()=>fr.filter(n=>reached[n.s]===n||true).slice().sort((a,b)=>fOf(a)-fOf(b)||H(a.s)-H(b.s)||a.k-b.k).map(n=>({s:n.s,g:n.g,h:H(n.s),f:fOf(n),stale:reached[n.s]!==n}));
+      steps.push({msg:`시작: ${start}(g=0, h=${H(start)}, f=${fOf(root)})만 전선에 있어요.`,fr:snapFr(),exp:new Set(),reached:{...reached},cur:null});
+      for(let it=0;it<60;it++){
+        if(!fr.length){steps.push({msg:'전선이 비었어요: 실패',fr:[],exp:new Set(exp),fail:true});break;}
+        fr.sort((a,b)=>fOf(a)-fOf(b)||H(a.s)-H(b.s)||a.k-b.k);const n=fr.shift();
+        if(reached[n.s]!==n){steps.push({msg:`${SH(n.s)}(f=${fOf(n)}) 꺼냄 → 옛 기록(reached에 더 싼 g=${reached[n.s].g}) → 버림`,pop:n,stale:true,fr:snapFr(),exp:new Set(exp),cur:n.s,path:path(n),gen});continue;}
+        if(n.s===G){steps.push({msg:`${n.s} 꺼냄 (g=${n.g}, h=0, f=${fOf(n)}) → 목표! 꺼낼 때 검사(late)해서 종료`,pop:n,goal:true,fr:snapFr(),exp:new Set(exp),cur:n.s,path:path(n),gen,done:n});break;}
+        exp.add(n.s);const kids=[];
+        for(const [c,w] of ADJ[n.s]){const ch=mk(c,n.g+w,n);gen++;const r=reached[c];let res;
+          if(!r){reached[c]=ch;fr.push(ch);res='new';}else if(ch.g<r.g){reached[c]=ch;fr.push(ch);res='better';}else res='worse';
+          kids.push({s:c,g:ch.g,h:H(c),f:fOf(ch),res,old:r?r.g:null});}
+        steps.push({msg:`${SH(n.s)} 꺼냄 (g=${n.g}, h=${H(n.s)}, f=${fOf(n)}) → 목표 아님 → 확장`,pop:n,kids,fr:snapFr(),exp:new Set(exp),cur:n.s,path:path(n),gen});
+      }
+      return steps;
+      function path(n){const p=[];for(let x=n;x;x=x.p)p.unshift(x.s);return p;}
+    }
+    const asSel=$('#asStart');optSel(asSel,'Arad');
+    let asMode='astar',asT=[],asI=0;
+    const MODES={astar:'A* (f = g + h)',greedy:'탐욕적 (f = h)',ucs:'UCS (f = g)'};
+    $('#asPick').innerHTML=Object.entries(MODES).map(([k,v])=>`<button data-m="${k}">${v}</button>`).join('');
+    function asReset(){asT=bestFirst(asSel.value,asMode);asI=0;asRender();
+      $('#asPick').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===asMode));
+      const res=Object.keys(MODES).map(m=>{const t=bestFirst(asSel.value,m),last=t[t.length-1];const ex=last.exp.size;return `<tr${m===asMode?' class="now"':''}><td>${MODES[m]}</td><td class="num-r">${last.done?last.done.g:'—'}</td><td class="num-r">${ex}</td><td>${last.done?last.path.map(SH).join(' → '):'실패'}</td></tr>`;}).join('');
+      $('#asCmp').innerHTML=res;}
+    function asRender(){const st=asT[asI],last=asI===asT.length-1;
+      const lab={};(st.fr||[]).forEach(n=>{if(!n.stale&&(lab[n.s]==null))lab[n.s]=asMode==='astar'?`${n.g}+${n.h}=${n.f}`:n.f;});
+      drawMap($('#asMap'),{cur:st.cur,exp:st.exp,fr:new Set((st.fr||[]).filter(n=>!n.stale).map(n=>n.s)),path:st.done?st.path:null,lab});
+      $('#asStatus').textContent=`${asI}단계 · `+st.msg+(st.done?` · 경로 ${st.path.map(SH).join(' → ')}, 비용 ${st.done.g}`:'');
+      const fmax=Math.max(1,...(st.fr||[]).map(n=>n.g+n.h));
+      $('#asFr').innerHTML=(st.fr||[]).map((n,i)=>`<tr${n.stale?' style="opacity:.55"':''}><td>${i===0&&!n.stale?'▶ ':''}${n.stale?'<s>':''}${SH(n.s)}${n.stale?'</s> 옛 기록':''}</td><td class="num-r">${n.g}</td><td class="num-r">${n.h}</td><td class="num-r"><b>${n.f}</b></td><td><span class="asbar"><i class="g" style="width:${n.g/fmax*100}%"></i><i class="h" style="width:${n.h/fmax*100}%"></i></span></td></tr>`).join('')||'<tr><td colspan="5" class="muted">비어 있음</td></tr>';
+      const RES={new:'처음 봄 → 전선 추가',better:'더 싼 길 → reached 갱신, 전선 추가',worse:'더 비쌈 → 버림'};
+      $('#asLog').innerHTML=asT.slice(1,asI+1).map((s,i)=>`<tr${i===asI-1?' class="now"':''}><td>${i+1}</td><td><b>${s.pop?SH(s.pop.s):'—'}</b>${s.pop?` <span class="muted">${s.pop.g}+${H(s.pop.s)}=${asMode==='ucs'?s.pop.g:asMode==='greedy'?H(s.pop.s):s.pop.g+H(s.pop.s)}</span>`:''}</td><td>${s.goal?'<b style="color:var(--good)">목표!</b>':s.stale?'옛 기록':'목표 아님'}</td><td>${(s.kids||[]).map(k=>`${SH(k.s)} <span class="muted">${k.g}+${k.h}=</span><b>${k.f}</b> → ${RES[k.res]}${k.old!=null&&k.res!=='new'?` <span class="muted">(기존 g=${k.old})</span>`:''}`).join('<br>')||'—'}</td></tr>`).join('');
+      const tw=$('#asLog').closest('.table-wrap');tw.scrollTop=tw.scrollHeight;
+      $('#asStep').disabled=$('#asRun').disabled=last;$('#asBack').disabled=asI===0;}
+    $('#asPick').addEventListener('click',e=>{const b=e.target.closest('button');if(b){asMode=b.dataset.m;asReset();}});
+    asSel.addEventListener('change',asReset);
+    $('#asStep').addEventListener('click',()=>{if(asI<asT.length-1){asI++;asRender();}});
+    $('#asBack').addEventListener('click',()=>{if(asI>0){asI--;asRender();}});
+    $('#asRun').addEventListener('click',()=>{asI=asT.length-1;asRender();});
+    $('#asReset').addEventListener('click',()=>{asI=0;asRender();});
+    asReset();
+
+    /* ===== IDA* 추적 ===== */
+    function idaTrace(start){
+      const ev=[];let limit=H(start),gen=1,iter=0;
+      while(iter<20){iter++;let next=Infinity,found=null;const cut=[];
+        ev.push({kind:'iter',msg:`반복 ${iter} 시작: f 한계 = ${limit}. 뿌리부터 다시 깊이 우선으로 내려가요.`,limit,path:[start],cur:start,cut:[],next:null,gen,iter});
+        (function dfs(s,g,path){if(found)return;const f=g+H(s);
+          if(f>limit){next=Math.min(next,f);cut.push(`${SH(s)} ${f}`);ev.push({kind:'cut',msg:`${SH(s)}: f = ${g}+${H(s)} = ${f} > 한계 ${limit} → 잘라냄 (다음 한계 후보 ${f})`,limit,path:path.concat(s),cur:s,cut:cut.slice(),next,gen,iter});return;}
+          if(s===G){found={g,path:path.concat(s)};ev.push({kind:'goal',msg:`${s}: f = ${g}+0 = ${f} ≤ ${limit} → 목표! 비용 ${g}`,limit,path:path.concat(s),cur:s,cut:cut.slice(),next,gen,iter,done:found});return;}
+          ev.push({kind:'exp',msg:`${SH(s)}: f = ${g}+${H(s)} = ${f} ≤ ${limit} → 확장`,limit,path:path.concat(s),cur:s,cut:cut.slice(),next,gen,iter});
+          for(const [c,w] of ADJ[s]){if(path.includes(c)||c===s)continue;gen++;dfs(c,g+w,path.concat(s));if(found)return;}
+        })(start,0,[]);
+        if(found)break;
+        ev.push({kind:'end',msg:`반복 ${iter} 끝: 목표 없음. 잘린 노드의 최소 f = ${next} → 다음 한계 ${limit} → ${next}`,limit,path:[],cur:null,cut:cut.slice(),next,gen,iter});
+        limit=next;}
+      return ev;}
+
+    /* ===== RBFS 추적 (AIMA Fig 3.26) ===== */
+    function rbfsTrace(start){
+      const ev=[];let gen=1;
+      function rec(node,flimit,stack){
+        const path=stack.concat(node.s);
+        if(node.s===G){ev.push({msg:`${node.s} 도착 → 목표! 비용 ${node.g}`,path,cur:node.s,stack:stk(stack,node,flimit),done:{g:node.g,path}});return {res:node};}
+        const succ=ADJ[node.s].filter(([c])=>!stack.includes(c)).map(([c,w])=>{gen++;const g=node.g+w;return {s:c,g,f:Math.max(g+H(c),node.f)};});
+        if(!succ.length){ev.push({msg:`${SH(node.s)}: 자식 없음 → 실패`,path,cur:node.s,stack:stk(stack,node,flimit)});return {res:null,f:Infinity};}
+        for(let guard=0;guard<30;guard++){
+          succ.sort((a,b)=>a.f-b.f);const best=succ[0],alt=succ[1]?succ[1].f:Infinity;
+          const list=succ.map(s=>`${SH(s.s)} ${s.f}`).join(', ');
+          if(best.f>flimit){ev.push({msg:`${SH(node.s)}의 자식 [${list}] 중 최선 ${SH(best.s)} f=${best.f} > f-limit ${fl(flimit)} → 되돌아감. ${SH(node.s)}의 f 기록값을 ${best.f}(으)로 바꿔 둠(백업)`,path,cur:node.s,stack:stk(stack,node,flimit),backup:{s:node.s,f:best.f}});return {res:null,f:best.f};}
+          const nl=Math.min(flimit,alt);
+          ev.push({msg:`${SH(node.s)} 확장: 자식 [${list}]. 최선 ${SH(best.s)}(f=${best.f})로 내려가요. 새 f-limit = min(${fl(flimit)}, 차선 ${fl(alt)}) = ${fl(nl)}`,path:path.concat(best.s),cur:best.s,stack:stk(stack,node,flimit)});
+          const r=rec(best,nl,path);best.f=r.f;if(r.res)return r;
+          ev.push({msg:`${SH(best.s)} 쪽에서 돌아옴: ${SH(best.s)}의 f 기록값 = ${fl(best.f)}, 그리고 ${SH(node.s)}에서 다시 고름`,path,cur:node.s,stack:stk(stack,node,flimit)});}
+        return {res:null,f:Infinity};}
+      const fl=x=>x===Infinity?'∞':x;
+      function stk(stack,node,flimit){return stack.concat(node.s).map(SH).join(' → ')+` (f-limit ${fl(flimit)})`;}
+      const root={s:start,g:0,f:H(start)};
+      ev.push({msg:`시작: ${start} f=${root.f}, f-limit = ∞`,path:[start],cur:start,stack:start});
+      rec(root,Infinity,[]);ev.forEach(e=>e.gen=gen);return ev;}
+
+    /* ===== SMA* 추적 (단순화) ===== */
+    function smaTrace(start,M){
+      const ev=[];let id=0,gen=1;
+      const mk=(s,g,p)=>({id:id++,s,g,f:Math.max(g+H(s),p?p.f:0),p,kids:[],forgot:Infinity,depth:p?p.depth+1:0});
+      const root=mk(start,0,null);let mem=[root];
+      const leaves=()=>mem.filter(n=>!n.kids.length);
+      const snap=(msg,extra)=>ev.push(Object.assign({msg,mem:mem.map(n=>({s:n.s,f:n.f,leaf:!n.kids.length,depth:n.depth,forgot:n.forgot})),path:pathOf(extra&&extra.cur),cur:extra&&extra.cur?extra.cur.s:null,gen},extra||{}));
+      const pathOf=n=>{const p=[];for(let x=n;x;x=x.p)p.unshift(x.s);return p;};
+      snap(`시작: 메모리 ${M}칸. ${start}(f=${root.f})만 메모리에 있어요.`);
+      for(let it=0;it<80;it++){
+        const L=leaves().filter(n=>n.f<Infinity);if(!L.length){snap('확장할 잎이 없어요 → 실패 (메모리가 너무 작아요)',{fail:true});break;}
+        L.sort((a,b)=>a.f-b.f||b.depth-a.depth);const b=L[0];
+        if(b.s===G){snap(`${b.s} 꺼냄 (f=${b.f}) → 목표! 비용 ${b.g}`,{cur:b,done:{g:b.g}});break;}
+        const pathS=pathOf(b);const succ=ADJ[b.s].filter(([c])=>!pathS.includes(c));
+        if(!succ.length){b.f=Infinity;snap(`${SH(b.s)}: 갈 곳 없음 → f=∞`,{cur:b});continue;}
+        const regen=b.forgot<Infinity,bf=b.f;b.forgot=Infinity;
+        const kids=succ.map(([c,w])=>{gen++;return mk(c,b.g+w,b);});
+        // 깊이 한계: 메모리 M칸이면 깊이 M-1에서 더 내려갈 수 없음
+        kids.forEach(k=>{if(k.depth>=M-1&&k.s!==G)k.f=Infinity;});
+        b.kids=kids;mem.push(...kids);const kidTxt=kids.map(k=>`${SH(k.s)} ${k.f===Infinity?'∞':k.f}`).join(', ');
+        const drops=[];
+        while(mem.length>M){const cand=leaves().filter(n=>n!==root);
+          cand.sort((x,y)=>y.f-x.f||x.depth-y.depth);const w=cand[0];if(!w)break;
+          mem.splice(mem.indexOf(w),1);const par=w.p;par.kids.splice(par.kids.indexOf(w),1);par.forgot=Math.min(par.forgot,w.f);drops.push(`${SH(w.s)}(f=${w.f===Infinity?'∞':w.f})`);
+          if(!par.kids.length)par.f=par.forgot;}
+        // 백업: 부모 f = 자식 f의 최소 (잊은 것 포함)
+        for(let x=b;x;x=x.p){const m=Math.min(...x.kids.map(k=>k.f),x.forgot);if(x.kids.length||x.forgot<Infinity)x.f=Math.max(x.f,Math.min(m,Infinity));}
+        snap(`${SH(b.s)}(f=${bf}) 확장${regen?' (전에 잊었던 자식을 다시 생성)':''}: ${kidTxt}`+(drops.length?` · 메모리 초과 → f가 가장 큰 잎 ${drops.join(', ')} 잊음(값은 부모에 기록)`:''),{cur:b,drops});
+      }
+      return ev;}
+
+    /* ===== 메모리 제한 실습 UI ===== */
+    const mSel=$('#mlStart');optSel(mSel,'Arad');
+    let mAlg='ida',mT=[],mI=0;
+    const MA={ida:'IDA*',rbfs:'RBFS',sma:'SMA*'};
+    $('#mlPick').innerHTML=Object.entries(MA).map(([k,v])=>`<button data-m="${k}">${v}</button>`).join('');
+    function mReset(){const M=+$('#mlMem').value;$('#mlMemO').textContent=M+'칸';
+      mT=mAlg==='ida'?idaTrace(mSel.value):mAlg==='rbfs'?rbfsTrace(mSel.value):smaTrace(mSel.value,M);mI=0;
+      $('#mlPick').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===mAlg));
+      $('#mlMemRow').hidden=mAlg!=='sma';
+      const astar=bestFirst(mSel.value,'astar');const al=astar[astar.length-1];
+      $('#mlInfo').innerHTML=({ida:'<b>IDA*</b>: 깊이 대신 <b>f 한계</b>로 자르는 반복 깊이 심화. 한 반복 = 한계 안쪽만 깊이 우선으로 훑기. 잘린 노드들의 최소 f가 다음 한계. 메모리는 현재 경로뿐.',rbfs:'<b>RBFS</b>: 재귀 깊이 우선이지만, 지금 가는 길의 f가 <b>차선책(f-limit)</b>보다 커지면 되돌아가 그 부분 트리의 최선 f를 부모에 적어 둔다(백업). 나중에 그 값이 다시 최선이 되면 다시 내려간다.',sma:'<b>SMA*</b>: A*처럼 f가 가장 작은 잎을 확장하다가, 메모리 칸이 꽉 차면 <b>f가 가장 큰 잎을 잊고</b> 그 값을 부모에 적어 둔다. 부모가 다시 최선이 되면 잊었던 자식을 다시 생성한다. 경로가 메모리 칸만큼 길어지면 그 아래로는 더 내려갈 수 없어서 f=∞로 표시돼요. 메모리 칸 수를 줄여 보세요(4칸이면 최적해 418 대신 450을 찾아요).'})[mAlg]+` <span class="muted">(비교: 같은 출발에서 A*는 ${al.exp.size}번 확장, 비용 ${al.done?al.done.g:'—'})</span>`;
+      mRender();}
+    function mRender(){const st=mT[mI],last=mI===mT.length-1;
+      drawMap($('#mlMap'),{cur:st.cur,path:st.path||[],exp:new Set()});
+      $('#mlStatus').textContent=`${mI}/${mT.length-1}단계 · `+st.msg;
+      let side='';
+      if(mAlg==='ida')side=`<div class="mlk"><span>현재 f 한계</span><b>${st.limit}</b></div><div class="mlk"><span>다음 한계 후보 (잘린 노드의 최소 f)</span><b>${st.next==null||st.next===Infinity?'—':st.next}</b></div><div class="mlk"><span>반복 회차</span><b>${st.iter}</b></div><div class="mlk"><span>이번 반복에서 잘린 노드</span><b style="font-weight:500">${(st.cut||[]).join(', ')||'—'}</b></div><div class="mlk"><span>메모리 (현재 경로)</span><b style="font-weight:500">${(st.path||[]).map(SH).join(' → ')||'—'}</b></div>`;
+      else if(mAlg==='rbfs')side=`<div class="mlk"><span>현재 재귀 경로</span><b style="font-weight:500">${st.stack||'—'}</b></div><div class="mlk"><span>메모리</span><b style="font-weight:500">경로 위 노드와 그 형제들의 f값만</b></div>`;
+      else side=`<div class="mlk"><span>메모리 (${st.mem.length}/${+$('#mlMem').value}칸)</span></div><div class="mlmem">${st.mem.map(n=>`<span class="chip"${n.leaf?'':' style="opacity:.75"'}>${'·'.repeat(n.depth)}${SH(n.s)} <b>${n.f===Infinity?'∞':n.f}</b>${n.forgot<Infinity?` <i title="잊은 자식의 최선 f">잊음 ${n.forgot}</i>`:''}</span>`).join('')}</div>${st.drops&&st.drops.length?`<p class="tiny" style="color:var(--amber)">이번에 잊은 잎: ${st.drops.join(', ')}</p>`:''}`;
+      side+=`<div class="mlk"><span>지금까지 생성한 노드 수</span><b>${st.gen}</b></div>`;
+      $('#mlSide').innerHTML=side;
+      $('#mlLog').innerHTML=mT.slice(0,mI+1).map((s,i)=>`<li${i===mI?' class="now"':''}>${s.msg}</li>`).join('');
+      const lw=$('#mlLog');lw.scrollTop=lw.scrollHeight;
+      $('#mlStep').disabled=$('#mlRun').disabled=last;$('#mlBack').disabled=mI===0;}
+    $('#mlPick').addEventListener('click',e=>{const b=e.target.closest('button');if(b){mAlg=b.dataset.m;mReset();}});
+    mSel.addEventListener('change',mReset);$('#mlMem').addEventListener('input',mReset);
+    $('#mlStep').addEventListener('click',()=>{if(mI<mT.length-1){mI++;mRender();}});
+    $('#mlBack').addEventListener('click',()=>{if(mI>0){mI--;mRender();}});
+    $('#mlRun').addEventListener('click',()=>{mI=mT.length-1;mRender();});
+    $('#mlReset').addEventListener('click',()=>{mI=0;mRender();});
+    mReset();
+  })();
   const ALGS={bfs:'너비 우선 (BFS)',ucs:'균일 비용 (UCS)',dfs:'깊이 우선 (DFS)',greedy:'탐욕적 최선 우선',astar:'A*'};
   const algPick=$('#algPick');
   algPick.innerHTML=Object.entries(ALGS).map(([k,v])=>`<button data-a="${k}">${v}</button>`).join('');

@@ -461,6 +461,7 @@ ol.sub{margin:0;padding:0;list-style:none;display:grid;gap:6px}
 .rc-list input{margin-top:5px;width:16px;height:16px;accent-color:var(--good);flex:none}
 .tag.expt-tag{background:var(--amber-soft);color:var(--amber);font-family:var(--sans);font-weight:600}
 .exdiv{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:26px 0 10px;padding:10px 14px;border-left:4px solid var(--accent,#6b5bd6);background:color-mix(in srgb,var(--accent,#6b5bd6) 8%,transparent);border-radius:8px}.exdiv b{font-size:1.15rem}.exdiv small{color:var(--muted,#777)}#exCh{margin-bottom:6px}#exCh button{font-weight:600}
+.gencard{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));background:linear-gradient(180deg,var(--accent-soft),var(--surface) 70%)}.lvdots{display:flex;gap:6px;flex-wrap:wrap}.lvdots i{width:22px;height:8px;border-radius:4px;background:var(--surface-2);border:1px solid var(--line)}.lvdots i.on{background:var(--accent);border-color:var(--accent)}.lvdots i.nx{outline:2px dashed var(--accent);outline-offset:1px}.lvnext{margin:0;font-size:14.5px}.genn{display:inline-flex;align-items:center;gap:6px;font-size:14px}.genn select{font:inherit;padding:5px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}.genwait{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px;padding:10px 12px;border-radius:10px;background:var(--surface-2)}.genwait>span:nth-child(2){flex:1;min-width:180px}.spin{width:18px;height:18px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite;flex:none}@keyframes spin{to{transform:rotate(360deg)}}.tag.ai{background:var(--accent-soft);color:var(--accent)}.dq{gap:8px}.dq.ok{box-shadow:inset 3px 0 0 var(--good)}.dq.no{box-shadow:inset 3px 0 0 var(--bad)}.dq-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.dq-h b.ok{color:var(--good)}.dq-h b.no{color:var(--bad)}.dq-a{display:flex;gap:6px 18px;flex-wrap:wrap;font-size:14px}.dq details.ans summary{font-size:13.5px}
 </style>
 </head>
 <body>
@@ -6068,21 +6069,27 @@ action ← rule.ACTION</pre>
   /* ---------- 퀴즈 ---------- */
   let qs,qi,score,wrong,answered,full,kind,unans,timedOut,recorded,startedAt=0,deadline=0,timer=null;
   const QUIZ_SEC=7*60;
+  let limitSec=QUIZ_SEC,curLv=0,picks=new Map(),setInfo=null;
   function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
   const fmtClock=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
-  const histKey=()=>'ai.hist.'+ch+(ch===10?'.v2':'');
+  const histKeyFor=c=>'ai.hist.'+c+(c===10?'.v2':'');
+  const histKey=()=>histKeyFor(ch);
   const getHist=()=>store.get(histKey(),[]);
   const qByIdx=ids=>ids.map(i=>CH[ch].quiz[i]).filter(Boolean);
+  // 회차 기록의 문제 목록: 새 기록은 d(문제+내 답), 옛 기록은 오답 번호만
+  const recItems=r=>r.d?r.d.map(x=>({q:x.q||CH[ch].quiz[x.i],c:x.c})).filter(x=>x.q):[...r.w.map(i=>({q:CH[ch].quiz[i],c:-2})),...r.u.map(i=>({q:CH[ch].quiz[i],c:-1}))].filter(x=>x.q);
+  const recWrong=r=>recItems(r).filter(x=>x.c!==x.q[2]);
   function stopTimer(){if(timer){clearInterval(timer);timer=null}}
   function tick(){
     const left=(deadline-Date.now())/1000,el=$('#qTimer');
     if(el){el.textContent='⏱ '+fmtClock(left);el.classList.toggle('low',left<=60)}
     if(left<=0)timeUp();
   }
-  function startQuiz(list,k){
+  function startQuiz(list,k,o){
     stopTimer();full=list===CH[ch].quiz;kind=k||(full?'전체':'다시 풀기');
+    limitSec=(o&&o.sec)||QUIZ_SEC;curLv=(o&&o.lv)||0;setInfo={list,k:kind,o};picks=new Map();
     qs=shuffle(list);qi=0;score=0;wrong=[];unans=new Set();timedOut=false;recorded=false;
-    startedAt=Date.now();deadline=startedAt+QUIZ_SEC*1000;timer=setInterval(tick,250);renderQ();
+    startedAt=Date.now();deadline=startedAt+limitSec*1000;timer=setInterval(tick,250);renderQ();
   }
   function timeUp(){
     stopTimer();timedOut=true;
@@ -6092,60 +6099,203 @@ action ← rule.ACTION</pre>
   function wrongCard(q,u){
     return `<div class="card"><b>${esc(q[0])}</b>${u?'<span class="tag warn" style="justify-self:start">미응답</span>':''}<span>정답: ${esc(q[1][q[2]])}</span><span class="muted">${esc(q[3])}</span>${q[4]?`<p class="xwhy">${esc(q[4])}</p>`:''}</div>`;
   }
+  // 기록 자세히 보기: 문제, 내 답, 정답, 해설, 보기별 풀이
+  function detailCard(q,c,n){
+    const ok=c===q[2],my=c>=0?q[1][c]:(c===-1?'미응답':'(옛 기록이라 고른 답은 저장 안 됨)');
+    return `<div class="card dq ${ok?'ok':'no'}"><div class="dq-h"><span class="num">${n}</span><b class="${ok?'ok':'no'}">${ok?'✓ 정답':c===-1?'✗ 미응답':'✗ 오답'}</b>${q[6]?`<span class="tag">${esc(q[6])}</span>`:''}</div>
+      <b>${esc(q[0])}</b>
+      <div class="dq-a"><span>내 답: <b>${esc(my)}</b></span><span>정답: <b>${esc(q[1][q[2]])}</b></span></div>
+      <span class="muted">${esc(q[3])}</span>${q[4]?`<p class="xwhy">${esc(q[4])}</p>`:''}
+      ${q[5]?`<details class="ans"><summary>보기별 풀이</summary><ul class="onotes">${q[5].map((t,j)=>`<li class="${j===q[2]?'c':j===c?'p':''}"><span class="l">${'ABCD'[j]}</span><span><b>${esc(q[1][j])}</b>${j===c&&j!==q[2]?' (내가 고른 답)':''} — ${esc(t)}</span></li>`).join('')}</ul></details>`:''}</div>`;
+  }
   function record(){
     if(recorded)return;recorded=true;
     const idx=q=>CH[ch].quiz.indexOf(q);
     const h=getHist();
-    h.unshift({t:Date.now(),k:kind,s:score,n:qs.length,w:wrong.filter(q=>!unans.has(q)).map(idx),u:[...unans].map(idx),sec:Math.min(QUIZ_SEC,Math.round((Date.now()-startedAt)/1000)),to:timedOut});
+    const d=qs.map(q=>{const i=idx(q),c=picks.has(q)?picks.get(q):-1;return i>=0?{i,c}:{q,c}});
+    h.unshift({t:Date.now(),k:kind,s:score,n:qs.length,w:wrong.filter(q=>!unans.has(q)).map(idx).filter(i=>i>=0),u:[...unans].map(idx).filter(i=>i>=0),sec:Math.min(limitSec,Math.round((Date.now()-startedAt)/1000)),lim:limitSec,to:timedOut,lv:curLv||undefined,d});
     store.set(histKey(),h.slice(0,30));
+    qsync.push(ch);
   }
+
+  /* ---------- 기록 동기화: 로그인하면 본인 전용 저장소에도 저장 (다른 기기에서 이어 보기) ---------- */
+  const qsync={db:null,uid:null,
+    doc(c){return this.db.doc('data/users/'+this.uid+'/quizhist_'+c)},
+    async push(c){if(!this.db)return;
+      try{let h=store.get(histKeyFor(c),[]),s=JSON.stringify(h);while(s.length>200000&&h.length>1){h=h.slice(0,-1);s=JSON.stringify(h)}
+        await this.doc(c).set({h:s,lv:store.get('ai.gen.lv.'+c,null),pool:JSON.stringify(store.get('ai.gen.pool.'+c,[]).slice(-80)),at:Date.now()});}catch(e){}},
+    async pull(){
+      for(const c of [1,2,3,10]){try{
+        const snap=await this.doc(c).get();if(!snap.exists)continue;const v=snap.data()||{};
+        const mine=store.get(histKeyFor(c),[]),seen=new Set(mine.map(r=>r.t));
+        let theirs=[];try{theirs=JSON.parse(v.h||'[]')}catch(e){}
+        const add=theirs.filter(r=>r&&r.t&&!seen.has(r.t));
+        if(add.length)store.set(histKeyFor(c),[...mine,...add].sort((a,b)=>b.t-a.t).slice(0,30));
+        if(typeof v.lv==='number'&&v.lv>store.get('ai.gen.lv.'+c,0))store.set('ai.gen.lv.'+c,v.lv);
+        try{const p=JSON.parse(v.pool||'[]'),mp=store.get('ai.gen.pool.'+c,[]);if(p.length>mp.length)store.set('ai.gen.pool.'+c,p)}catch(e){}
+        if(add.length<theirs.length||mine.length)this.push(c);
+      }catch(e){}}
+      if(!qs&&document.getElementById('quizBox'))quizHome();
+    }};
+  (async()=>{try{if(!window.claude||!claude.use)return;const [d,u]=await Promise.all([claude.use('db'),claude.use('user')]);if(!d||!u)return;const id=await u.id();if(!id)return;qsync.db=d;qsync.uid=id;qsync.pull();}catch(e){}})();
+
+  /* ---------- AI 새 문제 (난이도 업) ---------- */
+  const LV=['','정의·용어를 정확히 아는지','정의를 짧은 예에 적용','비슷한 두 개념을 구분·비교','처음 보는 상황에 적용해 분류·판단','간단한 계산이나 절차 한 단계 추적','여러 단계 추적·계산, 그럴듯한 함정 보기 포함','두세 개념을 결합하고, 조건이 바뀌면 결론이 어떻게 바뀌는지','반례 찾기, 참/거짓 판정의 근거까지 따져야 하는 문제','복합 시나리오에서 계산과 성질 판단을 함께','시험 최고난도: 미묘한 조건 차이와 증명 아이디어'];
+  let sampleFn,genCtl=null,genBusy=false;
+  (async()=>{try{sampleFn=window.claude&&claude.use?await claude.use('sample'):null}catch(e){sampleFn=null}if(!qs&&$('#genCard'))renderGen();})();
+  const genScope=()=>ch===10?{chs:[1,2,10],name:'1·2장(과제 1 범위)'}:{chs:[ch],name:CH[ch].short};
+  function lectureText(chs){
+    const ids=tabs.filter(b=>chs.includes(+b.dataset.ch)&&!/recall$|^hw-exam$/.test(b.dataset.tab)).map(b=>b.dataset.tab);
+    let out='';
+    for(const id of ids){const p=document.getElementById(id);if(!p)continue;
+      const c=p.cloneNode(true);
+      c.querySelectorAll('.note,svg,script,style,canvas,button,input,select,textarea,.toolbar,.pick,[aria-hidden="true"]').forEach(e=>e.remove());
+      c.querySelectorAll('td,th,li,p,h1,h2,h3,h4,div,dt,dd,tr,br').forEach(e=>e.append(' '));
+      const t=c.textContent.replace(/\s+/g,' ').trim();
+      if(t)out+=`\n## ${(tabs.find(b=>b.dataset.tab===id)||{}).textContent||id} (${(CH[(tabs.find(b=>b.dataset.tab===id)||{}).dataset?.ch]||{}).short||''})\n${t}\n`;
+    }
+    return out.slice(0,90000);
+  }
+  function genPrompt(lv,n,scope){
+    const pool=store.get('ai.gen.pool.'+ch,[]).slice(-60);
+    const bank=CH[ch].quiz.map(q=>q[0]);
+    return `당신은 대학 과목 "인공지능입문"(교재: Russell & Norvig, 인공지능: 현대적 접근방식 4판)의 시험 출제자입니다.
+아래 [강의 자료]에 있는 내용만 근거로 ${scope.name} 객관식 문제 ${n}문항을 새로 만드세요.
+
+[난이도] Lv ${lv} / 10 — ${LV[lv]}.
+학생은 이전 세트(Lv ${Math.max(1,lv-1)})보다 살짝 어려운 문제를 원합니다. 이 난이도에 맞게 내되, 강의 범위를 벗어나 어려워지면 안 됩니다.
+
+[규칙]
+1. 강의 자료에 근거가 있는 개념·예제·수치만 사용. 자료에 없는 사실이나 수치를 지어내지 말 것.
+2. 보기 4개, 정답은 정확히 1개. 오답 보기는 학생이 실제로 헷갈리는 오개념으로 그럴듯하게.
+3. 계산·추적 문제는 답을 정하기 전에 직접 다시 계산해 검산할 것. 정답이 모호하면 그 문항은 버리고 다른 문항을 낼 것.
+4. [이미 낸 문제]와 같은 질문 금지. 같은 개념이라도 다른 상황, 다른 수치, 다른 각도로.
+5. 주제를 골고루(한 주제에서 2문항 이하).
+6. 한국어로. 용어는 강의 표기를 따르고 필요하면 영어를 괄호로 병기.
+7. "why"는 2~4문장으로, 정답의 근거가 된 강의 내용을 짚어 설명. "notes"는 보기 4개 각각이 왜 맞거나 틀린지 한 문장씩(보기 순서대로).
+
+[출력 형식] JSON 배열만 출력:
+[{"topic":"주제 (짧게)","q":"문제","opts":["보기1","보기2","보기3","보기4"],"a":정답 보기 번호(0~3),"brief":"정답 한 줄 요약","why":"정답 해설","notes":["보기1 풀이","보기2 풀이","보기3 풀이","보기4 풀이"]}]
+
+[이미 낸 문제]
+${[...bank,...pool].map(s=>'- '+s).join('\n')}
+
+[강의 자료]
+${lectureText(scope.chs)}`;
+  }
+  function cleanGen(arr){
+    if(!Array.isArray(arr))return [];
+    return arr.filter(x=>x&&typeof x.q==='string'&&Array.isArray(x.opts)&&x.opts.length===4&&x.opts.every(o=>typeof o==='string'&&o.trim())&&Number.isInteger(+x.a)&&+x.a>=0&&+x.a<4)
+      .map(x=>{const notes=Array.isArray(x.notes)&&x.notes.length===4?x.notes.map(String):null;
+        const ord=shuffle([0,1,2,3]);  // 정답 위치가 한쪽으로 쏠리지 않게 보기 순서를 섞음
+        return [x.q.trim(),ord.map(i=>x.opts[i].trim()),ord.indexOf(+x.a),String(x.brief||'').trim(),String(x.why||'').trim(),notes?ord.map(i=>notes[i]):null,String(x.topic||'').trim()];});
+  }
+  const ERR={rate_limited:'요청이 많거나 사용 한도에 닿았어요. 잠시 뒤 다시 눌러 주세요.',session_expired:'claude.ai에 다시 로그인한 뒤 눌러 주세요.',invalid_json:'문제 형식이 깨져서 받지 못했어요. 한 번 더 눌러 주세요.',refused:'이번 요청은 만들지 못했어요. 문항 수를 줄여 다시 해 보세요.',empty_completion:'빈 응답이 왔어요. 문항 수를 줄여 다시 해 보세요.',prompt_too_large:'강의 자료가 너무 길어 보내지 못했어요.'};
+  async function generate(lv){
+    if(genBusy||!sampleFn)return;
+    lv=Math.max(1,Math.min(10,lv));
+    const n=+($('#genN')||{value:5}).value||5,scope=genScope(),st=$('#genStatus');
+    genBusy=true;genCtl=new AbortController();renderGen();
+    const show=t=>{const s=$('#genStatus');if(s)s.innerHTML=t};
+    show(`<div class="genwait"><span class="spin"></span><span>Lv ${lv} 문제 ${n}개를 만드는 중… 강의 자료를 읽고 검산까지 하느라 1~2분쯤 걸릴 수 있어요. <b id="genCnt"></b></span><button class="btn" id="genStop">취소</button></div>`);
+    $('#genStop').onclick=()=>genCtl&&genCtl.abort();
+    try{
+      const raw=await sampleFn.json(genPrompt(lv,n,scope),{modelTier:'complex',cache:false,signal:genCtl.signal,
+        onText:({text})=>{const k=(text.match(/"q"\s*:/g)||[]).length,el=$('#genCnt');if(el)el.textContent=k?`(${Math.min(k,n)} / ${n} 작성 중)`:''}});
+      const list=cleanGen(raw);
+      if(!list.length)throw {code:'invalid_json'};
+      store.set('ai.gen.lv.'+ch,lv);
+      store.set('ai.gen.pool.'+ch,[...store.get('ai.gen.pool.'+ch,[]),...list.map(q=>q[0])].slice(-120));
+      genBusy=false;genCtl=null;
+      startQuiz(list,`AI 새 문제 · Lv ${lv}`,{sec:list.length*90,lv});
+    }catch(e){
+      genBusy=false;genCtl=null;
+      if(e&&['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(e.code)){sampleFn=null;renderGen();return}
+      renderGen();
+      if(!e||e.code!=='cancelled')show(`<p class="tag warn" style="white-space:normal">${esc(ERR[e&&e.code]||'문제를 만들지 못했어요. 잠시 뒤 다시 눌러 주세요.')}</p>`);
+    }
+  }
+  function renderGen(){
+    const box=$('#genCard');if(!box)return;
+    const cur=store.get('ai.gen.lv.'+ch,null),next=Math.min(10,(cur||2)+1),same=cur||2;
+    const dots=Array.from({length:10},(_,i)=>`<i class="${i<(cur||0)?'on':''}${i===next-1?' nx':''}" title="Lv ${i+1}: ${LV[i+1]}"></i>`).join('');
+    const gens=getHist().filter(r=>r.lv);
+    box.innerHTML=`<div class="qhead"><h3>AI 새 문제 · 난이도 업</h3><span class="counter">${cur?`지금 Lv ${cur} / 10`:'아직 안 풀었어요'}</span></div>
+      <p class="muted">${esc(genScope().name)} 강의 자료(요약 노트·본문·실습 탭의 강의 내용, 내 질문 노트는 제외)만 근거로 Claude가 <b>매번 새</b> 객관식 문제를 만들어요. 이미 낸 문제는 피하고, 버튼을 누를 때마다 난이도가 한 단계씩 올라가요. 문항당 90초 타이머, 풀고 나면 기록에 문제·내 답·해설이 모두 저장돼요.</p>
+      <div class="lvdots" aria-label="난이도 단계">${dots}</div>
+      <p class="lvnext"><b>다음: Lv ${next}</b> · ${esc(LV[next])}</p>
+      ${sampleFn===undefined?'<p class="muted">Claude 연결 확인 중…</p>':sampleFn===null?'<p class="muted">이 기능은 claude.ai에서 이 페이지를 열고 로그인했을 때, 그리고 Claude 사용을 허용했을 때만 동작해요. 처음 누르면 허용할지 묻는 창이 떠요.</p>':
+      `<div class="row left"><label class="genn">문항 수 <select id="genN"${genBusy?' disabled':''}>${[5,8,10].map(v=>`<option value="${v}"${v===store.get('ai.gen.n',5)?' selected':''}>${v}</option>`).join('')}</select></label>
+        <button class="btn primary" id="genUp"${genBusy?' disabled':''}>새 문제 만들기 · Lv ${next}로 올리기</button>
+        <button class="btn" id="genSame"${genBusy?' disabled':''}>Lv ${same} 그대로 새로</button>
+        ${same>1?`<button class="btn" id="genDown"${genBusy?' disabled':''}>한 단계 내려서 (Lv ${same-1})</button>`:''}</div>`}
+      <div id="genStatus"></div>
+      ${gens.length?`<p class="muted" style="font-size:13.5px">지금까지 AI 세트 ${gens.length}회 · 최근 점수 ${gens.slice(0,5).map(r=>`Lv ${r.lv} ${r.s}/${r.n}`).join(' · ')}</p>`:''}`;
+    const sel=$('#genN');if(sel)sel.onchange=()=>store.set('ai.gen.n',+sel.value);
+    const u=$('#genUp'),s=$('#genSame'),d=$('#genDown');
+    if(u)u.onclick=()=>generate(next);if(s)s.onclick=()=>generate(same);if(d)d.onclick=()=>generate(same-1);
+  }
+
   function quizHome(){
     stopTimer();qs=null;
     const box=$('#quizBox'),h=getHist(),c=CH[ch];
     const allWrong=[...new Set(h.flatMap(r=>[...r.w,...r.u]))].sort((a,b)=>a-b);
+    const genWrong=[];{const seen=new Set();h.forEach(r=>{if(r.lv&&r.d)recWrong(r).forEach(x=>{if(!seen.has(x.q[0])){seen.add(x.q[0]);genWrong.push(x.q)}})})}
     const rows=h.map((r,ri)=>{
-      const ids=[...r.w,...r.u],pct=Math.round(r.s/r.n*100);
+      const ids=recWrong(r),pct=Math.round(r.s/r.n*100);
       const d=new Date(r.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
-      return `<div class="hrow"><div class="hmeta"><b>${d}</b><span class="tag">${esc(r.k)}</span>${r.to?'<span class="tag warn">시간 종료</span>':''}</div>
-        <div class="hscore"><span class="big">${r.s} / ${r.n}</span> <span class="muted">${pct}% · ${fmtClock(r.sec)} 사용${r.u.length?` · 미응답 ${r.u.length}`:''}</span></div>
-        ${ids.length?`<div class="row left"><button class="btn" data-act="view" data-r="${ri}" aria-expanded="false">오답 확인 (${ids.length})</button><button class="btn primary" data-act="redo" data-r="${ri}">오답 다시 풀기</button></div><div class="review" id="hw${ri}" hidden></div>`:'<p class="muted">오답 없이 모두 맞혔어요.</p>'}</div>`;
+      return `<div class="hrow"><div class="hmeta"><b>${d}</b><span class="tag${r.lv?' ai':''}">${esc(r.k)}</span>${r.to?'<span class="tag warn">시간 종료</span>':''}</div>
+        <div class="hscore"><span class="big">${r.s} / ${r.n}</span> <span class="muted">${pct}% · ${fmtClock(r.sec)} 사용${r.u.length||(r.d&&r.d.some(x=>x.c===-1))?` · 미응답 ${r.d?r.d.filter(x=>x.c===-1).length:r.u.length}`:''}</span></div>
+        <div class="row left">${r.d?`<button class="btn" data-act="all" data-r="${ri}" aria-expanded="false">자세히 보기 (${r.d.length}문항 · 해설)</button>`:''}
+        ${ids.length?`<button class="btn" data-act="view" data-r="${ri}" aria-expanded="false">오답 확인 (${ids.length})</button><button class="btn primary" data-act="redo" data-r="${ri}">오답 다시 풀기</button>`:''}
+        ${r.lv&&r.d?`<button class="btn" data-act="again" data-r="${ri}">이 세트 다시 풀기</button>`:''}</div>
+        ${ids.length?'':'<p class="muted">오답 없이 모두 맞혔어요.</p>'}<div class="review" id="hw${ri}" hidden></div></div>`;
     }).join('');
     box.innerHTML=`<div class="qcard"><div class="qhead"><h3>${c.short} 퀴즈</h3><span class="counter">${c.quiz.length}문항 · 제한 시간 7분</span></div>
       <p class="muted">시작 버튼을 누르면 7분 타이머가 바로 돌아가요. 시간이 끝나면 남은 문제는 미응답(오답)으로 처리되고 결과가 저장돼요.</p>
-      <div class="row left"><button class="btn primary" id="qStart">전체 문제 시작</button>${allWrong.length?`<button class="btn" id="qAllWrong">누적 오답 ${allWrong.length}문항 다시 풀기</button>`:''}</div></div>
+      <div class="row left"><button class="btn primary" id="qStart">전체 문제 시작</button>${allWrong.length?`<button class="btn" id="qAllWrong">누적 오답 ${allWrong.length}문항 다시 풀기</button>`:''}${genWrong.length?`<button class="btn" id="qGenWrong">AI 문제 누적 오답 ${genWrong.length}문항</button>`:''}</div></div>
+      <div class="qcard gencard" id="genCard"></div>
       <div class="qcard"><div class="qhead"><h3>지난 기록</h3>${h.length?'<button class="btn" id="qClear">기록 지우기</button>':''}</div>
-      ${h.length?`<p class="muted" style="font-size:13.5px">최근 30회까지 이 브라우저에 저장돼요. 회차마다 오답을 확인하거나 그 오답만 다시 풀 수 있어요.</p><div class="hlist">${rows}</div>`:'<p class="muted">아직 푼 기록이 없어요.</p>'}</div>`;
+      ${h.length?`<p class="muted" style="font-size:13.5px">최근 30회까지 저장돼요(로그인 상태면 본인 전용 저장소에도 저장되어 다른 기기에서도 보여요). "자세히 보기"를 누르면 그 회차에 나온 문제 전부와 내가 고른 답, 정답, 해설, 보기별 풀이를 볼 수 있어요.</p><div class="hlist">${rows}</div>`:'<p class="muted">아직 푼 기록이 없어요.</p>'}</div>`;
     $('#qStart').onclick=()=>startQuiz(c.quiz);
     const aw=$('#qAllWrong');if(aw)aw.onclick=()=>startQuiz(qByIdx(allWrong),'누적 오답');
-    const cl=$('#qClear');if(cl)cl.onclick=()=>{if(confirm(c.short+' 퀴즈 기록을 모두 지울까요?')){store.set(histKey(),[]);quizHome()}};
+    const gw=$('#qGenWrong');if(gw)gw.onclick=()=>startQuiz(genWrong,'AI 문제 누적 오답',{sec:Math.max(QUIZ_SEC,genWrong.length*90)});
+    const cl=$('#qClear');if(cl)cl.onclick=()=>{if(confirm(c.short+' 퀴즈 기록을 모두 지울까요? (AI 문제와 해설 기록도 함께 지워져요)')){store.set(histKey(),[]);qsync.push(ch);quizHome()}};
     box.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()=>{
-      const r=h[+b.dataset.r];
-      if(b.dataset.act==='redo'){startQuiz(qByIdx([...r.w,...r.u]),'오답 다시 풀기');return}
-      const el=$('#hw'+b.dataset.r),open=el.hidden;
-      if(open&&!el.innerHTML)el.innerHTML=[...r.w.map(i=>[i,0]),...r.u.map(i=>[i,1])].filter(([i])=>CH[ch].quiz[i]).map(([i,u])=>wrongCard(CH[ch].quiz[i],u)).join('');
-      el.hidden=!open;b.setAttribute('aria-expanded',open);b.textContent=(open?'오답 닫기':'오답 확인')+` (${r.w.length+r.u.length})`;
+      const r=h[+b.dataset.r],act=b.dataset.act;
+      if(act==='redo'){const w=recWrong(r).map(x=>x.q);startQuiz(w,'오답 다시 풀기',r.lv?{sec:Math.max(180,w.length*90),lv:r.lv}:null);return}
+      if(act==='again'){const l=recItems(r).map(x=>x.q);startQuiz(l,r.k,{sec:l.length*90,lv:r.lv});return}
+      const el=$('#hw'+b.dataset.r),was=b.getAttribute('aria-expanded')==='true';
+      box.querySelectorAll(`[data-r="${b.dataset.r}"][aria-expanded]`).forEach(x=>{x.setAttribute('aria-expanded','false');x.textContent=x.dataset.act==='all'?`자세히 보기 (${r.d.length}문항 · 해설)`:`오답 확인 (${recWrong(r).length})`});
+      if(was){el.hidden=true;return}
+      el.innerHTML=act==='all'?`<h3>문제 전체 · 내 답 · 해설</h3>${recItems(r).map((x,i)=>detailCard(x.q,x.c,i+1)).join('')}`:recWrong(r).map(x=>wrongCard(x.q,x.c===-1)).join('');
+      el.hidden=false;b.setAttribute('aria-expanded','true');b.textContent=act==='all'?'자세히 닫기':'오답 닫기';
     }));
+    renderGen();
     renderProgress();
   }
   function renderQ(){
     const box=$('#quizBox');
     if(qi>=qs.length){
       stopTimer();record();
-      const pct=Math.round(score/qs.length*100),used=Math.min(QUIZ_SEC,Math.round((Date.now()-startedAt)/1000));
+      const pct=Math.round(score/qs.length*100),used=Math.min(limitSec,Math.round((Date.now()-startedAt)/1000));
       const best=store.get('ai.best.'+ch+(ch===10?'.v2':''),null);
       if(full&&(best==null||pct>best))store.set('ai.best.'+ch+(ch===10?'.v2':''),pct);
+      const lvNow=store.get('ai.gen.lv.'+ch,0);
       box.innerHTML=`<div class="qcard result"><span class="eyebrow">${CH[ch].short} 결과 · ${esc(kind)}</span><div class="score">${score} / ${qs.length}</div>
-        <p class="muted">${timedOut?`⏱ 시간 종료 · 미응답 ${unans.size}문항은 오답으로 처리했어요. `:`⏱ ${fmtClock(used)} 사용. `}${pct>=90?'완벽에 가까워요. 다음 장으로 넘어가도 좋습니다.':pct>=70?'잘했어요. 틀린 문제만 다시 풀어 보세요.':'요약 노트와 플래시카드로 한 번 더 복습해 보세요.'}</p>
-        <div class="row">${wrong.length?'<button class="btn primary" id="retryWrong">틀린 문제만 다시</button>':''}<button class="btn" id="retryAll">전체 다시 풀기</button><button class="btn" id="toHome">기록 보기</button></div>
-        ${wrong.length?`<div class="review"><h3>틀린 문제</h3>${wrong.map(q=>wrongCard(q,unans.has(q))).join('')}</div>`:''}</div>`;
-      const rw=$('#retryWrong');if(rw){const w=wrong;rw.onclick=()=>startQuiz(w,'오답 다시 풀기')}
-      $('#retryAll').onclick=()=>startQuiz(CH[ch].quiz);
+        <p class="muted">${timedOut?`⏱ 시간 종료 · 미응답 ${unans.size}문항은 오답으로 처리했어요. `:`⏱ ${fmtClock(used)} 사용. `}${pct>=90?'완벽에 가까워요. 다음 장으로 넘어가도 좋습니다.':pct>=70?'잘했어요. 틀린 문제만 다시 풀어 보세요.':'요약 노트와 플래시카드로 한 번 더 복습해 보세요.'}${curLv?' 이 세트의 문제와 해설은 "지난 기록 → 자세히 보기"에 저장됐어요.':''}</p>
+        <div class="row">${wrong.length?'<button class="btn primary" id="retryWrong">틀린 문제만 다시</button>':''}${curLv&&sampleFn&&lvNow<10?`<button class="btn primary" id="genNext">새 문제 · Lv ${lvNow+1}로 올리기</button>`:''}<button class="btn" id="retryAll">${curLv?'이 세트 다시 풀기':'전체 다시 풀기'}</button><button class="btn" id="toHome">기록 보기</button></div>
+        <div class="review"><h3>이번 회차 문제 전체 · 해설</h3>${qs.map((q,i)=>detailCard(q,picks.has(q)?picks.get(q):-1,i+1)).join('')}</div></div>`;
+      const rw=$('#retryWrong');if(rw){const w=wrong,lv=curLv;rw.onclick=()=>startQuiz(w,'오답 다시 풀기',lv?{sec:Math.max(180,w.length*90),lv}:null)}
+      const si=setInfo;$('#retryAll').onclick=()=>curLv?startQuiz(si.list,si.k,si.o):startQuiz(CH[ch].quiz);
+      const gn=$('#genNext');if(gn)gn.onclick=()=>{quizHome();generate(lvNow+1);document.getElementById('genCard').scrollIntoView({block:'center'})};
       $('#toHome').onclick=quizHome;
       renderProgress();return;
     }
     const q=qs[qi];answered=false;
-    box.innerHTML=`<div class="qcard"><div class="qhead"><span class="counter">${CH[ch].short} · 문제 ${qi+1} / ${qs.length}</span><span class="qtimer" id="qTimer" role="timer">⏱ ${fmtClock((deadline-Date.now())/1000)}</span><span class="counter">점수 ${score}</span></div>
+    box.innerHTML=`<div class="qcard"><div class="qhead"><span class="counter">${CH[ch].short}${curLv?` · AI Lv ${curLv}`:''} · 문제 ${qi+1} / ${qs.length}</span><span class="qtimer" id="qTimer" role="timer">⏱ ${fmtClock((deadline-Date.now())/1000)}</span><span class="counter">점수 ${score}</span></div>
       <div class="qbar"><i style="width:${qi/qs.length*100}%"></i></div>
+      ${q[6]?`<span class="tag" style="justify-self:start">${esc(q[6])}</span>`:''}
       <div class="qtext">${esc(q[0])}</div>
       <div class="opts">${q[1].map((o,i)=>`<button class="opt" data-i="${i}"><span class="l">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
       <div id="qexp"></div>
@@ -6156,7 +6306,7 @@ action ← rule.ACTION</pre>
   }
   function answer(i){
     if(!qs||answered)return;answered=true;
-    const q=qs[qi],ok=i===q[2];
+    const q=qs[qi],ok=i===q[2];picks.set(q,i);
     if(ok)score++;else wrong.push(q);
     document.querySelectorAll('.opt').forEach(b=>{const j=+b.dataset.i;b.disabled=true;if(j===q[2])b.classList.add('correct');else if(j===i)b.classList.add('wrong')});
     $('#qexp').innerHTML=`<div class="explain"><div><b class="${ok?'ok':'no'}">${ok?'정답!':'오답'}</b> ${esc(q[3])}</div>${q[4]?`<span class="xh">정답 해설</span><p class="xwhy">${esc(q[4])}</p>`:''}${q[5]?`<span class="xh">보기별 풀이</span><ul class="onotes">${q[5].map((t,j)=>`<li class="${j===q[2]?'c':j===i?'p':''}"><span class="l">${'ABCD'[j]}</span><span><b>${esc(q[1][j])}</b>${j===i&&j!==q[2]?' (내가 고른 답)':''} — ${esc(t)}</span></li>`).join('')}</ul>`:''}</div><div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn primary" id="nextQ">${qi+1<qs.length?'다음 문제':'결과 보기'}</button></div>`;

@@ -503,6 +503,22 @@ tr.bad td{background:var(--bad-soft);color:var(--bad)}tr.sum td{font-weight:700}
 .gexam{border-color:color-mix(in srgb,var(--bad) 40%,var(--line))}.gexam h3{color:var(--bad)}
 .gtrap{border-left:4px solid var(--amber);background:var(--amber-soft);border-radius:10px;padding:10px 14px}
 .gprog{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.gbar{flex:1;min-width:140px;height:10px;border-radius:5px;background:var(--surface);border:1px solid var(--line);overflow:hidden}.gbar i{display:block;height:100%;width:0;background:var(--good);transition:width .3s}
+/* 소리로 듣기 */
+.has-tts{position:relative}
+.ttsbtn{position:absolute;top:8px;right:8px;z-index:3;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:15px;line-height:1;cursor:pointer;opacity:.7;display:grid;place-items:center;padding:0}
+.ttsbtn:hover,.ttsbtn:focus-visible{opacity:1;border-color:var(--accent)}
+.has-tts>h2,.has-tts>h3,.has-tts>.exq-h,.has-tts>.gsec-h,.has-tts>.ckpt-h{padding-right:40px}
+.ttsfab{position:fixed;left:12px;bottom:12px;z-index:60;font:inherit;font-size:14px;font-weight:600;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.12);cursor:pointer}
+.ttsbar{position:fixed;left:12px;bottom:60px;z-index:61;width:min(560px,calc(100vw - 24px));max-height:min(60vh,520px);display:grid;grid-template-rows:auto auto auto auto minmax(0,1fr);gap:8px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.ttsbar[hidden]{display:none}
+.tts-h{display:flex;align-items:center;gap:6px}.tts-h b{flex:1;min-width:0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ttsx{border:none;background:none;font-size:16px;color:var(--muted);cursor:pointer;padding:2px 6px}
+.tts-ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.tts-ctl label{display:inline-flex;gap:4px;align-items:center;font-size:13px;color:var(--muted)}.tts-ctl select{font:inherit;font-size:13px;padding:4px 6px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);max-width:140px}
+.tts-status{margin:0;font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.tts-text{overflow:auto;font-size:15px;line-height:1.75;padding:8px 10px;border-radius:10px;background:var(--surface-2);min-height:60px}
+.tts-text span[data-i]{cursor:pointer;border-radius:4px}.tts-text span.past{color:var(--muted)}.tts-text span.now{background:var(--accent-soft);color:var(--ink);box-shadow:0 0 0 2px var(--accent-soft)}
+.ttsbar.min .tts-text,.ttsbar.min .tts-status,.ttsbar.min .tts-mode{display:none}
+@media (max-width:600px){.ttsbar{bottom:64px;max-height:55vh}.ttsfab{bottom:12px}}
 </style>
 </head>
 <body>
@@ -7279,6 +7295,130 @@ action ← rule.ACTION</pre>
     $('#greset').onclick=()=>{if(confirm('3장 완전 정리의 체크를 모두 지울까요?')){store.set(KEY,{});upd()}};
     gp.querySelector('.gtoc').addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;e.preventDefault();const t=document.getElementById('g-'+a.dataset.g);if(t){t.hidden=false;t.scrollIntoView({behavior:'smooth',block:'start'})}});
     upd();
+  })();
+
+  /* ---------- 소리로 듣기: 그대로 읽기 · Claude가 쉽게 풀어 설명 ---------- */
+  (function(){
+    const synth=window.speechSynthesis;if(!synth||!window.SpeechSynthesisUtterance)return;
+    const TARGET='section.panel .block, section.panel .note, section.panel article.exq, section.panel .ckpt';
+    let waiting=false,sampleT,cur=null,sents=[],idx=0,playing=false,streaming=false,tok=0,mode='explain',ctl=null;
+    (async()=>{await 0;try{sampleT=window.claude&&claude.use?await claude.use('sample'):null}catch(e){sampleT=null}if(bar&&!bar.hidden)render()})();
+    // 버튼 달기
+    function decorate(root){(root||document).querySelectorAll(TARGET).forEach(el=>{if(el.querySelector(':scope>.ttsbtn'))return;
+      const b=document.createElement('button');b.className='ttsbtn';b.type='button';b.title='이 부분 소리로 듣기';b.setAttribute('aria-label','이 부분 소리로 듣기');b.textContent='🔊';
+      el.classList.add('has-tts');el.prepend(b);b.addEventListener('click',e=>{e.stopPropagation();open(el)});});}
+    decorate();
+    // 글 뽑기
+    function rawText(el,forRead){
+      const c=el.cloneNode(true);
+      c.querySelectorAll('.ttsbtn,svg,script,style,canvas,button,input,select,textarea,.toolbar,.pick,[aria-hidden="true"],.inklayer').forEach(x=>x.remove());
+      if(forRead)c.querySelectorAll('details:not([open])').forEach(d=>{[...d.children].forEach(ch=>{if(ch.tagName!=='SUMMARY')ch.remove()})});
+      c.querySelectorAll('tr').forEach(tr=>{tr.querySelectorAll('th,td').forEach((td,i,a)=>{if(i<a.length-1)td.append(', ')});tr.append('. ')});
+      c.querySelectorAll('.gtoc a,p,li,h1,h2,h3,h4,summary,.card,.eyebrow,.badge,pre,.exq-h,dt,dd,br').forEach(x=>x.append('\n'));
+      return c.textContent.replace(/[ \t]+/g,' ').replace(/\n\s*/g,'\n').trim();
+    }
+    const SUP={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','ᵈ':'d','ᵐ':'m','ⁿ':'n','ʳ':'r','ˡ':'l','⁺':' 더하기 ','⁻':' 빼기 '};
+    const SUB={'₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9','ₗ':'l','ₘ':'m','ₜ':'t','ᵢ':'i','ₖ':'k'};
+    function speakable(t){
+      return t.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/gu,'').replace(/[★☆✎✏✔✕]/g,'')
+        .replace(/IDA\*/g,'아이디에이 스타').replace(/SMA\*/g,'에스엠에이 스타').replace(/A\*/g,'에이 스타').replace(/([A-Za-z])\*/g,'$1 스타')
+        .replace(/([0-9A-Za-z)])([⁰¹²³⁴⁵⁶⁷⁸⁹ᵈᵐⁿʳˡ⁺⁻]+)/g,(m,a,s)=>a+'의 '+[...s].map(x=>SUP[x]).join('')+' 제곱')
+        .replace(/[₀₁₂₃₄₅₆₇₈₉ₗₘₜᵢₖ]/g,x=>' '+SUB[x])
+        .replace(/O\(/g,'빅오 (').replace(/≤/g,' 이하 ').replace(/≥/g,' 이상 ').replace(/≠/g,' 같지 않음 ').replace(/≈/g,' 약 ').replace(/×/g,' 곱하기 ').replace(/√/g,'루트 ').replace(/Σ/g,'시그마 ').replace(/⌊|⌋/g,'')
+        .replace(/ < /g,' 보다 작음 ').replace(/ > /g,' 보다 큼 ').replace(/&lt;/g,' 보다 작음 ').replace(/&gt;/g,' 보다 큼 ')
+        .replace(/⇒/g,', 따라서 ').replace(/→/g,', ').replace(/[·•—–]/g,', ').replace(/\s*\|\s*/g,', ').replace(/[\[\]{}]/g,' ').replace(/\s{2,}/g,' ').trim();
+    }
+    function split(t){const out=[];t.split(/\n+/).forEach(line=>{line.split(/(?<=[.!?。]|다\.|요\.)\s+/).forEach(s=>{s=s.trim();if(!s)return;
+        while(s.length>180){let k=s.lastIndexOf(', ',170);if(k<60)k=170;out.push(s.slice(0,k+1));s=s.slice(k+1).trim()}if(s)out.push(s)})});return out}
+    // 플레이어
+    const bar=document.createElement('div');bar.className='ttsbar';bar.hidden=true;bar.setAttribute('role','region');bar.setAttribute('aria-label','소리로 듣기');
+    bar.innerHTML=`<div class="tts-h"><b class="tts-title"></b><button class="ttsx" data-a="min" title="자막 접기">▾</button><button class="ttsx" data-a="close" title="닫기">✕</button></div>
+      <div class="tts-mode pick"><button data-m="explain">🎓 쉽게 풀어 설명</button><button data-m="read">📖 그대로 읽기</button></div>
+      <div class="tts-ctl"><button class="btn" data-a="prev" title="이전 문장">⏮</button><button class="btn primary tts-play" data-a="play">▶ 재생</button><button class="btn" data-a="next" title="다음 문장">⏭</button>
+        <label>속도 <select class="tts-rate">${[0.8,0.9,1,1.15,1.3,1.5].map(r=>`<option value="${r}">${r}×</option>`).join('')}</select></label><label>목소리 <select class="tts-voice"></select></label><button class="btn tts-regen" data-a="regen">다른 설명 듣기</button></div>
+      <p class="tts-status"></p><div class="tts-text"></div>`;
+    document.body.appendChild(bar);
+    const fab=document.createElement('button');fab.className='ttsfab';fab.type='button';fab.textContent='🔊 듣기';fab.title='지금 탭 전체를 소리로 듣기';document.body.appendChild(fab);
+    const q=s=>bar.querySelector(s);
+    const pref=store.get('ai.tts.pref',{rate:1,voice:'',mode:'explain'});mode=pref.mode||'explain';q('.tts-rate').value=String(pref.rate||1);
+    function voices(){const vs=synth.getVoices().filter(v=>/^ko/i.test(v.lang));const sel=q('.tts-voice');
+      sel.innerHTML=vs.length?vs.map(v=>`<option value="${v.name}">${v.name.replace(/\s*\(.*\)/,'')}</option>`).join(''):'<option value="">기본 (한국어)</option>';if(pref.voice&&vs.some(v=>v.name===pref.voice))sel.value=pref.voice;}
+    voices();if('onvoiceschanged' in synth)synth.addEventListener('voiceschanged',voices);
+    const savePref=()=>store.set('ai.tts.pref',{rate:+q('.tts-rate').value,voice:q('.tts-voice').value,mode});
+    q('.tts-rate').addEventListener('change',()=>{savePref();if(playing){synth.cancel();speak()}});
+    q('.tts-voice').addEventListener('change',()=>{savePref();if(playing){synth.cancel();speak()}});
+    function status(t){q('.tts-status').innerHTML=t||''}
+    function renderText(){const box=q('.tts-text');box.innerHTML=sents.map((s,i)=>`<span data-i="${i}" class="${i===idx?'now':i<idx?'past':''}">${esc(s)} </span>`).join('')+(streaming?'<span class="tts-more">…</span>':'');
+      const n=box.querySelector('.now');if(n&&!box.dataset.user)n.scrollIntoView({block:'nearest'});}
+    function mark(){q('.tts-text').querySelectorAll('span[data-i]').forEach(s=>{const i=+s.dataset.i;s.className=i===idx?'now':i<idx?'past':''});const n=q('.tts-text .now');if(n)n.scrollIntoView({block:'nearest'});
+      q('.tts-play').textContent=playing?'⏸ 일시정지':'▶ 재생';}
+    function speak(){
+      const my=++tok;
+      waiting=false;if(idx>=sents.length){if(streaming){waiting=true;status('설명을 이어서 만드는 중…');return}playing=false;mark();status('끝까지 들었어요. ⏮로 되돌리거나 문장을 눌러 그 부분부터 다시 들을 수 있어요.');return}
+      const u=new SpeechSynthesisUtterance(speakable(sents[idx]));u.lang='ko-KR';u.rate=+q('.tts-rate').value||1;
+      const v=synth.getVoices().find(v=>v.name===q('.tts-voice').value);if(v)u.voice=v;
+      u.onend=()=>{if(my!==tok||!playing)return;idx++;mark();speak()};
+      u.onerror=e=>{if(my!==tok)return;if(e.error==='interrupted'||e.error==='canceled')return;playing=false;mark();status('이 기기에서 음성 재생이 막혔어요. 화면을 한 번 누른 뒤 ▶를 다시 눌러 주세요.')};
+      playing=true;mark();synth.speak(u);
+    }
+    function stop(){tok++;playing=false;waiting=false;synth.cancel();mark()}
+    function load(list,done){sents=list;idx=0;streaming=!done;renderText();}
+    function ctxName(el){const p=el.closest('section.panel');const t=p&&tabs.find(b=>b.dataset.tab===p.id&&!b.hidden);const h=el.querySelector('h2,h3,.exq-h b');return [(CH[ch]||{}).short,t&&t.textContent,h&&h.textContent].filter(Boolean).join(' · ')}
+    const clean=t=>t.replace(/^\s*(?:[-•]|\d+\.)\s+/gm,'').replace(/\*\*|__|#{1,6}\s?|`/g,'');
+    function hash(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return (h>>>0).toString(36)}
+    async function explain(el,regen){
+      const raw=rawText(el,false).slice(0,el.tagName==='SECTION'?14000:7000),key='ai.tts.x.'+hash(raw);
+      const cached=!regen&&store.get(key,null);
+      if(cached){load(split(cached),true);status('저장해 둔 설명이에요. "다른 설명 듣기"를 누르면 새로 만들어요.');speak();return}
+      if(!sampleT){status(sampleT===undefined?'Claude 연결을 확인하는 중이에요. 잠시 뒤 다시 눌러 주세요.':'"쉽게 풀어 설명"은 claude.ai에서 이 페이지를 열고 Claude 사용을 허용했을 때만 돼요. 지금은 "그대로 읽기"를 써 주세요.');return}
+      if(ctl)ctl.abort();ctl=new AbortController();
+      load([],false);status('<span class="spin"></span> Claude가 설명을 만드는 중… 첫 문장이 나오면 바로 읽기 시작해요.');
+      // iOS: 사용자 동작 안에서 음성을 한 번 열어 둬야 이후 재생이 막히지 않는다
+      try{const w=new SpeechSynthesisUtterance('설명을 준비할게요.');w.lang='ko-KR';w.rate=+q('.tts-rate').value||1;synth.speak(w)}catch(e){}
+      const prompt=`당신은 대학 "인공지능입문"(AIMA 4판) 과목의 친절한 과외 선생님입니다. 학생이 이 부분이 머리에 잘 안 들어온다고 해서, 아래 내용을 <귀로 듣고> 이해할 수 있게 말로 풀어 설명해 주세요. 학생은 화면을 보지 않고 듣기만 할 수 있습니다.
+
+[규칙]
+- 소리 내어 읽을 문장만 쓰세요. 마크다운, 목록 기호, 표, 괄호 속 영어 나열, 이모지는 쓰지 마세요.
+- 기호는 말로 바꾸세요. 예: A* → 에이 스타, h* → 에이치 스타, ≤ → 이하, f(n) → 에프 엔, O(b^d) → 빅오 b의 d제곱.
+- 한 문장은 짧게(40자 안팎). 친근한 존댓말 구어체("~예요", "~거든요").
+- 순서: ① 이 부분이 무엇에 관한 건지 한두 문장 ② 핵심 개념을 쉬운 말과 일상 비유로 ③ 내용에 나온 예나 숫자를 하나 골라 한 단계씩 따라가기 ④ 시험에서 헷갈리기 쉬운 점 ⑤ 마지막에 "정리하면"으로 시작하는 핵심 세 문장.
+- 내용에 없는 사실이나 숫자를 지어내지 마세요. 내용에 모범답안이 있으면 답을 외우게 하지 말고 왜 그렇게 되는지를 설명하세요.
+- 분량: 한국어 700~1300자 (2~4분 분량).
+
+[위치] ${ctxName(el)}
+
+[내용]
+${raw}`;
+      let got=0;
+      try{
+        const r=await sampleT(prompt,{modelTier:'default',cache:false,signal:ctl.signal,onText:({text})=>{
+          const parts=split(clean(text));const complete=/[.!?。]\s*$/.test(text)?parts:parts.slice(0,-1);
+          if(complete.length>got){sents=complete;got=complete.length;renderText();if((waiting||!playing)&&idx<sents.length&&!q('.tts-play').dataset.paused){status('설명을 들려주는 중… (아직 이어서 만드는 중)');speak()}}}});
+        const full=clean(r.text);store.set(key,full);
+        sents=split(full);streaming=false;renderText();status(r.truncated?'설명이 길어서 중간에 끊겼어요.':'설명을 다 만들었어요. 다음에 다시 열면 저장된 설명을 바로 들려줘요.');
+        if((waiting||!playing)&&idx<sents.length&&!q('.tts-play').dataset.paused)speak();
+      }catch(e){streaming=false;if(e&&e.code==='cancelled')return;
+        if(e&&['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(e.code))sampleT=null;
+        status(e&&e.code==='rate_limited'?'요청이 많거나 사용 한도에 닿았어요. 잠시 뒤 다시 눌러 주세요. 지금은 "그대로 읽기"를 쓸 수 있어요.':'설명을 만들지 못했어요. "그대로 읽기"로 들을 수 있어요.');renderText();}
+    }
+    function startRead(el){stop();if(ctl)ctl.abort();const t=rawText(el,true);load(split(t),true);status('화면의 글을 그대로 읽어요. 수식 기호는 말로 바꿔 읽어요.');speak()}
+    function go(){stop();delete q('.tts-play').dataset.paused;if(!cur)return;if(mode==='read')startRead(cur);else explain(cur)}
+    function open(el){cur=el;bar.hidden=false;bar.classList.remove('min');q('.tts-title').textContent=el.tagName==='SECTION'?'이 탭 전체: '+ctxName(el):ctxName(el);
+      bar.querySelectorAll('.tts-mode button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===mode));q('.tts-regen').hidden=mode!=='explain';go()}
+    fab.addEventListener('click',()=>{const p=document.querySelector('section.panel:not([hidden])');if(p)open(p)});
+    bar.querySelector('.tts-mode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;savePref();
+      bar.querySelectorAll('.tts-mode button').forEach(x=>x.setAttribute('aria-pressed',x===b));q('.tts-regen').hidden=mode!=='explain';go()});
+    bar.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;
+      if(a==='close'){stop();if(ctl)ctl.abort();bar.hidden=true;return}
+      if(a==='min'){bar.classList.toggle('min');b.textContent=bar.classList.contains('min')?'▴':'▾';return}
+      if(a==='play'){if(playing){stop();b.dataset.paused='1';status('일시정지. ▶로 이어서 들어요.')}else{delete b.dataset.paused;if(idx>=sents.length&&!streaming)idx=0;speak()}return}
+      if(a==='prev'){stop();idx=Math.max(0,idx-1);speak();return}
+      if(a==='next'){stop();idx=Math.min(sents.length,idx+1);speak();return}
+      if(a==='regen'&&cur){stop();explain(cur,true)}});
+    q('.tts-text').addEventListener('click',e=>{const s=e.target.closest('span[data-i]');if(!s)return;stop();idx=+s.dataset.i;speak()});
+    // 탭을 옮기면 멈춤
+    new MutationObserver(()=>{if(cur&&cur.closest('section.panel')&&cur.closest('section.panel').hidden&&playing){stop();status('탭을 옮겨서 멈췄어요.')}}).observe(document.querySelector('.wrap')||document.body,{attributes:true,subtree:true,attributeFilter:['hidden']});
+    window.addEventListener('pagehide',()=>synth.cancel());
   })();
 
   /* ---------- 퀴즈 ---------- */
